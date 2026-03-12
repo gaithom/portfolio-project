@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { ParticleCanvas, Typewriter, SkillBar, Modal, ParallaxElement, ScrollReveal } from "../components/Shared";
+import { CarDrivingGame } from "../components/CarDrivingGame";
 import { DevBadge } from "../components/DeveloperMode";
 import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, TESTIMONIALS } from "../data/content";
 
@@ -97,7 +98,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
   },[filter]);
 
   return <>
-    {/* HERO — organic curved bottom */}
+    {/* HERO — organic curved bottom with car game */}
     <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)"}}>
       <ParallaxElement theme={theme} speed={0.3}>
         <ParticleCanvas theme={theme}/>
@@ -106,24 +107,31 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         {[360,200,140,260,110].map((s,i)=><div key={i} className="f-ring" style={{position:"absolute",width:s,height:s,borderRadius:`${[48,62,55,70,58][i]}% ${[52,38,45,30,42][i]}% ${[44,60,50,66,52][i]}% ${[56,40,50,34,48][i]}%`,border:`1px solid ${theme.animDot}`,left:[`5%`,"68%","6%","62%","41%"][i],top:["7%","12%","58%","50%","73%"][i],pointerEvents:"none",opacity:.5,animation:[`spinSlow 30s linear infinite`,`spinSlowR 40s linear infinite`,`spinSlow 36s linear infinite`,`spinSlowR 50s linear infinite`,`spinSlow 24s linear infinite`][i]}}/>)}
         <div style={{position:"absolute",width:480,height:480,borderRadius:"50%",background:`radial-gradient(circle,${theme.animOrb} 0%,transparent 68%)`,top:"50%",left:"50%",transform:"translate(-50%,-50%)",animation:"breathe 6s ease-in-out infinite",pointerEvents:"none"}}/>
       </ParallaxElement>
-      <div style={{position:"relative",zIndex:1,maxWidth:700}}>
-        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted,opacity:.9}}>
-          <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Available for Freelance Projects
+      
+      <div style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%"}}>
+        {/* Hero content */}
+        <div style={{textAlign:"center"}}>
+          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted,opacity:.9}}>
+            <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Available for Freelance Projects
+          </div>
+          <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
+          <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(13px,1.8vw,17px)",marginBottom:32,minHeight:26}}><Typewriter words={["Frontend Developer","UI/UX Designer","Creative Coder","Problem Solver"]} theme={theme}/></div>
+          <p style={{fontSize:15,color:theme.textMuted,maxWidth:460,margin:"0 auto 36px",lineHeight:1.9,opacity:.85}}>Building premium digital experiences — Nakuru, Kenya 🇰🇪</p>
+          <div ref={heroCtaRef} style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap"}}>
+            <button className="bp" onClick={()=>scrollTo("projects")}>View My Work ↓</button>
+            <button className="bg" onClick={()=>scrollTo("contact")}>Let's Build</button>
+          </div>
         </div>
-        <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
-        <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(13px,1.8vw,17px)",marginBottom:32,minHeight:26}}><Typewriter words={["Frontend Developer","UI/UX Designer","Creative Coder","Problem Solver"]} theme={theme}/></div>
-        <p style={{fontSize:15,color:theme.textMuted,maxWidth:460,margin:"0 auto 36px",lineHeight:1.9,opacity:.85}}>Building premium digital experiences — Nakuru, Kenya 🇰🇪</p>
-        <div ref={heroCtaRef} style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap"}}>
-          <button className="bp" onClick={()=>scrollTo("projects")}>View My Work ↓</button>
-          <button className="bg" onClick={()=>scrollTo("contact")}>Let's Build</button>
-        </div>
-        <div ref={heroStatsRef} style={{display:"flex",gap:44,justifyContent:"center",marginTop:54,flexWrap:"wrap"}}>
-          {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} style={{textAlign:"center"}}>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,fontWeight:800,color:theme.text,opacity:.8}}>{s.n}</div>
-            <div style={{fontSize:9,color:theme.textMuted,letterSpacing:".14em",textTransform:"uppercase",marginTop:4,opacity:.6}}>{s.l}</div>
-          </div>)}
+        
+        {/* Car Driving Game */}
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+          <div style={{marginBottom:15,fontSize:12,letterSpacing:".1em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.7}}>
+            Drive Through the Forest 🌲
+          </div>
+          <CarDrivingGame theme={theme} scrollTo={scrollTo} />
         </div>
       </div>
+      
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
     </section>
 
