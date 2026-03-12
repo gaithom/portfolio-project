@@ -40,6 +40,206 @@ export function ScrollBar({ theme }) {
   return <div style={{position:"fixed",top:0,left:0,height:2,width:`${p}%`,background:`linear-gradient(90deg,${theme.textMuted},${theme.accent})`,zIndex:9997,transition:"width .08s",opacity:.55}}/>;
 }
 
+// ── Enhanced Scroll Components ───────────────────────────────────────────────────
+export function ScrollProgress({ theme }) {
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrolled / maxScroll) * 100;
+      
+      setScrollY(scrolled);
+      setScrollProgress(progress);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: 20,
+      left: 20,
+      zIndex: 1000,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 8
+    }}>
+      <div style={{
+        width: 40,
+        height: 40,
+        borderRadius: '50%',
+        border: `2px solid ${theme.border}`,
+        position: 'relative',
+        background: theme.surface
+      }}>
+        <div style={{
+          position: 'absolute',
+          inset: 2,
+          borderRadius: '50%',
+          background: `conic-gradient(${theme.accent} ${scrollProgress * 3.6}deg, ${theme.bg} 0deg)`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div style={{
+            width: 28,
+            height: 28,
+            borderRadius: '50%',
+            background: theme.surface,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 8,
+            fontWeight: 700,
+            color: theme.textMuted,
+            fontFamily: '"Space Mono", monospace'
+          }}>
+            {Math.round(scrollProgress)}%
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ParallaxElement({ children, speed = 0.5, theme }) {
+  const ref = useRef(null);
+  const [offset, setOffset] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current) {
+        const rect = ref.current.getBoundingClientRect();
+        const scrolled = window.scrollY;
+        const rate = scrolled * -speed;
+        setOffset(rate);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [speed]);
+  
+  return (
+    <div ref={ref} style={{
+      transform: `translateY(${offset}px)`,
+      willChange: 'transform'
+    }}>
+      {children}
+    </div>
+  );
+}
+
+export function ScrollReveal({ children, direction = 'up', delay = 0, theme }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setVisible(true), delay * 1000);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [delay]);
+  
+  const getTransform = () => {
+    if (visible) return 'translate(0, 0)';
+    switch (direction) {
+      case 'up': return 'translate(0, 60px)';
+      case 'down': return 'translate(0, -60px)';
+      case 'left': return 'translate(60px, 0)';
+      case 'right': return 'translate(-60px, 0)';
+      default: return 'translate(0, 60px)';
+    }
+  };
+  
+  return (
+    <div ref={ref} style={{
+      transform: getTransform(),
+      opacity: visible ? 1 : 0,
+      transition: `transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)`,
+      transitionDelay: `${delay}s`
+    }}>
+      {children}
+    </div>
+  );
+}
+
+export function ScrollIndicator({ theme }) {
+  const [visible, setVisible] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      setScrollY(scrolled);
+      setVisible(scrolled < 100);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: 30,
+      left: '50%',
+      transform: `translateX(-50%) ${visible ? 'translateY(0)' : 'translateY(20px)'}`,
+      opacity: visible ? 1 : 0,
+      transition: 'all 0.3s ease',
+      zIndex: 100,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 8
+    }}>
+      <div style={{
+        width: 24,
+        height: 40,
+        border: `2px solid ${theme.textMuted}`,
+        borderRadius: 12,
+        position: 'relative',
+        opacity: 0.6
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: 8,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 4,
+          height: 8,
+          background: theme.textMuted,
+          borderRadius: 2,
+          animation: 'scrollBounce 2s infinite'
+        }} />
+      </div>
+      <span style={{
+        fontSize: 10,
+        color: theme.textMuted,
+        fontFamily: '"Space Mono", monospace',
+        textTransform: 'uppercase',
+        letterSpacing: '0.1em',
+        opacity: 0.5
+      }}>
+        Scroll
+      </span>
+    </div>
+  );
+}
+
 export function Typewriter({ words, theme }) {
   const [idx,setIdx]=useState(0);const [txt,setTxt]=useState("");const [del,setDel]=useState(false);
   useEffect(()=>{const w=words[idx%words.length];const t=setTimeout(()=>{if(!del){setTxt(w.slice(0,txt.length+1));if(txt.length+1===w.length)setTimeout(()=>setDel(true),1400);}else{setTxt(w.slice(0,txt.length-1));if(txt.length===0){setDel(false);setIdx(i=>i+1);}}},del?50:105);return()=>clearTimeout(t);},[txt,del,idx,words]);

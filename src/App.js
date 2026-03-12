@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { GSAPLoader } from "./hooks/useGSAP";
 import { THEMES } from "./data/themes";
 import { TESTIMONIALS } from "./data/content";
-import { ParticleCanvas, CustomCursor, ScrollBar, Modal } from "./components/Shared";
+import { ParticleCanvas, CustomCursor, ScrollBar, Modal, ScrollProgress, ParallaxElement, ScrollReveal, ScrollIndicator } from "./components/Shared";
 import { DevBadge, PerfMeter, AnimDebugBand, GridGuide } from "./components/DeveloperMode";
 import { ForestLayout } from "./layouts/ForestLayout";
 import { MidnightLayout } from "./layouts/MidnightLayout";
@@ -52,6 +52,7 @@ export default function App() {
     @keyframes breathe{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
     @keyframes pulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.1);opacity:.75}}
     @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes scrollBounce{0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-8px)}60%{transform:translateX(-50%) translateY(-4px)}}
     .nl{opacity:.5;transition:opacity .2s,color .2s;background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;color:${theme.text};font-size:11px;font-weight:700;letterSpacing:.1em;text-transform:uppercase;}
     .nl:hover{opacity:.9;color:${theme.accent};}
     .bp{display:inline-block;padding:12px 26px;background:${theme.accent};color:${theme.bg};border:none;border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:'Syne',sans-serif;transition:transform .2s,box-shadow .2s,opacity .2s;text-decoration:none;opacity:.88;}
@@ -88,6 +89,8 @@ export default function App() {
       <GSAPLoader/><style>{css}</style>
       <CustomCursor theme={theme}/>
       <ScrollBar theme={theme}/>
+      <ScrollProgress theme={theme}/>
+      <ScrollIndicator theme={theme}/>
       <GridGuide showGrid={showGrid} theme={theme}/>
 
       {/* NAV */}

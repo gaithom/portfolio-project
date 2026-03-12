@@ -1,8 +1,67 @@
 import { useState, useRef } from "react";
 import { useGSAP } from "../hooks/useGSAP";
-import { ParticleCanvas, Typewriter, SkillBar, Modal } from "../components/Shared";
+import { ParticleCanvas, Typewriter, SkillBar, Modal, ParallaxElement, ScrollReveal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
 import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, TESTIMONIALS } from "../data/content";
+
+// ── Project Card Component ───────────────────────────────────────────────────
+function ProjectCard({ project, theme, onSelect }) {
+  const [hovered, setHovered] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const ref = useRef(null);
+  
+  const handleMouseMove = (e) => {
+    const rect = ref.current.getBoundingClientRect();
+    setTilt({
+      x: ((e.clientY - rect.top - rect.height / 2) / rect.height) * -7,
+      y: ((e.clientX - rect.left - rect.width / 2) / rect.width) * 7
+    });
+  };
+  
+  return (
+    <div 
+      ref={ref} 
+      onMouseEnter={() => setHovered(true)} 
+      onMouseLeave={() => { setHovered(false); setTilt({ x: 0, y: 0 }); }} 
+      onMouseMove={handleMouseMove} 
+      onClick={() => onSelect(project)} 
+      style={{
+        width: 305,
+        flexShrink: 0,
+        background: hovered ? theme.surface : theme.surfaceAlt,
+        border: `1px solid ${hovered ? theme.borderMid : theme.border}`,
+        borderRadius: "18px 4px 18px 4px",
+        overflow: "hidden",
+        cursor: "pointer",
+        transform: hovered 
+          ? `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-5px)` 
+          : "perspective(700px) rotateX(0) rotateY(0)",
+        transition: "all .3s",
+        boxShadow: hovered ? theme.shadowMd : theme.shadow,
+        backdropFilter: "blur(12px)"
+      }}
+    >
+      <div style={{ height: 148, background: project.cardBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 46 }}>
+        {project.emoji}
+      </div>
+      <div style={{ padding: "15px 20px 22px" }}>
+        <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 9 }}>
+          {project.tags.map(t => (
+            <span key={t} style={{ fontSize: 9, fontWeight: 600, letterSpacing: ".11em", textTransform: "uppercase", color: theme.textMuted, border: `1px solid ${theme.border}`, borderRadius: 99, padding: "2px 8px", opacity: .8 }}>
+              {t}
+            </span>
+          ))}
+        </div>
+        <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 6px", fontFamily: "'Syne', sans-serif", color: theme.text }}>
+          {project.title}
+        </h3>
+        <p style={{ fontSize: 12, color: theme.textMuted, margin: 0, lineHeight: 1.75 }}>
+          {project.desc}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm, themeKey }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroSubRef=useRef(null),heroCtaRef=useRef(null),heroStatsRef=useRef(null);
@@ -40,11 +99,13 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
   return <>
     {/* HERO — organic curved bottom */}
     <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)"}}>
-      <ParticleCanvas theme={theme}/>
-      <div style={{position:"absolute",inset:0,pointerEvents:"none",backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"64px 64px",maskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)",WebkitMaskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)"}}/>
-      {/* Organic blob rings */}
-      {[360,200,140,260,110].map((s,i)=><div key={i} className="f-ring" style={{position:"absolute",width:s,height:s,borderRadius:`${[48,62,55,70,58][i]}% ${[52,38,45,30,42][i]}% ${[44,60,50,66,52][i]}% ${[56,40,50,34,48][i]}%`,border:`1px solid ${theme.animDot}`,left:[`5%`,"68%","6%","62%","41%"][i],top:["7%","12%","58%","50%","73%"][i],pointerEvents:"none",opacity:.5,animation:[`spinSlow 30s linear infinite`,`spinSlowR 40s linear infinite`,`spinSlow 36s linear infinite`,`spinSlowR 50s linear infinite`,`spinSlow 24s linear infinite`][i]}}/>)}
-      <div style={{position:"absolute",width:480,height:480,borderRadius:"50%",background:`radial-gradient(circle,${theme.animOrb} 0%,transparent 68%)`,top:"50%",left:"50%",transform:"translate(-50%,-50%)",animation:"breathe 6s ease-in-out infinite",pointerEvents:"none"}}/>
+      <ParallaxElement theme={theme} speed={0.3}>
+        <ParticleCanvas theme={theme}/>
+        <div style={{position:"absolute",inset:0,pointerEvents:"none",backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"64px 64px",maskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)",WebkitMaskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)"}}/>
+        {/* Organic blob rings */}
+        {[360,200,140,260,110].map((s,i)=><div key={i} className="f-ring" style={{position:"absolute",width:s,height:s,borderRadius:`${[48,62,55,70,58][i]}% ${[52,38,45,30,42][i]}% ${[44,60,50,66,52][i]}% ${[56,40,50,34,48][i]}%`,border:`1px solid ${theme.animDot}`,left:[`5%`,"68%","6%","62%","41%"][i],top:["7%","12%","58%","50%","73%"][i],pointerEvents:"none",opacity:.5,animation:[`spinSlow 30s linear infinite`,`spinSlowR 40s linear infinite`,`spinSlow 36s linear infinite`,`spinSlowR 50s linear infinite`,`spinSlow 24s linear infinite`][i]}}/>)}
+        <div style={{position:"absolute",width:480,height:480,borderRadius:"50%",background:`radial-gradient(circle,${theme.animOrb} 0%,transparent 68%)`,top:"50%",left:"50%",transform:"translate(-50%,-50%)",animation:"breathe 6s ease-in-out infinite",pointerEvents:"none"}}/>
+      </ParallaxElement>
       <div style={{position:"relative",zIndex:1,maxWidth:700}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted,opacity:.9}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Available for Freelance Projects
@@ -75,7 +136,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
 
     {/* ABOUT — diagonal offset */}
     <section ref={aboutRef} id="about" style={{padding:"110px 40px",maxWidth:1010,margin:"0 auto",position:"relative"}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1.3fr",gap:80,alignItems:"center"}}>
+      <ScrollReveal theme={theme} direction="up" delay={0.1}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1.3fr",gap:80,alignItems:"center"}}>
         <div ref={aboutImgRef} style={{position:"relative"}}>
           {/* Organic shape frame */}
           <div style={{width:"100%",maxWidth:350,aspectRatio:"1",borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:`linear-gradient(140deg,${theme.surface},${theme.bgAlt})`,border:`1px solid ${theme.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:82,boxShadow:theme.shadowMd,position:"relative",overflow:"hidden"}}>
@@ -101,13 +163,15 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:28,fontSize:14}}>Bachelor of IT at <span style={{color:theme.text,fontWeight:500}}>Kabarak University</span>, blending academic rigour with real-world craft.</p>
           <div style={{display:"flex",gap:11,flexWrap:"wrap"}}><button className="bp">Download CV</button><button className="bg" onClick={()=>scrollTo("projects")}>See My Work</button></div>
         </div>
-      </div>
+        </div>
+      </ScrollReveal>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
     </section>
 
     {/* SKILLS — organic layout */}
     <section id="skills" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
-      <div style={{maxWidth:1010,margin:"0 auto"}}>
+      <ScrollReveal theme={theme} direction="up" delay={0.2}>
+        <div style={{maxWidth:1010,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:62}}>
           <div>{SKILLS.map((s,i)=><SkillBar key={s.label} {...s} theme={theme} delay={i*.09}/>)}</div>
@@ -120,7 +184,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </ScrollReveal>
       {devMode&&<DevBadge id="skills" devMode={devMode} theme={theme}/>}
     </section>
 
@@ -135,18 +200,9 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       </div>
       <div ref={hPanelRef} style={{overflow:"hidden",position:"relative",height:"100vh"}}>
         <div ref={hTrackRef} style={{display:"flex",gap:20,padding:"55px 55px 55px 48px",willChange:"transform",alignItems:"center",height:"100%",width:"max-content"}}>
-          {filtered.map((p,i)=>{
-            const [h,setH]=useState(false);const [tilt,setTilt]=useState({x:0,y:0});const ref=useRef(null);
-            const mm=e=>{const r=ref.current.getBoundingClientRect();setTilt({x:((e.clientY-r.top-r.height/2)/r.height)*-7,y:((e.clientX-r.left-r.width/2)/r.width)*7});};
-            return <div key={p.id} ref={ref} onMouseEnter={()=>setH(true)} onMouseLeave={()=>{setH(false);setTilt({x:0,y:0});}} onMouseMove={mm} onClick={()=>setSel(p)} style={{width:305,flexShrink:0,background:h?theme.surface:theme.surfaceAlt,border:`1px solid ${h?theme.borderMid:theme.border}`,borderRadius:"18px 4px 18px 4px",overflow:"hidden",cursor:"pointer",transform:h?`perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-5px)`:"perspective(700px) rotateX(0) rotateY(0)",transition:"all .3s",boxShadow:h?theme.shadowMd:theme.shadow,backdropFilter:"blur(12px)"}}>
-              <div style={{height:148,background:p.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:46}}>{p.emoji}</div>
-              <div style={{padding:"15px 20px 22px"}}>
-                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:9}}>{p.tags.map(t=><span key={t} style={{fontSize:9,fontWeight:600,letterSpacing:".11em",textTransform:"uppercase",color:theme.textMuted,border:`1px solid ${theme.border}`,borderRadius:99,padding:"2px 8px",opacity:.8}}>{t}</span>)}</div>
-                <h3 style={{fontSize:15,fontWeight:700,margin:"0 0 6px",fontFamily:"'Syne',sans-serif",color:theme.text}}>{p.title}</h3>
-                <p style={{fontSize:12,color:theme.textMuted,margin:0,lineHeight:1.75}}>{p.desc}</p>
-              </div>
-            </div>;
-          })}
+          {filtered.map((project,i) => (
+            <ProjectCard key={project.id} project={project} theme={theme} onSelect={setSel} />
+          ))}
         </div>
         <div style={{position:"absolute",bottom:18,right:38,fontSize:9,color:theme.textMuted,letterSpacing:".15em",textTransform:"uppercase",opacity:.3}}>scroll →</div>
       </div>
@@ -155,7 +211,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
 
     {/* SERVICES — organic asymmetric grid */}
     <section ref={servicesRef} id="services" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
-      <div style={{maxWidth:1010,margin:"0 auto"}}>
+      <ScrollReveal theme={theme} direction="up" delay={0.3}>
+        <div style={{maxWidth:1010,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
           {SERVICES.map((s,i)=><div key={s.title} className="srv-card" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:["18px 4px 18px 4px","4px 18px 4px 18px","18px 4px 18px 4px","4px 18px 4px 18px"][i],padding:26,backdropFilter:"blur(12px)",transition:"transform .3s,box-shadow .3s,border-color .3s",cursor:"default",marginTop:i%2===1?24:0}}
@@ -166,13 +223,15 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             <p style={{fontSize:13,color:theme.textMuted,lineHeight:1.78,opacity:.85}}>{s.desc}</p>
           </div>)}
         </div>
-      </div>
+        </div>
+      </ScrollReveal>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
     </section>
 
     {/* TIMELINE — branch style */}
     <section ref={timelineRef} id="experience" style={{padding:"110px 40px",position:"relative"}}>
-      <div style={{maxWidth:660,margin:"0 auto"}}>
+      <ScrollReveal theme={theme} direction="left" delay={0.4}>
+        <div style={{maxWidth:660,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
         <div style={{position:"relative"}}>
           <div style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
@@ -188,7 +247,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             </div>
           </div>)}
         </div>
-      </div>
+        </div>
+      </ScrollReveal>
       {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
@@ -210,7 +270,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
 
     {/* CONTACT */}
     <section ref={contactRef} id="contact" style={{padding:"110px 40px",position:"relative"}}>
-      <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
+      <ScrollReveal theme={theme} direction="up" delay={0.5}>
+        <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{display:"block",textAlign:"center"}}>Get In Touch</span>
         <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Create Together</h2>
         <div style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
@@ -226,7 +287,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             <button className="bp" onClick={()=>setSent(true)} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:13,padding:"14px",borderRadius:"12px 3px 12px 3px"}}>Send Message →</button>
           </>}
         </div>
-      </div>
+        </div>
+      </ScrollReveal>
       {devMode&&<DevBadge id="contact" devMode={devMode} theme={theme}/>}
     </section>
   </>;
