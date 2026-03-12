@@ -104,9 +104,6 @@ export default function App() {
         </div>
         <div style={{display:"flex",gap:isVoid?18:22,alignItems:"center"}}>
           {navLabels[themeKey].map(l=><button key={l} className="nl" onClick={()=>scrollTo(l.toLowerCase())}>{isVoid?l.toUpperCase():l}</button>)}
-          <button className="bp" onClick={()=>scrollTo("contact")} style={{padding:"7px 16px",fontSize:10,letterSpacing:isVoid?".1em":".05em"}}>
-            {isVoid?"HIRE":"Hire Me"}
-          </button>
         </div>
       </nav>
 
