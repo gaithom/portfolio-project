@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, SkillBar, Modal } from "../components/Shared";
+import { PacManGame } from "../components/PacManGame";
 import { DevBadge } from "../components/DeveloperMode";
 import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, TESTIMONIALS } from "../data/content";
 
@@ -34,21 +35,32 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
   },[filter]);
 
   return <>
-    {/* HERO — editorial wide left-aligned */}
+    {/* HERO — editorial wide left-aligned with Pac-Man */}
     <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 60px 80px",textAlign:"left",position:"relative"}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"72px 72px",pointerEvents:"none",opacity:.4}}/>
-      <div style={{position:"relative",zIndex:1,maxWidth:900,width:"100%"}}>
-        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:10,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>
-          <span style={{width:5,height:5,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>Available for Select Projects
+      <div style={{position:"relative",zIndex:1,display:"flex",gap:"60px",alignItems:"center",width:"100%",maxWidth:1200}}>
+        {/* Left side - Hero content */}
+        <div style={{flex:1}}>
+          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:10,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>
+            <span style={{width:5,height:5,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>Available for Select Projects
+          </div>
+          <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(48px,9vw,110px)",fontWeight:800,lineHeight:.95,letterSpacing:"-.04em",marginBottom:24,color:theme.text}}>
+            Michael<br/>Gaitho
+          </h1>
+          <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(14px,2vw,20px)",marginBottom:36,minHeight:30,letterSpacing:".08em"}}><Typewriter words={["Frontend Architect","UI/UX Designer","Motion Engineer","Creative Technologist"]} theme={theme}/></div>
+          <p style={{fontSize:17,color:theme.textMuted,maxWidth:520,margin:"0 0 40px 0",lineHeight:1.85,opacity:.85,fontFamily:"'DM Sans',sans-serif"}}>Crafting exceptional digital experiences at the intersection of design and engineering — Nakuru, Kenya 🇰🇪</p>
+          <div ref={heroCtaRef} style={{display:"flex",gap:14,justifyContent:"flex-start",flexWrap:"wrap"}}>
+            <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Portfolio ↓</button>
+            <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:2,letterSpacing:".08em"}}>Start Conversation</button>
+          </div>
         </div>
-        <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(48px,9vw,110px)",fontWeight:800,lineHeight:.95,letterSpacing:"-.04em",marginBottom:24,color:theme.text}}>
-          Michael<br/>Gaitho
-        </h1>
-        <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(14px,2vw,20px)",marginBottom:36,minHeight:30,letterSpacing:".08em"}}><Typewriter words={["Frontend Architect","UI/UX Designer","Motion Engineer","Creative Technologist"]} theme={theme}/></div>
-        <p style={{fontSize:17,color:theme.textMuted,maxWidth:520,margin:"0 0 40px 0",lineHeight:1.85,opacity:.85,fontFamily:"'DM Sans',sans-serif"}}>Crafting exceptional digital experiences at the intersection of design and engineering — Nakuru, Kenya 🇰🇪</p>
-        <div ref={heroCtaRef} style={{display:"flex",gap:14,justifyContent:"flex-start",flexWrap:"wrap"}}>
-          <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Portfolio ↓</button>
-          <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:2,letterSpacing:".08em"}}>Start Conversation</button>
+        
+        {/* Right side - Pac-Man Game */}
+        <div style={{flex:0,display:"flex",flexDirection:"column",alignItems:"center"}}>
+          <div style={{marginBottom:20,fontSize:12,letterSpacing:".1em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.7}}>
+            Take a Break & Play
+          </div>
+          <PacManGame theme={theme} />
         </div>
       </div>
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
