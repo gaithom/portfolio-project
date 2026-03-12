@@ -27,9 +27,9 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
   },[]);
 
   return <>
-    {/* HERO — brutalist full bleed */}
-    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"140px 60px 100px",textAlign:"center",position:"relative",background:theme.bg}}>
-      <div style={{position:"relative",zIndex:1,maxWidth:1000}}>
+    {/* HERO — brutalist full bleed left-aligned */}
+    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"140px 60px 100px",textAlign:"left",position:"relative",background:theme.bg}}>
+      <div style={{position:"relative",zIndex:1,maxWidth:1000,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:10,border:`2px solid ${theme.borderMid}`,borderRadius:0,padding:"8px 20px",marginBottom:40,background:theme.surface,fontSize:11,letterSpacing:".2em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",fontWeight:700}}>
           <span style={{width:6,height:6,borderRadius:0,background:theme.accent,display:"inline-block",opacity:.8,transform:"rotate(45deg)"}}/>AVAILABLE FOR WORK
         </div>
@@ -37,8 +37,8 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
           MICHAEL<br/>GAITHO
         </h1>
         <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(16px,2.5vw,24px)",marginBottom:40,minHeight:32,letterSpacing:".1em",color:theme.accent}}><Typewriter words={["FRONTEND DEVELOPER","UI/UX DESIGNER","CREATIVE CODER","PROBLEM SOLVER"]} theme={theme}/></div>
-        <p style={{fontSize:18,color:theme.textMuted,maxWidth:600,margin:"0 auto 48px",lineHeight:1.8,opacity:.9,fontFamily:"'DM Sans',sans-serif",fontWeight:500}}>BUILDING RAW DIGITAL EXPERIENCES — NAKURU, KENYA 🇰🇪</p>
-        <div ref={heroCtaRef} style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap"}}>
+        <p style={{fontSize:18,color:theme.textMuted,maxWidth:600,margin:"0 0 48px 0",lineHeight:1.8,opacity:.9,fontFamily:"'DM Sans',sans-serif",fontWeight:500}}>BUILDING RAW DIGITAL EXPERIENCES — NAKURU, KENYA 🇰🇪</p>
+        <div ref={heroCtaRef} style={{display:"flex",gap:16,justifyContent:"flex-start",flexWrap:"wrap"}}>
           <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:0,letterSpacing:".1em",textTransform:"uppercase",fontSize:12,fontWeight:800}}>VIEW WORK ↓</button>
           <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:0,letterSpacing:".1em",textTransform:"uppercase",fontSize:12,fontWeight:800}}>CONTACT</button>
         </div>

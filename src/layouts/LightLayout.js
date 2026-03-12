@@ -23,10 +23,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   },[]);
 
   return <>
-    {/* HERO — clean centered */}
-    <section ref={heroRef} id="hero" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"120px 40px 80px",textAlign:"center",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    {/* HERO — clean left-aligned */}
+    <section ref={heroRef} id="hero" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 40px 80px",textAlign:"left",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"48px 48px",pointerEvents:"none"}}/>
-      <div style={{position:"relative",zIndex:1,maxWidth:680}}>
+      <div style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>
           Available for Freelance
@@ -34,14 +34,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(40px,8vw,88px)",fontWeight:800,lineHeight:1.0,letterSpacing:"-.03em",marginBottom:20,color:theme.text}}>
           Michael Gaitho,<br/><span style={{color:theme.accent}}>Frontend Dev.</span>
         </h1>
-        <p style={{fontSize:16,color:theme.textMuted,maxWidth:440,margin:"0 auto 12px",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
-        <p style={{fontSize:13,color:theme.textMuted,maxWidth:380,margin:"0 auto 40px",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
-        <div ref={heroCtaRef} style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
+        <p style={{fontSize:16,color:theme.textMuted,maxWidth:440,margin:"0 0 12px 0",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
+        <p style={{fontSize:13,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
+        <div ref={heroCtaRef} style={{display:"flex",gap:12,justifyContent:"flex-start",flexWrap:"wrap"}}>
           <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>View Projects</button>
           <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:4}}>Say Hello →</button>
         </div>
-        <div style={{display:"flex",gap:48,justifyContent:"center",marginTop:60}}>
-          {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} style={{textAlign:"center"}}>
+        <div style={{display:"flex",gap:48,justifyContent:"flex-start",marginTop:60}}>
+          {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} style={{textAlign:"left"}}>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.text,lineHeight:1,opacity:.8}}>{s.n}</div>
             <div style={{fontSize:9,color:theme.textMuted,letterSpacing:".14em",textTransform:"uppercase",marginTop:5,opacity:.6}}>{s.l}</div>
           </div>)}

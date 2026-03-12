@@ -34,10 +34,10 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
   },[filter]);
 
   return <>
-    {/* HERO — editorial wide */}
-    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"120px 60px 80px",textAlign:"center",position:"relative"}}>
+    {/* HERO — editorial wide left-aligned */}
+    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 60px 80px",textAlign:"left",position:"relative"}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"72px 72px",pointerEvents:"none",opacity:.4}}/>
-      <div style={{position:"relative",zIndex:1,maxWidth:900}}>
+      <div style={{position:"relative",zIndex:1,maxWidth:900,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:10,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>
           <span style={{width:5,height:5,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>Available for Select Projects
         </div>
@@ -45,8 +45,8 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
           Michael<br/>Gaitho
         </h1>
         <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(14px,2vw,20px)",marginBottom:36,minHeight:30,letterSpacing:".08em"}}><Typewriter words={["Frontend Architect","UI/UX Designer","Motion Engineer","Creative Technologist"]} theme={theme}/></div>
-        <p style={{fontSize:17,color:theme.textMuted,maxWidth:520,margin:"0 auto 40px",lineHeight:1.85,opacity:.85,fontFamily:"'DM Sans',sans-serif"}}>Crafting exceptional digital experiences at the intersection of design and engineering — Nakuru, Kenya 🇰🇪</p>
-        <div ref={heroCtaRef} style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap"}}>
+        <p style={{fontSize:17,color:theme.textMuted,maxWidth:520,margin:"0 0 40px 0",lineHeight:1.85,opacity:.85,fontFamily:"'DM Sans',sans-serif"}}>Crafting exceptional digital experiences at the intersection of design and engineering — Nakuru, Kenya 🇰🇪</p>
+        <div ref={heroCtaRef} style={{display:"flex",gap:14,justifyContent:"flex-start",flexWrap:"wrap"}}>
           <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Portfolio ↓</button>
           <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:2,letterSpacing:".08em"}}>Start Conversation</button>
         </div>
