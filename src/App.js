@@ -12,6 +12,10 @@ import { LightLayout } from "./layouts/LightLayout";
 export default function App() {
   const [themeKey,setThemeKey]=useState("forest");
   const theme=THEMES[themeKey];
+  const isForest=themeKey==="forest";
+  const isMidnight=themeKey==="midnight";
+  const isVoid=themeKey==="void";
+  const isLight=themeKey==="light";
   const [devMode,setDevMode]=useState(false);
   const [showGrid,setShowGrid]=useState(false);
   const [loading,setLoading]=useState(true);
@@ -78,10 +82,7 @@ export default function App() {
     </div>
   );
 
-  const isVoid = themeKey==="void";
-  const isLight = themeKey==="light";
-  const isMidnight = themeKey==="midnight";
-
+  
   return (
     <div style={{background:theme.bg,color:theme.text,minHeight:"100vh",overflowX:"hidden",position:"relative"}}>
       <GSAPLoader/><style>{css}</style>
@@ -92,18 +93,49 @@ export default function App() {
       {/* NAV */}
       <nav ref={navRef} style={{
         position:"fixed",top:0,left:0,right:0,zIndex:1000,
-        padding:`0 ${isVoid||isMidnight?"60px":"40px"}`,
-        height:62,display:"flex",alignItems:"center",justifyContent:"space-between",
-        background:`${theme.bg}${isVoid?"F8":"88"}`,
-        backdropFilter:isVoid?"none":"blur(14px)",
-        borderBottom:`${isVoid?"2px":"1px"} solid ${theme.border}`,
-        transition:"background .4s",
+        padding:`0 ${isVoid?"60px":isMidnight?"80px":"40px"}`,
+        height:isVoid?72:isMidnight?68:62,display:"flex",alignItems:"center",justifyContent:"space-between",
+        background:isVoid?theme.bg:isMidnight?`linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgAlt} 100%)`:isLight?`rgba(255,255,255,0.95)`:`${theme.bg}CC`,
+        backdropFilter:isVoid?"none":isLight?"blur(20px)":"blur(14px)",
+        borderBottom:isVoid?"none":isMidnight?`2px solid ${theme.accent}22`:isLight?`1px solid ${theme.border}`:`${isForest?"2px":"1px"} solid ${theme.border}`,
+        boxShadow:isLight?"0 2px 20px rgba(0,0,0,0.08)":isVoid?"none":isMidnight?"0 4px 30px rgba(90,139,200,0.15)":"0 2px 20px rgba(0,0,0,0.3)",
+        transition:"all .4s cubic-bezier(0.4, 0, 0.2, 1)",
+        ...(isVoid && {clipPath:"polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%)"}),
+        ...(isForest && {borderLeft:`4px solid ${theme.accent}`}),
       }}>
-        <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:isVoid?14:17,letterSpacing:isVoid?".08em":"-.02em",color:theme.text,opacity:.9,textTransform:isVoid?"uppercase":"none"}}>
-          {isVoid?"MG":"M"}<span style={{color:theme.accent}}>{isVoid?"_":"."}</span>{isVoid?"":"Gaitho"}
+        <div style={{
+          fontFamily:isVoid?"'Space Mono',monospace":"'Syne',sans-serif", 
+          fontWeight:isVoid?400:800, 
+          fontSize:isVoid?12:isMidnight?18:17, 
+          letterSpacing:isVoid?".2em":isMidnight?".01em":"-.02em",
+          color:theme.text, 
+          opacity:isVoid?.7:.9, 
+          textTransform:isVoid?"uppercase":"none",
+          ...(isForest && {textShadow:"0 1px 3px rgba(0,0,0,0.3)"})
+        }}>
+          {isVoid?"MG":isMidnight?"MICHAEL GAITHO":"M"}<span style={{color:theme.accent}}>{isVoid?"_":isMidnight?"":"."}</span>{isVoid?"":isMidnight?"":"Gaitho"}
         </div>
-        <div style={{display:"flex",gap:isVoid?18:22,alignItems:"center"}}>
-          {navLabels[themeKey].map(l=><button key={l} className="nl" onClick={()=>scrollTo(l.toLowerCase())}>{isVoid?l.toUpperCase():l}</button>)}
+        <div style={{display:"flex",gap:isVoid?24:isMidnight?28:22,alignItems:"center"}}>
+          {navLabels[themeKey].map(l=><button 
+            key={l} 
+            className="nl" 
+            onClick={()=>scrollTo(l.toLowerCase())}
+            style={{
+              fontFamily:isVoid?"'Space Mono',monospace":"'Syne',sans-serif",
+              fontSize:isVoid?9:isMidnight?11:10,
+              fontWeight:isVoid?700:isMidnight?600:500,
+              letterSpacing:isVoid?".15em":isMidnight?".08em":".02em",
+              textTransform:isVoid?"uppercase":"none",
+              padding:isVoid?"8px 12px":isMidnight?"6px 14px":"4px 8px",
+              borderRadius:isVoid?"0":isMidnight?"2px":"4px",
+              border:isVoid?`1px solid ${theme.border}`:isMidnight?`1px solid ${theme.border}33`:"none",
+              background:isVoid?"transparent":isMidnight?"transparent":isLight?"rgba(58,122,82,0.1)":"transparent",
+              color:theme.text,
+              opacity:isVoid?.6:.8,
+              transition:"all .2s ease",
+              cursor:"pointer"
+            }}
+          >{isVoid?l.toUpperCase():isMidnight?l:l}</button>)}
         </div>
       </nav>
 
