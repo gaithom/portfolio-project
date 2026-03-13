@@ -227,7 +227,12 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
               <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.7}}>Message</label>
               <textarea style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s"}} rows={6} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
-            <button className="bp" onClick={()=>setSent(true)} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"16px",borderRadius:2,letterSpacing:".08em"}}>Send Message →</button>
+            <button className="bp" onClick={()=>{
+              const subject = encodeURIComponent(form.subject || "Portfolio Contact");
+              const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
+              window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
+              setSent(true);
+            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"16px",borderRadius:2,letterSpacing:".08em"}}>Send Message →</button>
           </>}
         </div>
       </div>

@@ -211,7 +211,12 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
             </div>
-            <button className="bp" onClick={()=>setSent(true)} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:13,padding:"13px",borderRadius:5}}>Send Message →</button>
+            <button className="bp" onClick={()=>{
+              const subject = encodeURIComponent(form.subject || "Portfolio Contact");
+              const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
+              window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
+              setSent(true);
+            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:13,padding:"12px 15px",borderRadius:4}}>Send Message →</button>
           </>}
         </div>
       </div>

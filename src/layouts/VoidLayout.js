@@ -188,7 +188,12 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
               <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.6}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 14px",background:"transparent",border:`1px solid ${theme.borderMid}`,borderRadius:0,color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Brief me." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
-            <button className="bp" onClick={()=>setSent(true)} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:11,padding:"14px",borderRadius:0,letterSpacing:".1em",textTransform:"uppercase"}}>SEND →</button>
+            <button className="bp" onClick={()=>{
+              const subject = encodeURIComponent(form.subject || "Portfolio Contact");
+              const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
+              window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
+              setSent(true);
+            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:11,padding:"14px",borderRadius:0,letterSpacing:".1em",textTransform:"uppercase"}}>SEND →</button>
           </>}
         </div>
       </div>
