@@ -9,7 +9,7 @@ import { VoidLayout } from "./layouts/VoidLayout";
 import { LightLayout } from "./layouts/LightLayout";
 
 export default function App() {
-  const [themeKey,setThemeKey]=useState("forest");
+  const [themeKey,setThemeKey]=useState("light");
   const theme=THEMES[themeKey];
   const isForest=themeKey==="forest";
   const isMidnight=themeKey==="midnight";

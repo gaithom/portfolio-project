@@ -8,8 +8,6 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroSubRef=useRef(null),heroCtaRef=useRef(null);
   const aboutRef=useRef(null),aboutImgRef=useRef(null),aboutTxtRef=useRef(null);
   const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
-  const [filter,setFilter]=useState("All");
-  const filtered=filter==="All"?PROJECTS:PROJECTS.filter(p=>p.tags.includes(filter));
 
   useGSAP((gsap,ST)=>{
     const tl=gsap.timeline({delay:.15});
@@ -99,10 +97,10 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60,padding:"80px 60px 30px"}}>
         <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ WORK</div></div>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-          {["All","UI/UX","Web App","Research"].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:"5px 12px",fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"'Space Mono',monospace",letterSpacing:".08em",textTransform:"uppercase",border:`1px solid ${filter===f?theme.accent:theme.borderMid}`,borderRadius:0,background:filter===f?theme.accent:"transparent",color:filter===f?theme.bg:theme.textMuted,transition:"all .15s"}}>{f}</button>)}
+          <span style={{fontSize:10,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>Projects</span>
         </div>
       </div>
-      {filtered.map((p,i)=>{
+      {PROJECTS.map((p,i)=>{
         const [h,setH]=useState(false);
         return <div key={p.id} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setSel(p)} style={{display:"grid",gridTemplateColumns:"200px 1fr auto",gap:60,padding:"28px 60px",borderTop:`1px solid ${theme.border}`,cursor:"pointer",background:h?theme.surfaceAlt:"transparent",transition:"background .15s"}}>
           <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,opacity:.4,paddingTop:6}}>{String(i+1).padStart(2,"0")}</div>
@@ -110,10 +108,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,color:theme.text,opacity:.9,textTransform:"uppercase",letterSpacing:".02em",marginBottom:4}}>{p.title}</h3>
             <p style={{fontSize:12,color:theme.textMuted,opacity:.7}}>{p.desc}</p>
           </div>
-          <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap"}}>
-            {p.tags.map(t=><span key={t} style={{fontSize:9,fontWeight:700,color:theme.textMuted,border:`1px solid ${theme.border}`,padding:"2px 7px",letterSpacing:".08em",textTransform:"uppercase"}}>{t}</span>)}
-            <span style={{fontSize:12,color:theme.textMuted,opacity:h?.7:.25,transition:"opacity .15s",marginLeft:10}}>→</span>
-          </div>
+          <div style={{fontSize:42,opacity:.6}}>{p.emoji}</div>
         </div>;
       })}
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}

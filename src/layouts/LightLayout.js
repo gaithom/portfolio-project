@@ -7,8 +7,6 @@ import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../dat
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroCtaRef=useRef(null);
   const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
-  const [filter,setFilter]=useState("All");
-  const filtered=filter==="All"?PROJECTS:PROJECTS.filter(p=>p.tags.includes(filter));
 
   useGSAP((gsap,ST)=>{
     const tl=gsap.timeline({delay:.2});
@@ -32,7 +30,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           Available for Freelance
         </div>
         <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(40px,8vw,88px)",fontWeight:800,lineHeight:1.0,letterSpacing:"-.03em",marginBottom:20,color:theme.text}}>
-          Michael Gaitho,<br/><span style={{color:theme.accent}}>Frontend Dev.</span>
+          Michael Gaitho.<span style={{color:theme.accent}}>DEV</span>
         </h1>
         <p style={{fontSize:16,color:theme.textMuted,maxWidth:440,margin:"0 0 12px 0",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
         <p style={{fontSize:13,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
@@ -121,18 +119,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:40}}>
           <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Portfolio</span>
-          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:24,color:theme.text}}>Selected Work</h2>
-          <div style={{display:"flex",gap:7,justifyContent:"center",flexWrap:"wrap"}}>
-            {["All","UI/UX","Web App","Research"].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"'Syne',sans-serif",letterSpacing:".07em",border:`1px solid ${filter===f?theme.borderMid:theme.border}`,background:filter===f?theme.surface:"transparent",color:filter===f?theme.text:theme.textMuted,opacity:filter===f?1:.6,transition:"all .2s",boxShadow:filter===f?theme.shadow:"none"}}>{f}</button>)}
-          </div>
+          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:24,color:theme.text}}>Projects</h2>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(310px,1fr))",gap:18}}>
-          {filtered.map((p)=>{
+          {PROJECTS.map((p)=>{
             const [h,setH]=useState(false);
             return <div key={p.id} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setSel(p)} style={{background:theme.surface,border:`1px solid ${h?theme.borderMid:theme.border}`,borderRadius:8,overflow:"hidden",cursor:"pointer",transform:h?"translateY(-4px)":"translateY(0)",transition:"all .28s",boxShadow:h?theme.shadowMd:theme.shadow}}>
               <div style={{height:140,background:p.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42}}>{p.emoji}</div>
               <div style={{padding:"16px 20px 22px"}}>
-                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:8}}>{p.tags.map(t=><span key={t} style={{fontSize:9,fontWeight:600,letterSpacing:".1em",textTransform:"uppercase",color:theme.textMuted,border:`1px solid ${theme.border}`,borderRadius:3,padding:"2px 7px"}}>{t}</span>)}</div>
                 <h3 style={{fontSize:15,fontWeight:700,margin:"0 0 6px",fontFamily:"'Syne',sans-serif",color:theme.text}}>{p.title}</h3>
                 <p style={{fontSize:12,color:theme.textMuted,margin:0,lineHeight:1.75}}>{p.desc}</p>
               </div>

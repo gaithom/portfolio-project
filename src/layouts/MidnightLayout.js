@@ -10,8 +10,6 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
   const aboutRef=useRef(null),aboutImgRef=useRef(null),aboutTxtRef=useRef(null);
   const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
   const hPanelRef=useRef(null),hTrackRef=useRef(null);
-  const [filter,setFilter]=useState("All");
-  const filtered=filter==="All"?PROJECTS:PROJECTS.filter(p=>p.tags.includes(filter));
 
   useGSAP((gsap,ST)=>{
     const tl=gsap.timeline({delay:.2});
@@ -27,13 +25,6 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     if(ti)gsap.fromTo(ti,{x:-35,opacity:0},{x:0,opacity:1,stagger:.12,duration:.75,ease:"expo.out",scrollTrigger:{trigger:timelineRef.current,start:"top 82%"}});
     gsap.fromTo(contactRef.current,{y:30,opacity:0},{y:0,opacity:1,duration:.85,ease:"expo.out",scrollTrigger:{trigger:contactRef.current,start:"top 84%"}});
   },[]);
-  useGSAP((gsap,ST)=>{
-    if(hPanelRef.current && hTrackRef.current) {
-      const track=hTrackRef.current,panel=hPanelRef.current,totalW=track.scrollWidth-panel.offsetWidth;
-      const hst=ST.create({trigger:panel,start:"top top",end:()=>`+=${totalW+100}`,pin:true,scrub:1.2,anticipatePin:1,onUpdate:self=>{track.style.transform=`translateX(-${self.progress*totalW}px)`;}});
-      return()=>hst.kill();
-    }
-  },[filter]);
 
   return <>
     {/* HERO — editorial wide left-aligned with Pac-Man */}
@@ -138,26 +129,21 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
 
     {/* PROJECTS — editorial horizontal scroll */}
     <section id="projects" style={{position:"relative"}}>
-      <div style={{textAlign:"center",marginBottom:40,padding:"0 60px"}}>
+      <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Portfolio</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:24,color:theme.text}}>Selected Projects</h2>
-        <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
-          {["All","UI/UX","Web App","Research"].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:"8px 20px",borderRadius:2,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"'Space Mono',monospace",letterSpacing:".08em",textTransform:"uppercase",border:`1px solid ${filter===f?theme.borderMid:theme.border}`,background:filter===f?theme.surface:"transparent",color:filter===f?theme.text:theme.textMuted,opacity:filter===f?1:.6,transition:"all .2s"}}>{f}</button>)}
-        </div>
+        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:24,color:theme.text}}>Projects</h2>
       </div>
       <div ref={hPanelRef} style={{overflow:"hidden",position:"relative",height:"100vh"}}>
-        <div ref={hTrackRef} style={{display:"flex",gap:24,padding:"60px 60px 60px 60px",willChange:"transform",alignItems:"center",height:"100%",width:"max-content"}}>
-          {filtered.map((p,i)=>{
-            const [h,setH]=useState(false);const ref=useRef(null);
-            return <div key={p.id} ref={ref} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setSel(p)} style={{width:340,flexShrink:0,background:h?theme.surface:theme.surfaceAlt,border:`1px solid ${h?theme.borderMid:theme.border}`,borderRadius:2,overflow:"hidden",cursor:"pointer",transform:h?"translateY(-8px)":"translateY(0)",transition:"all .3s",boxShadow:h?theme.shadowMd:theme.shadow}}>
-              <div style={{height:160,background:p.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{p.emoji}</div>
+        <div ref={hTrackRef} style={{display:"flex",gap:24,padding:"0 40px",height:"100%",alignItems:"center"}}>
+          {PROJECTS.map((project,i)=>(
+            <div key={project.id} style={{width:340,flexShrink:0,background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:2,overflow:"hidden",cursor:"pointer",transform:"translateY(0)",transition:"all .3s",boxShadow:theme.shadow}}>
+              <div style={{height:160,background:project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{project.emoji}</div>
               <div style={{padding:"20px 24px 28px"}}>
-                <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>{p.tags.map(t=><span key={t} style={{fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:theme.textMuted,border:`1px solid ${theme.border}`,borderRadius:2,padding:"3px 8px",fontFamily:"'Space Mono',monospace"}}>{t}</span>)}</div>
-                <h3 style={{fontSize:17,fontWeight:700,margin:"0 0 8px",fontFamily:"'Syne',sans-serif",color:theme.text,letterSpacing:"-.01em"}}>{p.title}</h3>
-                <p style={{fontSize:13,color:theme.textMuted,margin:0,lineHeight:1.8}}>{p.desc}</p>
+                <h3 style={{fontSize:17,fontWeight:700,margin:"0 0 8px",fontFamily:"'Syne', sans-serif",color:theme.text,letterSpacing:"-.01em"}}>{project.title}</h3>
+                <p style={{fontSize:13,color:theme.textMuted,margin:0,lineHeight:1.8}}>{project.desc}</p>
               </div>
-            </div>;
-          })}
+            </div>
+          ))}
         </div>
       </div>
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
