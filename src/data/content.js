@@ -30,7 +30,7 @@ export const TIMELINE = [
 ];
 
 export const CONTACT_INFO = [
-  {icon:"📧",title:"Email",value:"michaelgaitho47@gmail.com",link:"mailto:michaelgaitho47@gmail.com"},
+  {icon:"📧",title:"Email",value:"michaelgaitho47@gmail.com",link:"#contact",action:"scroll"},
   {icon:"🔗",title:"LinkedIn",value:"linkedin.com/in/michael-gaitho-99b02a355",link:"https://www.linkedin.com/in/michael-gaitho-99b02a355/"},
   {icon:"🐙",title:"GitHub",value:"github.com/gaithom",link:"https://github.com/gaithom"}
 ];

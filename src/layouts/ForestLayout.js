@@ -27,7 +27,8 @@ function ProjectCard({ project, theme, onSelect }) {
       onMouseMove={handleMouseMove} 
       onClick={() => onSelect(project)} 
       style={{
-        width: 305,
+        width: "100%",
+        maxWidth: 450,
         flexShrink: 0,
         background: hovered ? theme.surface : theme.surfaceAlt,
         border: `1px solid ${hovered ? theme.borderMid : theme.border}`,
@@ -69,8 +70,6 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
   const aboutRef=useRef(null),aboutImgRef=useRef(null),aboutTxtRef=useRef(null);
   const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
   const hPanelRef=useRef(null),hTrackRef=useRef(null);
-  const [filter,setFilter]=useState("All");
-  const filtered=filter==="All"?PROJECTS:PROJECTS.filter(p=>p.tags.includes(filter));
 
   useGSAP((gsap,ST)=>{
     const tl=gsap.timeline({delay:.2});
@@ -90,13 +89,6 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     gsap.fromTo(contactRef.current,{y:36,opacity:0},{y:0,opacity:1,duration:.95,ease:"expo.out",scrollTrigger:{trigger:contactRef.current,start:"top 84%"}});
     document.querySelectorAll(".gsap-h-f").forEach(el=>gsap.fromTo(el,{clipPath:"inset(0 100% 0 0)",opacity:0},{clipPath:"inset(0 0% 0 0)",opacity:1,duration:1.1,ease:"expo.inOut",scrollTrigger:{trigger:el,start:"top 88%",toggleActions:"play none none none"}}));
   },[]);
-  useGSAP((gsap,ST)=>{
-    if(hPanelRef.current && hTrackRef.current) {
-      const track=hTrackRef.current,panel=hPanelRef.current,totalW=track.scrollWidth-panel.offsetWidth;
-      const hst=ST.create({trigger:panel,start:"top top",end:()=>`+=${totalW+100}`,pin:true,scrub:1.1,anticipatePin:1,onUpdate:self=>{track.style.transform=`translateX(-${self.progress*totalW}px)`;}});
-      return()=>hst.kill();
-    }
-  },[filter]);
 
   return <>
     {/* HERO — organic curved bottom with car game */}
@@ -200,20 +192,18 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
 
     {/* PROJECTS — horizontal scroll */}
     <section id="projects" style={{padding:"80px 0 0",position:"relative"}}>
-      <div style={{textAlign:"center",marginBottom:34,padding:"0 40px"}}>
-        <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
-        <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:20,color:theme.text,opacity:.9}}>Selected Work</h2>
-        <div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap"}}>
-          {["All","UI/UX","Web App","Research"].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:"7px 18px",borderRadius:99,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"'Syne',sans-serif",letterSpacing:".07em",border:`1px solid ${filter===f?theme.borderMid:theme.border}`,background:filter===f?theme.surface:"transparent",color:filter===f?theme.text:theme.textMuted,opacity:filter===f?.9:.55,transition:"all .2s"}}>{f}</button>)}
+      <ScrollReveal theme={theme} direction="up" delay={0.3}>
+        <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
+          <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
+          <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>My Projects</h2>
         </div>
-      </div>
-      <div ref={hPanelRef} style={{overflow:"hidden",position:"relative",height:"100vh"}}>
-        <div ref={hTrackRef} style={{display:"flex",gap:20,padding:"55px 55px 55px 48px",willChange:"transform",alignItems:"center",height:"100%",width:"max-content"}}>
-          {filtered.map((project,i) => (
-            <ProjectCard key={project.id} project={project} theme={theme} onSelect={setSel} />
-          ))}
-        </div>
-        <div style={{position:"absolute",bottom:18,right:38,fontSize:9,color:theme.textMuted,letterSpacing:".15em",textTransform:"uppercase",opacity:.3}}>scroll →</div>
+      </ScrollReveal>
+      <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(400px,1fr))",gap:40,padding:"0 40px"}}>
+        {PROJECTS.map((project,i)=>(
+          <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
+            <ProjectCard project={project} theme={theme} onSelect={setSel}/>
+          </ScrollReveal>
+        ))}
       </div>
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
     </section>
@@ -269,7 +259,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
           {CONTACT_INFO.map((c,i)=>(
-            <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
+            <a key={i} href={c.link} onClick={(e)=>{if(c.action==="scroll"){e.preventDefault();scrollTo("contact");}}} target={c.action==="scroll"?"_self":"_blank"} rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:32}}>{c.icon}</div>
               <div style={{fontSize:14,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
               <div style={{fontSize:12,color:theme.textMuted,opacity:.8}}>{c.value}</div>
@@ -295,7 +285,12 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
               <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.6}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
-            <button className="bp" onClick={()=>setSent(true)} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:13,padding:"14px",borderRadius:"12px 3px 12px 3px"}}>Send Message →</button>
+            <button className="bp" onClick={()=>{
+              const subject = encodeURIComponent(form.subject || "Portfolio Contact");
+              const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
+              window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
+              setSent(true);
+            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:13,padding:"14px",borderRadius:"12px 3px 12px 3px"}}>Send Message →</button>
           </>}
         </div>
         </div>
