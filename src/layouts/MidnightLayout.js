@@ -28,10 +28,11 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     gsap.fromTo(contactRef.current,{y:30,opacity:0},{y:0,opacity:1,duration:.85,ease:"expo.out",scrollTrigger:{trigger:contactRef.current,start:"top 84%"}});
   },[]);
   useGSAP((gsap,ST)=>{
-    if(!hPanelRef.current||!hTrackRef.current) return;
-    const track=hTrackRef.current,panel=hPanelRef.current,totalW=track.scrollWidth-panel.offsetWidth;
-    const hst=ST.create({trigger:panel,start:"top top",end:()=>`+=${totalW+100}`,pin:true,scrub:1.2,anticipatePin:1,onUpdate:self=>{track.style.transform=`translateX(-${self.progress*totalW}px)`;}});
-    return()=>hst.kill();
+    if(hPanelRef.current && hTrackRef.current) {
+      const track=hTrackRef.current,panel=hPanelRef.current,totalW=track.scrollWidth-panel.offsetWidth;
+      const hst=ST.create({trigger:panel,start:"top top",end:()=>`+=${totalW+100}`,pin:true,scrub:1.2,anticipatePin:1,onUpdate:self=>{track.style.transform=`translateX(-${self.progress*totalW}px)`;}});
+      return()=>hst.kill();
+    }
   },[filter]);
 
   return <>

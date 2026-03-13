@@ -91,10 +91,11 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     document.querySelectorAll(".gsap-h-f").forEach(el=>gsap.fromTo(el,{clipPath:"inset(0 100% 0 0)",opacity:0},{clipPath:"inset(0 0% 0 0)",opacity:1,duration:1.1,ease:"expo.inOut",scrollTrigger:{trigger:el,start:"top 88%",toggleActions:"play none none none"}}));
   },[]);
   useGSAP((gsap,ST)=>{
-    if(!hPanelRef.current||!hTrackRef.current) return;
-    const track=hTrackRef.current,panel=hPanelRef.current,totalW=track.scrollWidth-panel.offsetWidth;
-    const hst=ST.create({trigger:panel,start:"top top",end:()=>`+=${totalW+100}`,pin:true,scrub:1.1,anticipatePin:1,onUpdate:self=>{track.style.transform=`translateX(-${self.progress*totalW}px)`;}});
-    return()=>hst.kill();
+    if(hPanelRef.current && hTrackRef.current) {
+      const track=hTrackRef.current,panel=hPanelRef.current,totalW=track.scrollWidth-panel.offsetWidth;
+      const hst=ST.create({trigger:panel,start:"top top",end:()=>`+=${totalW+100}`,pin:true,scrub:1.1,anticipatePin:1,onUpdate:self=>{track.style.transform=`translateX(-${self.progress*totalW}px)`;}});
+      return()=>hst.kill();
+    }
   },[filter]);
 
   return <>
