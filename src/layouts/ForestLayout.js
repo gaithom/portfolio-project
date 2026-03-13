@@ -159,16 +159,16 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           </div>
           <div style={{position:"absolute",top:8,left:-18,background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"4px 12px 4px 12px",padding:"9px 15px",backdropFilter:"blur(12px)",animation:"floatYR 4.5s ease-in-out infinite .4s",boxShadow:theme.shadow}}>
             <div style={{fontSize:8,color:theme.textMuted,letterSpacing:".12em",marginBottom:2,opacity:.65}}>AT</div>
-            <div style={{fontWeight:600,fontSize:12,color:theme.text,opacity:.85}}>🧠 LishAI Labs</div>
+            <div style={{fontWeight:600,fontSize:12,color:theme.text,opacity:.85}}>🧠 AI Interfaces</div>
           </div>
         </div>
         <div ref={aboutTxtRef}>
           <span className="sec-label">About Me</span>
-          <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,3.5vw,40px)",fontWeight:800,lineHeight:1.15,letterSpacing:"-.02em",marginBottom:20,color:theme.text,opacity:.9}}>
+          <h2 className="gsap-h-f" style={{fontFamily:theme.headingFont,fontSize:"clamp(26px,3.5vw,40px)",fontWeight:800,lineHeight:1.15,letterSpacing:"-.02em",marginBottom:20,color:theme.text,opacity:.9}}>
             Crafting interfaces<br/><span style={{color:theme.accent,opacity:.82}}>worth remembering</span>
           </h2>
-          <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:14,fontSize:14}}>Frontend Developer & UI/UX designer at <span style={{color:theme.text,fontWeight:500}}>LishAI Labs</span> in Nakuru.</p>
-          <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:28,fontSize:14}}>Bachelor of IT at <span style={{color:theme.text,fontWeight:500}}>Kabarak University</span>, blending academic rigour with real-world craft.</p>
+          <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:14,fontSize:14}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
+          <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:28,fontSize:14}}>Bachelor of IT student, blending academic rigour with real-world craft.</p>
           <div style={{display:"flex",gap:11,flexWrap:"wrap"}}><button className="bp">Download CV</button><button className="bg" onClick={()=>scrollTo("projects")}>See My Work</button></div>
         </div>
         </div>

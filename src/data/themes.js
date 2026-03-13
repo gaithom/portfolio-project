@@ -9,6 +9,11 @@ export const THEMES = {
     shadow:"0 4px 28px rgba(0,0,0,0.38)", shadowMd:"0 8px 44px rgba(0,0,0,0.46)",
     particleRgb:"155,205,170",
     devAccent:"#00FF88", devBg:"rgba(2,12,6,0.97)", devBorder:"rgba(0,255,136,0.22)",
+    // Fonts
+    fontFamily:"'Syne', sans-serif",
+    headingFont:"'Syne', sans-serif",
+    bodyFont:"'DM Sans', sans-serif",
+    monoFont:"'Space Mono', monospace",
     // Layout personality: organic, asymmetric, nature-coded
     heroRadius:"0 0 60% 60% / 0 0 40px 40px",
     cardRadius:"18px 4px 18px 4px",
@@ -24,6 +29,11 @@ export const THEMES = {
     shadow:"0 4px 28px rgba(0,0,0,0.44)", shadowMd:"0 8px 44px rgba(0,0,0,0.52)",
     particleRgb:"155,182,232",
     devAccent:"#4DBBFF", devBg:"rgba(0,4,18,0.97)", devBorder:"rgba(77,187,255,0.22)",
+    // Fonts
+    fontFamily:"'Merriweather', serif",
+    headingFont:"'Merriweather', serif",
+    bodyFont:"'Lora', serif",
+    monoFont:"'Fira Code', monospace",
     // Layout personality: editorial, magazine, wide typography
     heroRadius:"0",
     cardRadius:"2px",
@@ -39,6 +49,11 @@ export const THEMES = {
     shadow:"0 4px 28px rgba(0,0,0,0.55)", shadowMd:"0 8px 44px rgba(0,0,0,0.65)",
     particleRgb:"200,195,225",
     devAccent:"#BB86FC", devBg:"rgba(4,2,10,0.97)", devBorder:"rgba(187,134,252,0.22)",
+    // Fonts
+    fontFamily:"'Space Grotesk', sans-serif",
+    headingFont:"'Space Grotesk', sans-serif",
+    bodyFont:"'Space Mono', monospace",
+    monoFont:"'IBM Plex Mono', monospace",
     // Layout personality: brutalist, bold, raw
     heroRadius:"0",
     cardRadius:"0",
@@ -54,6 +69,11 @@ export const THEMES = {
     shadow:"0 4px 24px rgba(0,0,0,0.07)", shadowMd:"0 8px 40px rgba(0,0,0,0.10)",
     particleRgb:"80,138,100",
     devAccent:"#1A7A40", devBg:"rgba(248,252,249,0.98)", devBorder:"rgba(26,122,64,0.22)",
+    // Fonts
+    fontFamily:"'Poppins', sans-serif",
+    headingFont:"'Poppins', sans-serif",
+    bodyFont:"'Inter', sans-serif",
+    monoFont:"'SF Mono', monospace",
     // Layout personality: airy, minimal, Swiss grid
     heroRadius:"0",
     cardRadius:"8px",

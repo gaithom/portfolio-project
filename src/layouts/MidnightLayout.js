@@ -94,11 +94,11 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,marginBottom:32}}>
             <div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Expertise</h3>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Frontend Developer & UI/UX Designer at <strong>LishAI Labs</strong>, specializing in AI-powered interfaces and real-time analytics.</p>
+              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Frontend Developer & UI/UX Designer specializing in AI-powered interfaces and real-time analytics.</p>
             </div>
             <div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Education</h3>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Bachelor of IT at <strong>Kabarak University</strong>, focusing on software engineering and human-computer interaction.</p>
+              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Bachelor of IT student focusing on software engineering and human-computer interaction.</p>
             </div>
           </div>
           <div style={{display:"flex",gap:12}}><button className="bp" style={{borderRadius:2,letterSpacing:".08em"}}>Download CV</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Work →</button></div>

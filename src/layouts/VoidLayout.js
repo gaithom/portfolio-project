@@ -60,10 +60,10 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,5vw,64px)",fontWeight:800,lineHeight:.9,letterSpacing:"-.03em",marginBottom:40,color:theme.text,textTransform:"uppercase"}}>BUILDING<br/>THINGS<br/><span style={{color:theme.accent,opacity:.85}}>THAT WORK</span></h2>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40}}>
             <div style={{borderTop:`2px solid ${theme.borderMid}`,paddingTop:20}}>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Frontend Developer & UI/UX designer at <span style={{color:theme.text,fontWeight:700}}>LishAI Labs</span>, Nakuru. I build AI-powered interfaces that actually work.</p>
+              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
             </div>
             <div style={{borderTop:`2px solid ${theme.borderMid}`,paddingTop:20}}>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Pursuing Bachelor of IT at <span style={{color:theme.text,fontWeight:700}}>Kabarak University</span>. Bridging academic theory with real-world production code.</p>
+              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Pursuing Bachelor of IT. Bridging academic theory with real-world production code.</p>
             </div>
           </div>
           <div style={{marginTop:40,display:"flex",gap:10}}><button className="bp" style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>CV.PDF</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>WORK →</button></div>

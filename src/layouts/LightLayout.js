@@ -67,16 +67,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div style={{fontSize:36,marginBottom:18,opacity:.8}}>👨🏾‍💻</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>Michael Gaitho</h3>
-            <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Frontend Developer & UI/UX designer at LishAI Labs, Nakuru. I craft beautiful, performant web experiences.</p>
+            <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
           </div>
           <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div style={{fontSize:36,marginBottom:18,opacity:.8}}>🧠</div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>LishAI Labs</h3>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>AI Development</h3>
             <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Building AI-powered web interfaces and dashboards. Leading frontend architecture and UI/UX design decisions.</p>
           </div>
           <div style={{background:theme.accent,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div style={{fontSize:36,marginBottom:18}}>🎓</div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.bg}}>Kabarak University</h3>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.bg}}>Education</h3>
             <p style={{color:theme.bg,fontSize:13,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction. Expected 2026.</p>
           </div>
         </div>

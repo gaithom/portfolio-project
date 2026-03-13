@@ -37,10 +37,10 @@ export default function App() {
 
   // Global CSS
   const css=`
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;}
-    body{background:${theme.bg};color:${theme.text};font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+    body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:hidden;}
     ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:${theme.bg}}::-webkit-scrollbar-thumb{background:${theme.textMuted};border-radius:99px;opacity:.45}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -53,13 +53,13 @@ export default function App() {
     @keyframes pulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.1);opacity:.75}}
     @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     @keyframes scrollBounce{0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-8px)}60%{transform:translateX(-50%) translateY(-4px)}}
-    .nl{opacity:.5;transition:opacity .2s,color .2s;background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;color:${theme.text};font-size:11px;font-weight:700;letterSpacing:.1em;text-transform:uppercase;}
+    .nl{opacity:.5;transition:opacity .2s,color .2s;background:none;border:none;cursor:pointer;font-family:${theme.bodyFont};color:${theme.text};font-size:11px;font-weight:700;letterSpacing:.1em;text-transform:uppercase;}
     .nl:hover{opacity:.9;color:${theme.accent};}
-    .bp{display:inline-block;padding:12px 26px;background:${theme.accent};color:${theme.bg};border:none;border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:'Syne',sans-serif;transition:transform .2s,box-shadow .2s,opacity .2s;text-decoration:none;opacity:.88;}
+    .bp{display:inline-block;padding:12px 26px;background:${theme.accent};color:${theme.bg};border:none;border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:${theme.bodyFont};transition:transform .2s,box-shadow .2s,opacity .2s;text-decoration:none;opacity:.88;}
     .bp:hover{transform:translateY(-2px);box-shadow:${theme.shadowMd};opacity:1;}
-    .bg{display:inline-block;padding:12px 26px;background:transparent;color:${theme.text};border:1px solid ${theme.borderMid};border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:'Syne',sans-serif;transition:all .2s;text-decoration:none;opacity:.65;}
+    .bg{display:inline-block;padding:12px 26px;background:transparent;color:${theme.text};border:1px solid ${theme.borderMid};border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:${theme.bodyFont};transition:all .2s;text-decoration:none;opacity:.65;}
     .bg:hover{border-color:${theme.accent};color:${theme.accent};transform:translateY(-2px);opacity:1;}
-    .sec-label{font-size:10px;letterSpacing:.25em;text-transform:uppercase;color:${theme.textMuted};font-family:"'Space Mono',monospace";opacity:.65;}
+    .sec-label{font-size:10px;letterSpacing:.25em;text-transform:uppercase;color:${theme.textMuted};font-family:${theme.monoFont};opacity:.65;}
     input::placeholder,textarea::placeholder{color:${theme.textMuted};opacity:.5;}
     /* Dev mode outline */
     [data-dev-section]:hover{outline:1px dashed ${theme.devAccent};outline-offset:2px;}
@@ -107,7 +107,7 @@ export default function App() {
         ...(isForest && {borderLeft:`4px solid ${theme.accent}`}),
       }}>
         <div style={{
-          fontFamily:isVoid?"'Space Mono',monospace":"'Syne',sans-serif", 
+          fontFamily:isVoid?theme.monoFont:theme.headingFont, 
           fontWeight:isVoid?400:800, 
           fontSize:isVoid?12:isMidnight?18:17, 
           letterSpacing:isVoid?".2em":isMidnight?".01em":"-.02em",
@@ -124,7 +124,7 @@ export default function App() {
             className="nl" 
             onClick={()=>scrollTo(l.toLowerCase())}
             style={{
-              fontFamily:isVoid?"'Space Mono',monospace":"'Syne',sans-serif",
+              fontFamily:isVoid?theme.monoFont:theme.bodyFont,
               fontSize:isVoid?9:isMidnight?11:10,
               fontWeight:isVoid?700:isMidnight?600:500,
               letterSpacing:isVoid?".15em":isMidnight?".08em":".02em",
@@ -167,7 +167,7 @@ export default function App() {
           border:`1px solid ${devMode?theme.devAccent:theme.borderMid}`,
           borderRadius:themeKey==="void"?0:8,
           padding:"8px 14px",fontSize:10,fontWeight:700,
-          fontFamily:"'Space Mono',monospace",cursor:"pointer",
+          fontFamily:theme.monoFont,cursor:"pointer",
           letterSpacing:".07em",transition:"all .2s",
           boxShadow:devMode?"0 4px 20px rgba(0,0,0,.5)":theme.shadow,
         }}>
@@ -181,7 +181,7 @@ export default function App() {
           border:`1px solid ${theme.devBorder}`,
           borderRadius:themeKey==="void"?0:6,
           padding:"6px 12px",fontSize:9,fontWeight:700,
-          fontFamily:"'Space Mono',monospace",cursor:"pointer",
+          fontFamily:theme.monoFont,cursor:"pointer",
           letterSpacing:".07em",transition:"all .2s",
         }}>
           <span>⊞</span> GRID {showGrid?"ON":"OFF"}
@@ -213,13 +213,13 @@ export default function App() {
       {/* FOOTER */}
       <footer style={{borderTop:`${isVoid?"2px":"1px"} solid ${theme.border}`,padding:`${isVoid?"28px 60px":"28px 40px"}`,background:theme.bg}}>
         <div style={{maxWidth:isVoid||isMidnight?1200:1010,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16}}>
-          <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:isVoid?13:15,color:theme.text,opacity:.7,letterSpacing:isVoid?".1em":"-.01em",textTransform:isVoid?"uppercase":"none"}}>
+          <div style={{fontFamily:theme.headingFont,fontWeight:800,fontSize:isVoid?13:15,color:theme.text,opacity:.7,letterSpacing:isVoid?".1em":"-.01em",textTransform:isVoid?"uppercase":"none"}}>
             {isVoid?"MG_PORTFOLIO":"M"}<span style={{color:theme.accent}}>{isVoid?"":"."}</span>{isVoid?"":"Gaitho"}
           </div>
           <div style={{display:"flex",gap:18}}>
-            {["GitHub","LinkedIn","Twitter","Dribbble"].map(s=><a key={s} href="#" style={{fontSize:11,color:theme.textMuted,textDecoration:"none",fontWeight:isVoid?700:500,opacity:.45,transition:"opacity .2s,color .2s",letterSpacing:isVoid?".08em":"0",textTransform:isVoid?"uppercase":"none"}} onMouseEnter={e=>{e.target.style.opacity=.85;e.target.style.color=theme.text;}} onMouseLeave={e=>{e.target.style.opacity=.45;e.target.style.color=theme.textMuted;}}>{s}</a>)}
+            {["GitHub","LinkedIn","Twitter","Dribbble"].map(s=><a key={s} href="#" style={{fontSize:11,color:theme.textMuted,textDecoration:"none",fontWeight:isVoid?700:500,opacity:.45,transition:"opacity .2s,color .2s",letterSpacing:isVoid?".08em":"0",textTransform:isVoid?"uppercase":"none",fontFamily:theme.bodyFont}} onMouseEnter={e=>{e.target.style.opacity=.85;e.target.style.color=theme.text;}} onMouseLeave={e=>{e.target.style.opacity=.45;e.target.style.color=theme.textMuted;}}>{s}</a>)}
           </div>
-          <div style={{fontSize:10,color:theme.textMuted,opacity:.35,fontFamily:isVoid?"'Space Mono',monospace":"'DM Sans',sans-serif"}}>© 2025 Michael Gaitho · Nakuru, KE</div>
+          <div style={{fontSize:10,color:theme.textMuted,opacity:.35,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>© 2025 Michael Gaitho · Nakuru, KE</div>
         </div>
       </footer>
     </div>
