@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { GSAPLoader } from "./hooks/useGSAP";
 import { THEMES } from "./data/themes";
-import { TESTIMONIALS } from "./data/content";
 import { ParticleCanvas, CustomCursor, ScrollBar, Modal, ScrollProgress, ParallaxElement, ScrollReveal, ScrollIndicator } from "./components/Shared";
 import { DevBadge, PerfMeter, AnimDebugBand, GridGuide } from "./components/DeveloperMode";
 import { ForestLayout } from "./layouts/ForestLayout";
@@ -27,7 +26,6 @@ export default function App() {
   const navRef=useRef(null);
 
   useEffect(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*22;setLoadPct(Math.min(p,100));if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),400);}},80);return()=>clearInterval(iv);},[]);
-  useEffect(()=>{const t=setInterval(()=>setTIdx(i=>(i+1)%TESTIMONIALS.length),4500);return()=>clearInterval(t);},[]);
   const scrollTo=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
 
   // NAV labels per layout

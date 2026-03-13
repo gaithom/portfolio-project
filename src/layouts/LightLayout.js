@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, SkillBar, Modal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
-import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, TESTIMONIALS } from "../data/content";
+import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../data/content";
 
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroCtaRef=useRef(null);
@@ -182,20 +182,21 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* TESTIMONIALS */}
+    {/* GET IN TOUCH */}
     <section style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
-        <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Social Proof</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Kind Words</h2>
-        <div style={{overflow:"hidden"}}><div style={{display:"flex",transform:`translateX(-${tIdx*100}%)`,transition:"transform .65s cubic-bezier(.16,1,.3,1)"}}>
-          {TESTIMONIALS.map((t,i)=><div key={i} style={{minWidth:"100%"}}><div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:"34px 30px",boxShadow:theme.shadow}}>
-            <div style={{fontSize:36,marginBottom:16,opacity:.7}}>{t.avatar}</div>
-            <p style={{fontSize:15,lineHeight:1.9,fontStyle:"italic",marginBottom:22,color:theme.text,opacity:.8}}>"{t.text}"</p>
-            <div style={{fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,color:theme.text,opacity:.75}}>{t.name}</div>
-            <div style={{fontSize:12,color:theme.textMuted,marginTop:3}}>{t.role}</div>
-          </div></div>)}
-        </div></div>
-        <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:20}}>{TESTIMONIALS.map((_,i)=><button key={i} onClick={()=>setTIdx(i)} style={{width:tIdx===i?20:7,height:7,borderRadius:4,background:tIdx===i?theme.accent:theme.border,border:"none",cursor:"pointer",transition:"all .3s"}}/>)}</div>
+        <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
+        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
+        <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
+          {CONTACT_INFO.map((c,i)=>(
+            <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
+              <div style={{fontSize:32}}>{c.icon}</div>
+              <div style={{fontSize:14,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
+              <div style={{fontSize:12,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
 

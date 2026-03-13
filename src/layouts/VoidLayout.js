@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, Modal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
-import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, TESTIMONIALS } from "../data/content";
+import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../data/content";
 
 export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm, themeKey }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroSubRef=useRef(null),heroCtaRef=useRef(null);
@@ -154,18 +154,24 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
       {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* TESTIMONIALS */}
+    {/* GET IN TOUCH */}
     <section style={{padding:"80px 60px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ WORDS</div></div>
+        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ CONNECT</div></div>
         <div>
-          <div style={{overflow:"hidden"}}><div style={{display:"flex",transform:`translateX(-${tIdx*100}%)`,transition:"transform .6s cubic-bezier(.16,1,.3,1)"}}>
-            {TESTIMONIALS.map((t,i)=><div key={i} style={{minWidth:"100%"}}>
-              <p style={{fontSize:18,lineHeight:1.75,color:theme.text,opacity:.8,marginBottom:20,borderLeft:`3px solid ${theme.accent}`,paddingLeft:20}}>"{t.text}"</p>
-              <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.textMuted,opacity:.6}}>{t.name} — {t.role}</div>
-            </div>)}
-          </div></div>
-          <div style={{display:"flex",gap:5,marginTop:20}}>{TESTIMONIALS.map((_,i)=><button key={i} onClick={()=>setTIdx(i)} style={{width:24,height:3,border:"none",cursor:"pointer",background:tIdx===i?theme.accent:theme.borderMid,transition:"background .2s"}}/>)}</div>
+          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:32,fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:20}}>Let's Work Together</h2>
+          <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20}}>
+            {CONTACT_INFO.map((c,i)=>(
+              <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:"20px 16px",textDecoration:"none",display:"flex",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateX(4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateX(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
+                <div style={{fontSize:24}}>{c.icon}</div>
+                <div>
+                  <div style={{fontSize:13,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
+                  <div style={{fontSize:11,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>

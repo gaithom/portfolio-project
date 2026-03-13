@@ -3,7 +3,7 @@ import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, SkillBar, Modal } from "../components/Shared";
 import { PacManGame } from "../components/PacManGame";
 import { DevBadge } from "../components/DeveloperMode";
-import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, TESTIMONIALS } from "../data/content";
+import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../data/content";
 
 export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm, themeKey }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroSubRef=useRef(null),heroCtaRef=useRef(null);
@@ -207,19 +207,21 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
       {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* TESTIMONIALS */}
+    {/* GET IN TOUCH */}
     <section style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:800,margin:"0 auto",textAlign:"center"}}>
-        <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Testimonials</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:40,color:theme.text}}>Client Feedback</h2>
-        <div style={{overflow:"hidden"}}><div style={{display:"flex",transform:`translateX(-${tIdx*100}%)`,transition:"transform .7s cubic-bezier(.16,1,.3,1)"}}>
-          {TESTIMONIALS.map((t,i)=><div key={i} style={{minWidth:"100%",padding:"0 40px"}}>
-            <div style={{fontSize:52,marginBottom:20}}>{t.avatar}</div>
-            <p style={{fontSize:18,lineHeight:1.9,fontStyle:"italic",marginBottom:24,color:theme.text,opacity:.9,fontFamily:"'DM Sans',sans-serif"}}>"{t.text}"</p>
-            <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,color:theme.textMuted,opacity:.7}}>{t.name} — {t.role}</div>
-          </div>)}
-        </div></div>
-        <div style={{display:"flex",gap:8,justifyContent:"center",marginTop:24}}>{TESTIMONIALS.map((_,i)=><button key={i} onClick={()=>setTIdx(i)} style={{width:28,height:2,border:"none",cursor:"pointer",background:tIdx===i?theme.accent:theme.borderMid,transition:"background .25s"}}/>)}</div>
+        <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Connect</span>
+        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:40,color:theme.text}}>Let's Work Together</h2>
+        <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40,fontFamily:"'DM Sans',sans-serif"}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:24,marginBottom:40}}>
+          {CONTACT_INFO.map((c,i)=>(
+            <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:16,padding:"32px 24px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:16,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
+              <div style={{fontSize:40}}>{c.icon}</div>
+              <div style={{fontSize:16,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
+              <div style={{fontSize:13,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
 
