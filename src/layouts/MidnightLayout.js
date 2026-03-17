@@ -93,7 +93,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
               <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Bachelor of IT student focusing on software engineering and human-computer interaction.</p>
             </div>
           </div>
-          <div style={{display:"flex",gap:12}}><button className="bp" style={{borderRadius:2,letterSpacing:".08em"}}>Download CV</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Work →</button></div>
+          <div style={{display:"flex",gap:12}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:2,letterSpacing:".08em"}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Work →</button></div>
         </div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}

@@ -78,7 +78,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             <p style={{color:theme.bg,fontSize:13,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction. Expected 2026.</p>
           </div>
         </div>
-        <div style={{marginTop:24,display:"flex",gap:10,justifyContent:"center"}}><button className="bp" style={{borderRadius:4}}>Download CV</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>See Work →</button></div>
+        <div style={{marginTop:24,display:"flex",gap:10,justifyContent:"center"}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:4}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>See Work →</button></div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
     </section>

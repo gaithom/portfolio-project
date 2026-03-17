@@ -162,7 +162,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           </h2>
           <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:14,fontSize:14}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
           <p style={{color:theme.textMuted,lineHeight:1.9,marginBottom:28,fontSize:14}}>Bachelor of IT student, blending academic rigour with real-world craft.</p>
-          <div style={{display:"flex",gap:11,flexWrap:"wrap"}}><button className="bp">Download CV</button><button className="bg" onClick={()=>scrollTo("projects")}>See My Work</button></div>
+          <div style={{display:"flex",gap:11,flexWrap:"wrap"}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")}>See My Work</button></div>
         </div>
         </div>
       </ScrollReveal>

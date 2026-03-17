@@ -64,7 +64,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
               <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Pursuing Bachelor of IT. Bridging academic theory with real-world production code.</p>
             </div>
           </div>
-          <div style={{marginTop:40,display:"flex",gap:10}}><button className="bp" style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>CV.PDF</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>WORK →</button></div>
+          <div style={{marginTop:40,display:"flex",gap:10}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>RESUME.PDF</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>WORK →</button></div>
         </div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
