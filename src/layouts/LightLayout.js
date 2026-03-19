@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, SkillBar, Modal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
@@ -7,6 +7,16 @@ import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../dat
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroCtaRef=useRef(null);
   const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Track mouse movement for interactive background
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useGSAP((gsap,ST)=>{
     const tl=gsap.timeline({delay:.2});
@@ -21,9 +31,26 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   },[]);
 
   return <>
+    {/* Interactive Grid Background for entire theme */}
+    <div style={{position:"fixed",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:0}}>
+      <div style={{
+        position: "absolute",
+        width: "200%",
+        height: "200%",
+        top: "50%",
+        left: "50%",
+        transform: `translate(-50%, -50%) translate(${(mousePos.x - window.innerWidth/2) * 0.02}px, ${(mousePos.y - window.innerHeight/2) * 0.02}px)`,
+        backgroundImage: `linear-gradient(${theme.animFg} 1px, transparent 1px), linear-gradient(90deg, ${theme.animFg} 1px, transparent 1px)`,
+        backgroundSize: "48px 48px",
+        transition: "transform 0.3s ease-out",
+        opacity: 0.6
+      }}/>
+    </div>
+    
+    {/* Main content with higher z-index */}
+    <div style={{position:"relative",zIndex:1}}>
     {/* HERO — clean left-aligned */}
     <section ref={heroRef} id="hero" className="hero-section" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 40px 80px",textAlign:"left",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
-      <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"48px 48px",pointerEvents:"none"}}/>
       <div className="hero-content" style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>
@@ -48,7 +75,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
     </section>
 
-    <div style={{overflow:"hidden",borderBottom:`1px solid ${theme.border}`,padding:"9px 0",background:theme.bgAlt}}>
+    <div style={{overflow:"hidden",borderBottom:`1px solid ${theme.border}`,padding:"9px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 25s linear infinite"}}>
         {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:10,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,opacity:.45}}>{t}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
       </div>
@@ -84,7 +111,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* SKILLS — dot-grid indicators */}
-    <section id="skills" className="skills-section" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
+    <section id="skills" className="skills-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
           <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Expertise</span>
@@ -138,7 +165,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* SERVICES — two-column minimal */}
-    <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
         <div className="services-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
@@ -177,7 +204,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* GET IN TOUCH */}
-    <section className="contact-section" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`}}>
+    <section className="contact-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
         <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
@@ -222,5 +249,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       </div>
       {devMode&&<DevBadge id="contact" devMode={devMode} theme={theme}/>}
     </section>
-  </>;
+    </div>
+    </>;
 }
