@@ -621,9 +621,9 @@ export default function App() {
             {isVoid?"MG_PORTFOLIO":"M"}<span style={{color:theme.accent}}>{isVoid?"":"."}</span>{isVoid?"":"Gaitho"}
           </div>
           <div className="social-links" style={{display:"flex",gap:18}}>
-            {["GitHub","LinkedIn","Twitter","Dribbble"].map(s=><a key={s} href="#" style={{fontSize:11,color:theme.textMuted,textDecoration:"none",fontWeight:isVoid?700:500,opacity:.45,transition:"opacity .2s,color .2s",letterSpacing:isVoid?".08em":"0",textTransform:isVoid?"uppercase":"none",fontFamily:theme.bodyFont}} onMouseEnter={e=>{e.target.style.opacity=.85;e.target.style.color=theme.text;}} onMouseLeave={e=>{e.target.style.opacity=.45;e.target.style.color=theme.textMuted;}}>{s}</a>)}
+            {["GitHub","LinkedIn","Twitter"].map(s=><a key={s} href={s==="GitHub"?"https://github.com/gaithom":s==="LinkedIn"?"https://www.linkedin.com/in/michael-gaitho-99b02a355/":"https://twitter.com/michaelgaitho"} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:theme.text,textDecoration:"none",fontWeight:isVoid?700:500,opacity:.7,transition:"opacity .2s,color .2s",letterSpacing:isVoid?".08em":"0",textTransform:isVoid?"uppercase":"none",fontFamily:theme.bodyFont}} onMouseEnter={e=>{e.target.style.opacity=1;e.target.style.color=theme.accent;}} onMouseLeave={e=>{e.target.style.opacity=.7;e.target.style.color=theme.text;}}>{s}</a>)}
           </div>
-          <div className="copyright" style={{fontSize:10,color:theme.textMuted,opacity:.35,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>© 2025 Michael Gaitho · Nakuru, KE</div>
+          <div className="copyright" style={{fontSize:11,color:theme.text,opacity:.8,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>© 2025 Michael Gaitho · Nakuru, KE</div>
         </div>
       </footer>
     </div>

@@ -280,7 +280,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             <a key={i} href={c.link} onClick={(e)=>{if(c.action==="scroll"){e.preventDefault();scrollTo("contact");}}} target={c.action==="scroll"?"_self":"_blank"} rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:32}}>{c.icon}</div>
               <div style={{fontSize:14,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-              <div style={{fontSize:12,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+              <div style={{fontSize:12,color:theme.text,opacity:.9}}>{c.value}</div>
             </a>
           ))}
         </div>

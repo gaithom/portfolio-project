@@ -150,7 +150,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     {/* GET IN TOUCH */}
     <section style={{padding:"80px 60px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ CONNECT</div></div>
+        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6}}>/ CONNECT</div></div>
         <div>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:32,fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:20}}>Let's Work Together</h2>
           <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
@@ -160,7 +160,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
                 <div style={{fontSize:24}}>{c.icon}</div>
                 <div>
                   <div style={{fontSize:13,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-                  <div style={{fontSize:11,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+                  <div style={{fontSize:11,color:theme.text,opacity:.9}}>{c.value}</div>
                 </div>
               </a>
             ))}
@@ -173,7 +173,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     <section ref={contactRef} id="contact" style={{padding:"80px 60px",position:"relative"}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:80}}>
         <div>
-          <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginBottom:30}}>/ CONTACT</div>
+          <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".17em",textTransform:"uppercase",opacity:.8,marginBottom:5}}>/ CONTACT</div>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(36px,5vw,80px)",fontWeight:800,lineHeight:.88,letterSpacing:"-.04em",marginBottom:30,color:theme.text,textTransform:"uppercase"}}>WORK<br/><span style={{color:theme.accent}}>WITH<br/>ME</span></h2>
         </div>
         <div>
@@ -183,7 +183,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
               <input style={{width:"100%",padding:"12px 14px",background:"transparent",border:`1px solid ${theme.borderMid}`,borderRadius:0,color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
             </div>)}
             <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.6}}>Message</label>
+              <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 14px",background:"transparent",border:`1px solid ${theme.borderMid}`,borderRadius:0,color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Brief me." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
             <button className="bp" onClick={()=>{

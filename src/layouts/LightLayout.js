@@ -52,7 +52,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* HERO — clean left-aligned */}
     <section ref={heroRef} id="hero" className="hero-section" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 40px 80px",textAlign:"left",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div className="hero-content" style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
-        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted}}>
+        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:12,letterSpacing:".14em",textTransform:"uppercase",color:theme.text}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>
           Available for Freelance
         </div>
@@ -68,7 +68,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         <div className="hero-stats" style={{display:"flex",gap:48,justifyContent:"flex-start",marginTop:60}}>
           {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} className="stat-item" style={{textAlign:"left"}}>
             <div className="stat-number" style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.text,lineHeight:1,opacity:.8}}>{s.n}</div>
-            <div className="stat-label" style={{fontSize:9,color:theme.textMuted,letterSpacing:".14em",textTransform:"uppercase",marginTop:5,opacity:.6}}>{s.l}</div>
+            <div className="stat-label" style={{fontSize:11,color:theme.text,letterSpacing:".14em",textTransform:"uppercase",marginTop:5,opacity:.8}}>{s.l}</div>
           </div>)}
         </div>
       </div>
@@ -77,7 +77,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     <div style={{overflow:"hidden",borderBottom:`1px solid ${theme.border}`,padding:"9px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 25s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:10,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,opacity:.45}}>{t}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:12,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
       </div>
     </div>
 
@@ -85,7 +85,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="about" className="about-section" style={{padding:"100px 60px",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
-          <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>About</span>
+          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>About</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
         </div>
         <div className="about-cards" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
@@ -114,14 +114,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="skills" className="skills-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
-          <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Expertise</span>
+          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
         </div>
         <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
           <div>{SKILLS.map((s,i)=><div key={s.label} className="skill-item" style={{marginBottom:18}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
               <span style={{fontSize:13,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
-              <span style={{fontSize:11,color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>{s.pct}%</span>
+              <span style={{fontSize:11,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
             </div>
             {/* Dot progress */}
             <div style={{display:"flex",gap:4}}>
@@ -129,7 +129,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             </div>
           </div>)}</div>
           <div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:700,marginBottom:18,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.65}}>Tech Stack</h3>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,marginBottom:18,color:theme.text,letterSpacing:".08em",textTransform:"uppercase",opacity:.8}}>Tech Stack</h3>
             <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
               {TECH.map(t=><span key={t} style={{padding:"6px 12px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:4,fontSize:12,fontWeight:500,color:theme.text,opacity:.75,transition:"all .2s",cursor:"default",boxShadow:theme.shadow}}
                 onMouseEnter={e=>{e.target.style.borderColor=theme.accent;e.target.style.opacity=1;}}
@@ -145,7 +145,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="projects" className="projects-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:40}}>
-          <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Portfolio</span>
+          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Portfolio</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:24,color:theme.text}}>Projects</h2>
         </div>
         <div className="projects-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(310px,1fr))",gap:18}}>
@@ -155,7 +155,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               <div style={{height:140,background:p.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42}}>{p.emoji}</div>
               <div style={{padding:"16px 20px 22px"}}>
                 <h3 style={{fontSize:15,fontWeight:700,margin:"0 0 6px",fontFamily:"'Syne',sans-serif",color:theme.text}}>{p.title}</h3>
-                <p style={{fontSize:12,color:theme.textMuted,margin:0,lineHeight:1.75}}>{p.desc}</p>
+                <p style={{fontSize:13,color:theme.text,margin:0,lineHeight:1.75,opacity:.8}}>{p.desc}</p>
               </div>
             </div>;
           })}
