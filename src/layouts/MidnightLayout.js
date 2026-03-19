@@ -128,19 +128,19 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* PROJECTS — editorial horizontal scroll */}
-    <section id="projects" style={{position:"relative","@media (max-width: 768px)":{padding:"60px 20px"}}}>
+    <section id="projects" style={{position:"relative"}}>
       <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Portfolio</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:24,color:theme.text}}>Projects</h2>
+        <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:24,color:theme.text}}>Projects</h2>
       </div>
-      <div ref={hPanelRef} style={{overflow:"hidden",position:"relative",height:"100vh","@media (max-width: 768px)":{height:"auto",overflow:"visible"}}}>
-        <div ref={hTrackRef} style={{display:"flex",gap:24,padding:"0 40px",height:"100%",alignItems:"center","@media (max-width: 768px)":{flexDirection:"column",height:"auto",padding:"0 10px"}}}>
+      <div ref={hPanelRef} className="projects-container" style={{overflow:"hidden",position:"relative",height:"100vh"}}>
+        <div ref={hTrackRef} className="projects-track" style={{display:"flex",gap:24,padding:"0 40px",height:"100%",alignItems:"center"}}>
           {PROJECTS.map((project,i)=>(
-            <div key={project.id} style={{width:340,flexShrink:0,background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:2,overflow:"hidden",cursor:"pointer",transform:"translateY(0)",transition:"all .3s",boxShadow:theme.shadow,"@media (max-width: 768px)":{width:"100%",flexShrink:1,marginBottom:"20px"}}}>
-              <div style={{height:160,background:project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{project.emoji}</div>
-              <div style={{padding:"20px 24px 28px"}}>
-                <h3 style={{fontSize:17,fontWeight:700,margin:"0 0 8px",fontFamily:"'Syne', sans-serif",color:theme.text,letterSpacing:"-.01em"}}>{project.title}</h3>
-                <p style={{fontSize:13,color:theme.textMuted,margin:0,lineHeight:1.8}}>{project.desc}</p>
+            <div key={project.id} className="project-card" style={{width:340,flexShrink:0,background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:2,overflow:"hidden",cursor:"pointer",transform:"translateY(0)",transition:"all .3s",boxShadow:theme.shadow}}>
+              <div className="project-image" style={{height:160,background:project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{project.emoji}</div>
+              <div className="project-content" style={{padding:"20px 24px 28px"}}>
+                <h3 className="project-title" style={{fontSize:17,fontWeight:700,margin:"0 0 8px",fontFamily:"'Syne', sans-serif",color:theme.text,letterSpacing:"-.01em"}}>{project.title}</h3>
+                <p className="project-desc" style={{fontSize:13,color:theme.textMuted,margin:0,lineHeight:1.8}}>{project.desc}</p>
               </div>
             </div>
           ))}
@@ -150,17 +150,17 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* SERVICES — editorial grid */}
-    <section ref={servicesRef} id="services" style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,"@media (max-width: 768px)":{padding:"60px 20px"}}}>
+    <section ref={servicesRef} id="services" style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
           <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Services</span>
-          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",color:theme.text}}>What I Offer</h2>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",color:theme.text}}>What I Offer</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"20px"}}}>
+        <div className="services-grid" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24}}>
           {SERVICES.map(s=><div key={s.title} className="srv-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:32,boxShadow:theme.shadow,transition:"all .25s",cursor:"default"}}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=theme.shadowMd;e.currentTarget.style.borderColor=theme.borderMid;}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow=theme.shadow;e.currentTarget.style.borderColor=theme.border;}}>
-            <div style={{fontSize:36,marginBottom:16,opacity:.8}}>{s.icon}</div>
+            <div className="service-icon" style={{fontSize:36,marginBottom:16,opacity:.8}}>{s.icon}</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,marginBottom:12,color:theme.text,letterSpacing:"-.01em"}}>{s.title}</h3>
             <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
           </div>)}

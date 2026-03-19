@@ -145,6 +145,24 @@ export default function App() {
       #about .expertise-education p { text-align: center !important; font-size: 13px !important; line-height: 1.8 !important; margin-bottom: 16px !important; }
       #about .about-buttons { flex-direction: column !important; gap: 10px !important; align-items: center !important; }
       #about .about-buttons button { width: 100% !important; max-width: 280px !important; }
+      
+      #services { padding: 60px 20px !important; }
+      #services .section-title { font-size: clamp(24px, 5vw, 40px) !important; margin-bottom: 40px !important; }
+      #services .services-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+      #services .srv-card { padding: 24px !important; text-align: center !important; }
+      #services .srv-card .service-icon { font-size: 32px !important; margin-bottom: 12px !important; }
+      #services .srv-card h3 { font-size: 16px !important; margin-bottom: 10px !important; text-align: center !important; }
+      #services .srv-card p { font-size: 13px !important; line-height: 1.7 !important; text-align: center !important; }
+      
+      #projects { padding: 60px 20px !important; }
+      #projects .section-title { font-size: clamp(24px, 5vw, 40px) !important; margin-bottom: 20px !important; }
+      #projects .projects-container { height: auto !important; overflow: visible !important; }
+      #projects .projects-track { flex-direction: column !important; height: auto !important; padding: 0 10px !important; }
+      #projects .project-card { width: 100% !important; flex-shrink: 1 !important; margin-bottom: 20px !important; }
+      #projects .project-card .project-image { height: 140px !important; font-size: 40px !important; }
+      #projects .project-card .project-content { padding: 16px 20px 20px !important; }
+      #projects .project-card .project-title { font-size: 16px !important; margin-bottom: 6px !important; }
+      #projects .project-card .project-desc { font-size: 12px !important; line-height: 1.6 !important; }
     }
       .forest-services .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
       .forest-services .services-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
