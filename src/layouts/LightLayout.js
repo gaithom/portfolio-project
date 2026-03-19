@@ -23,6 +23,52 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     tl.fromTo(heroBadgeRef.current,{y:16,opacity:0},{y:0,opacity:1,duration:.65,ease:"expo.out"})
       .fromTo(heroTitleRef.current,{y:40,opacity:0},{y:0,opacity:1,duration:1,ease:"expo.out"},"-=.25")
       .fromTo(heroCtaRef.current,{y:16,opacity:0},{y:0,opacity:1,duration:.65,ease:"expo.out"},"-=.35");
+    
+    // 3D scrolling animations for background name elements
+    gsap.to(".name-bg",{
+      yPercent:20,
+      scale:1.08,
+      rotationX:3,
+      rotationY:2,
+      ease:"none",
+      scrollTrigger:{
+        trigger:heroRef.current,
+        start:"top top",
+        end:"bottom top",
+        scrub:1.8
+      }
+    });
+    
+    gsap.to(".name-float-1",{
+      xPercent:25,
+      yPercent:15,
+      rotation:18,
+      scale:0.92,
+      opacity:0.015,
+      ease:"none",
+      scrollTrigger:{
+        trigger:heroRef.current,
+        start:"top top",
+        end:"bottom top",
+        scrub:1.4
+      }
+    });
+    
+    gsap.to(".name-float-2",{
+      xPercent:-20,
+      yPercent:-18,
+      rotation:-15,
+      scale:1.1,
+      opacity:0.012,
+      ease:"none",
+      scrollTrigger:{
+        trigger:heroRef.current,
+        start:"top top",
+        end:"bottom top",
+        scrub:1.6
+      }
+    });
+    
     const sc=servicesRef.current?.querySelectorAll(".srv-card");
     if(sc)gsap.fromTo(sc,{y:30,opacity:0},{y:0,opacity:1,stagger:.08,duration:.75,ease:"expo.out",scrollTrigger:{trigger:servicesRef.current,start:"top 84%"}});
     const ti=timelineRef.current?.querySelectorAll(".tl-step");
@@ -51,6 +97,55 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <div style={{position:"relative",zIndex:1}}>
     {/* HERO — clean left-aligned */}
     <section ref={heroRef} id="hero" className="hero-section" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 40px 80px",textAlign:"left",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+      {/* Large blurred name in background */}
+      <div className="name-bg" style={{
+        position:"absolute",
+        top:"50%",
+        left:"50%",
+        transform:"translate(-50%, -50%)",
+        fontSize:"clamp(160px,24vw,360px)",
+        fontWeight:900,
+        fontFamily:"'Syne', sans-serif",
+        color:theme.accent,
+        opacity:0.04,
+        filter:"blur(3.5px)",
+        letterSpacing:"-0.03em",
+        pointerEvents:"none",
+        zIndex:0,
+        whiteSpace:"nowrap",
+        textTransform:"uppercase"
+      }}>GAITHO</div>
+      
+      {/* Additional floating name elements for 3D effect */}
+      <div className="name-float-1" style={{
+        position:"absolute",
+        top:"25%",
+        right:"15%",
+        fontSize:"clamp(60px,8vw,120px)",
+        fontWeight:800,
+        fontFamily:"'Space Mono', monospace",
+        color:theme.animOrb,
+        opacity:0.03,
+        filter:"blur(2.5px)",
+        pointerEvents:"none",
+        zIndex:0,
+        transform:"rotate(12deg)"
+      }}>MICHAEL</div>
+      
+      <div className="name-float-2" style={{
+        position:"absolute",
+        bottom:"30%",
+        left:"12%",
+        fontSize:"clamp(45px,7vw,90px)",
+        fontWeight:700,
+        fontFamily:"'Syne', sans-serif",
+        color:theme.animDot,
+        opacity:0.025,
+        filter:"blur(3px)",
+        pointerEvents:"none",
+        zIndex:0,
+        transform:"rotate(-8deg)"
+      }}>DEVELOPER</div>
       <div className="hero-content" style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:12,letterSpacing:".14em",textTransform:"uppercase",color:theme.text}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>

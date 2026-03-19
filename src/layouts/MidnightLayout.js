@@ -17,6 +17,52 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
       .fromTo(heroTitleRef.current,{y:40,opacity:0},{y:0,opacity:1,duration:1,ease:"expo.out"},"-=.25")
       .fromTo(heroSubRef.current,{y:20,opacity:0},{y:0,opacity:1,duration:.65,ease:"expo.out"},"-=.35")
       .fromTo(heroCtaRef.current,{y:16,opacity:0},{y:0,opacity:1,duration:.65,ease:"expo.out"},"-=.3");
+    
+    // 3D scrolling animations for background name elements - now for entire page
+    gsap.to(".name-bg",{
+      yPercent:25,
+      scale:1.15,
+      rotationX:8,
+      rotationY:-5,
+      ease:"none",
+      scrollTrigger:{
+        trigger:"body",
+        start:"top top",
+        end:"bottom top",
+        scrub:2.2
+      }
+    });
+    
+    gsap.to(".name-float-1",{
+      xPercent:30,
+      yPercent:25,
+      rotation:15,
+      scale:0.85,
+      opacity:0.02,
+      ease:"none",
+      scrollTrigger:{
+        trigger:"body",
+        start:"top top",
+        end:"bottom top",
+        scrub:1.7
+      }
+    });
+    
+    gsap.to(".name-float-2",{
+      xPercent:-30,
+      yPercent:-20,
+      rotation:-18,
+      scale:1.3,
+      opacity:0.015,
+      ease:"none",
+      scrollTrigger:{
+        trigger:"body",
+        start:"top top",
+        end:"bottom top",
+        scrub:1.9
+      }
+    });
+    
     gsap.fromTo(aboutImgRef.current,{x:-50,opacity:0},{x:0,opacity:1,duration:1.1,ease:"expo.out",scrollTrigger:{trigger:aboutRef.current,start:"top 78%",toggleActions:"play none none none"}});
     gsap.fromTo(aboutTxtRef.current,{x:50,opacity:0},{x:0,opacity:1,duration:1.1,ease:"expo.out",delay:.1,scrollTrigger:{trigger:aboutRef.current,start:"top 78%",toggleActions:"play none none none"}});
     const sc=servicesRef.current?.querySelectorAll(".srv-card");
@@ -27,6 +73,61 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
   },[]);
 
   return <>
+    {/* Global background name elements - visible across entire page */}
+    <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0}}>
+      {/* Large blurred name in background */}
+      <div className="name-bg" style={{
+        position:"absolute",
+        top:"50%",
+        left:"50%",
+        transform:"translate(-50%, -50%)",
+        fontSize:"clamp(200px,28vw,420px)",
+        fontWeight:900,
+        fontFamily:"'Syne', sans-serif",
+        color:theme.accent,
+        opacity:0.06,
+        filter:"blur(4px)",
+        letterSpacing:"-0.04em",
+        pointerEvents:"none",
+        zIndex:0,
+        whiteSpace:"nowrap",
+        textTransform:"uppercase"
+      }}>GAITHO</div>
+      
+      {/* Additional floating name elements for 3D effect */}
+      <div className="name-float-1" style={{
+        position:"absolute",
+        top:"15%",
+        right:"12%",
+        fontSize:"clamp(70px,9vw,140px)",
+        fontWeight:800,
+        fontFamily:"'Space Mono', monospace",
+        color:theme.animOrb,
+        opacity:0.04,
+        filter:"blur(3px)",
+        pointerEvents:"none",
+        zIndex:0,
+        transform:"rotate(8deg)"
+      }}>MICHAEL</div>
+      
+      <div className="name-float-2" style={{
+        position:"absolute",
+        bottom:"20%",
+        left:"8%",
+        fontSize:"clamp(55px,8vw,110px)",
+        fontWeight:700,
+        fontFamily:"'Syne', sans-serif",
+        color:theme.animDot,
+        opacity:0.03,
+        filter:"blur(3.5px)",
+        pointerEvents:"none",
+        zIndex:0,
+        transform:"rotate(-12deg)"
+      }}>DEVELOPER</div>
+    </div>
+    
+    {/* Main content with higher z-index */}
+    <div style={{position:"relative",zIndex:1}}>
     {/* HERO — editorial wide left-aligned with Pac-Man */}
     <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 60px 80px",textAlign:"left",position:"relative","@media (max-width: 768px)":{padding:"80px 20px 60px",alignItems:"center",textAlign:"center"}}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"72px 72px",pointerEvents:"none",opacity:.4}}/>
@@ -238,5 +339,6 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
       </div>
       {devMode&&<DevBadge id="contact" devMode={devMode} theme={theme}/>}
     </section>
-  </>;
+    </div>
+    </>
 }

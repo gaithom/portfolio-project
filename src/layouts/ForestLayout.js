@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import clsx from "clsx";
 import { useGSAP } from "../hooks/useGSAP";
 import { ParticleCanvas, Typewriter, SkillBar, Modal, ParallaxElement, ScrollReveal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
@@ -77,6 +78,52 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       .fromTo(heroSubRef.current,{y:28,opacity:0},{y:0,opacity:1,duration:.8,ease:"expo.out"},"-=.55")
       .fromTo(heroCtaRef.current,{y:20,opacity:0},{y:0,opacity:1,duration:.7,ease:"expo.out"},"-=.4")
       .fromTo(heroStatsRef.current,{y:16,opacity:0},{y:0,opacity:1,duration:.7,ease:"expo.out"},"-=.35");
+    
+    // 3D scrolling animations for background name elements - now for entire page
+    gsap.to(".name-bg",{
+      yPercent:30,
+      scale:1.1,
+      rotationX:5,
+      rotationY:3,
+      ease:"none",
+      scrollTrigger:{
+        trigger:"body",
+        start:"top top",
+        end:"bottom top",
+        scrub:2
+      }
+    });
+    
+    gsap.to(".name-float-1",{
+      xPercent:-20,
+      yPercent:-15,
+      rotation:-25,
+      scale:0.9,
+      opacity:0.03,
+      ease:"none",
+      scrollTrigger:{
+        trigger:"body",
+        start:"top top",
+        end:"bottom top",
+        scrub:1.5
+      }
+    });
+    
+    gsap.to(".name-float-2",{
+      xPercent:25,
+      yPercent:20,
+      rotation:20,
+      scale:1.2,
+      opacity:0.02,
+      ease:"none",
+      scrollTrigger:{
+        trigger:"body",
+        start:"top top",
+        end:"bottom top",
+        scrub:1.8
+      }
+    });
+    
     gsap.to(heroTitleRef.current,{yPercent:-20,ease:"none",scrollTrigger:{trigger:heroRef.current,start:"top top",end:"bottom top",scrub:1.8}});
     document.querySelectorAll(".f-ring").forEach((el,i)=>{gsap.to(el,{y:i%2===0?-55:55,ease:"none",scrollTrigger:{trigger:heroRef.current,start:"top top",end:"bottom top",scrub:1+i*.2}});});
     gsap.fromTo(aboutImgRef.current,{x:-65,opacity:0,rotate:-2},{x:0,opacity:1,rotate:0,duration:1.1,ease:"expo.out",scrollTrigger:{trigger:aboutRef.current,start:"top 78%",toggleActions:"play none none none"}});
@@ -90,11 +137,67 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
   },[]);
 
   return <>
+    {/* Global background name elements - visible across entire page */}
+    <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0}}>
+      {/* Large blurred name in background */}
+      <div className="name-bg" style={{
+        position:"absolute",
+        top:"50%",
+        left:"50%",
+        transform:"translate(-50%, -50%)",
+        fontSize:"clamp(180px,25vw,380px)",
+        fontWeight:900,
+        fontFamily:"'Syne', sans-serif",
+        color:theme.accent,
+        opacity:0.08,
+        filter:"blur(3px)",
+        letterSpacing:"-0.05em",
+        pointerEvents:"none",
+        zIndex:0,
+        whiteSpace:"nowrap",
+        textTransform:"uppercase"
+      }}>GAITHO</div>
+      
+      {/* Additional floating name elements for 3D effect */}
+      <div className="name-float-1" style={{
+        position:"absolute",
+        top:"20%",
+        left:"10%",
+        fontSize:"clamp(60px,8vw,120px)",
+        fontWeight:800,
+        fontFamily:"'Syne', sans-serif",
+        color:theme.animOrb,
+        opacity:0.06,
+        filter:"blur(2px)",
+        pointerEvents:"none",
+        zIndex:0,
+        transform:"rotate(-15deg)"
+      }}>MICHAEL</div>
+      
+      <div className="name-float-2" style={{
+        position:"absolute",
+        bottom:"25%",
+        right:"15%",
+        fontSize:"clamp(50px,7vw,100px)",
+        fontWeight:700,
+        fontFamily:"'Space Mono', monospace",
+        color:theme.animDot,
+        opacity:0.05,
+        filter:"blur(2.5px)",
+        pointerEvents:"none",
+        zIndex:0,
+        transform:"rotate(10deg)"
+      }}>DEVELOPER</div>
+    </div>
+    
+    {/* Main content with higher z-index */}
+    <div style={{position:"relative",zIndex:1}}>
     {/* HERO — organic curved bottom with car game */}
     <section ref={heroRef} id="hero" className="forest-hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)"}}>
       <ParallaxElement theme={theme} speed={0.3}>
         <ParticleCanvas theme={theme}/>
         <div style={{position:"absolute",inset:0,pointerEvents:"none",backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"64px 64px",maskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)",WebkitMaskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)"}}/>
+        
         {/* Organic blob rings */}
         {[360,200,140,260,110].map((s,i)=><div key={i} className="f-ring" style={{position:"absolute",width:s,height:s,borderRadius:`${[48,62,55,70,58][i]}% ${[52,38,45,30,42][i]}% ${[44,60,50,66,52][i]}% ${[56,40,50,34,48][i]}%`,border:`1px solid ${theme.animDot}`,left:[`5%`,"68%","6%","62%","41%"][i],top:["7%","12%","58%","50%","73%"][i],pointerEvents:"none",opacity:.5,animation:[`spinSlow 30s linear infinite`,`spinSlowR 40s linear infinite`,`spinSlow 36s linear infinite`,`spinSlowR 50s linear infinite`,`spinSlow 24s linear infinite`][i]}}/>)}
         <div style={{position:"absolute",width:480,height:480,borderRadius:"50%",background:`radial-gradient(circle,${theme.animOrb} 0%,transparent 68%)`,top:"50%",left:"50%",transform:"translate(-50%,-50%)",animation:"breathe 6s ease-in-out infinite",pointerEvents:"none"}}/>
@@ -164,7 +267,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     <section id="skills" className="forest-skills" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.2}>
         <div style={{maxWidth:1010,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
         <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:62}}>
           <div>{SKILLS.map((s,i)=><SkillBar key={s.label} {...s} theme={theme} delay={i*.09}/>)}</div>
           <div>
@@ -186,7 +289,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
           <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
-          <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,5vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:28,color:theme.text,opacity:.9}}>Recent Work</h2>
+          <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,5vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:28,color:theme.text,opacity:.9}}>Recent Work</h2>
         </div>
         <div className="projects-grid" style={{
           display:"flex",
@@ -230,7 +333,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1010,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
         <div className="services-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
           {SERVICES.map((s,i)=><div key={s.title} className="srv-card" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:["18px 4px 18px 4px","4px 18px 4px 18px","18px 4px 18px 4px","4px 18px 4px 18px"][i],padding:26,backdropFilter:"blur(12px)",transition:"transform .3s,box-shadow .3s,border-color .3s",cursor:"default",marginTop:i%2===1?24:0}}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow=theme.shadowMd;e.currentTarget.style.borderColor=theme.borderMid;}}
@@ -249,7 +352,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     <section ref={timelineRef} id="experience" className="forest-timeline" style={{padding:"110px 40px",position:"relative"}}>
       <ScrollReveal theme={theme} direction="left" delay={0.4}>
         <div style={{maxWidth:660,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
         <div style={{position:"relative"}}>
           <div className="timeline-line" style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
           {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:26,marginBottom:42}}>
@@ -273,7 +376,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     <section className="forest-contact" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{display:"block",textAlign:"center"}}>Connect</span>
-        <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Work Together</h2>
+        <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Work Together</h2>
         <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
         <div className="contact-info-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
           {CONTACT_INFO.map((c,i)=>(
@@ -292,7 +395,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       <ScrollReveal theme={theme} direction="up" delay={0.5}>
         <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{display:"block",textAlign:"center"}}>Get In Touch</span>
-        <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Create Together</h2>
+        <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Create Together</h2>
         <div className="contact-form" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:46,marginBottom:16}}>✅</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
@@ -315,5 +418,6 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       </ScrollReveal>
       {devMode&&<DevBadge id="contact" devMode={devMode} theme={theme}/>}
     </section>
+    </div>
   </>;
 }
