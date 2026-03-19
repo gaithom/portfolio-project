@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { ParticleCanvas, Typewriter, SkillBar, Modal, ParallaxElement, ScrollReveal } from "../components/Shared";
-import { CarDrivingGame } from "../components/CarDrivingGame";
 import { DevBadge } from "../components/DeveloperMode";
 import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../data/content";
 
@@ -113,16 +112,6 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap"}}>
             <button className="bp" onClick={()=>scrollTo("projects")}>View My Work ↓</button>
             <button className="bg" onClick={()=>scrollTo("contact")}>Let's Build</button>
-          </div>
-        </div>
-        
-        {/* Car Driving Game */}
-        <div className="forest-game" style={{display:"flex",flexDirection:"column",alignItems:"center",margin:"60px auto"}}>
-          <div style={{marginBottom:15,fontSize:12,letterSpacing:".1em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.7}}>
-            Drive Through the Forest 🌲
-          </div>
-          <div className="game-container" style={{transform: "scale(1)", transition: "transform 0.3s ease"}}>
-            <CarDrivingGame theme={theme} scrollTo={scrollTo} />
           </div>
         </div>
       </div>
