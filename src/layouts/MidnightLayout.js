@@ -28,9 +28,9 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
 
   return <>
     {/* HERO — editorial wide left-aligned with Pac-Man */}
-    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 60px 80px",textAlign:"left",position:"relative"}}>
+    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 60px 80px",textAlign:"left",position:"relative","@media (max-width: 768px)":{padding:"80px 20px 60px",alignItems:"center",textAlign:"center"}}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"72px 72px",pointerEvents:"none",opacity:.4}}/>
-      <div style={{position:"relative",zIndex:1,display:"flex",gap:"60px",alignItems:"center",width:"100%",maxWidth:1200}}>
+      <div style={{position:"relative",zIndex:1,display:"flex",gap:"60px",alignItems:"center",width:"100%",maxWidth:1200,"@media (max-width: 768px)":{flexDirection:"column",gap:"40px"}}}>
         {/* Left side - Hero content */}
         <div style={{flex:1}}>
           <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:10,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>
@@ -66,8 +66,8 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </div>
 
     {/* ABOUT — editorial split */}
-    <section ref={aboutRef} id="about" style={{padding:"100px 60px",maxWidth:1200,margin:"0 auto",position:"relative"}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1.2fr",gap:100,alignItems:"center"}}>
+    <section ref={aboutRef} id="about" style={{padding:"100px 60px",maxWidth:1200,margin:"0 auto",position:"relative","@media (max-width: 768px)":{padding:"60px 20px"}}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1.2fr",gap:100,alignItems:"center","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"60px"}}}>
         <div ref={aboutImgRef} style={{position:"relative"}}>
           <div style={{width:"100%",maxWidth:400,aspectRatio:"1",borderRadius:"2px",background:`linear-gradient(135deg,${theme.surface},${theme.bgAlt})`,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:88,boxShadow:theme.shadowMd,position:"relative",overflow:"hidden"}}>
             <div style={{position:"absolute",inset:0,background:`radial-gradient(circle at 40% 40%,${theme.animOrb},transparent 70%)`,opacity:.6}}/>
@@ -100,13 +100,13 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* SKILLS — editorial grid */}
-    <section id="skills" style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
+    <section id="skills" style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,"@media (max-width: 768px)":{padding:"60px 20px"}}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
           <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Capabilities</span>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",color:theme.text}}>Technical Proficiency</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:40}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:40,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"30px"}}}>
           {SKILLS.map((s,i)=><div key={s.label} style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:24,boxShadow:theme.shadow}}>
             <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.accent,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:12}}>{s.pct}%</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:8,color:theme.text}}>{s.label}</h3>
@@ -128,15 +128,15 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* PROJECTS — editorial horizontal scroll */}
-    <section id="projects" style={{position:"relative"}}>
+    <section id="projects" style={{position:"relative","@media (max-width: 768px)":{padding:"60px 20px"}}}>
       <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Portfolio</span>
         <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:24,color:theme.text}}>Projects</h2>
       </div>
-      <div ref={hPanelRef} style={{overflow:"hidden",position:"relative",height:"100vh"}}>
-        <div ref={hTrackRef} style={{display:"flex",gap:24,padding:"0 40px",height:"100%",alignItems:"center"}}>
+      <div ref={hPanelRef} style={{overflow:"hidden",position:"relative",height:"100vh","@media (max-width: 768px)":{height:"auto",overflow:"visible"}}}>
+        <div ref={hTrackRef} style={{display:"flex",gap:24,padding:"0 40px",height:"100%",alignItems:"center","@media (max-width: 768px)":{flexDirection:"column",height:"auto",padding:"0 10px"}}}>
           {PROJECTS.map((project,i)=>(
-            <div key={project.id} style={{width:340,flexShrink:0,background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:2,overflow:"hidden",cursor:"pointer",transform:"translateY(0)",transition:"all .3s",boxShadow:theme.shadow}}>
+            <div key={project.id} style={{width:340,flexShrink:0,background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:2,overflow:"hidden",cursor:"pointer",transform:"translateY(0)",transition:"all .3s",boxShadow:theme.shadow,"@media (max-width: 768px)":{width:"100%",flexShrink:1,marginBottom:"20px"}}}>
               <div style={{height:160,background:project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{project.emoji}</div>
               <div style={{padding:"20px 24px 28px"}}>
                 <h3 style={{fontSize:17,fontWeight:700,margin:"0 0 8px",fontFamily:"'Syne', sans-serif",color:theme.text,letterSpacing:"-.01em"}}>{project.title}</h3>

@@ -476,10 +476,11 @@ export default function App() {
         borderBottom: `1px solid ${theme.border}`,
         backdropFilter: 'blur(12px)',
         zIndex: 999,
-        display: 'none',
         maxHeight: mobileMenuOpen ? '400px' : '0',
         overflow: 'hidden',
         transition: 'all 0.3s ease',
+        opacity: mobileMenuOpen ? 1 : 0,
+        transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(-10px)',
         '@media (max-width: 768px)': {
           display: 'block'
         }

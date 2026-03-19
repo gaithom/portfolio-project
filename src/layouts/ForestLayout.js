@@ -199,10 +199,35 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
           <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,5vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:28,color:theme.text,opacity:.9}}>Recent Work</h2>
         </div>
-        <div className="projects-grid" style={{display:"flex",gap:16,padding:"0 20px",overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none",scrollSnapType:"x mandatory"}}>
+        <div className="projects-grid" style={{
+          display:"flex",
+          gap:16,
+          padding:"0 20px",
+          overflowX:"auto",
+          scrollbarWidth:"none",
+          msOverflowStyle:"none",
+          scrollSnapType:"x mandatory",
+          "@media (max-width: 768px)": {
+            flexDirection:"column",
+            overflowX:"visible",
+            scrollSnapType:"none",
+            padding:"0 10px"
+          }
+        }}>
         {PROJECTS.map((project,i)=>(
           <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
-            <div style={{minWidth:280,maxWidth:320,flexShrink:0,scrollSnapAlign:"start"}}>
+            <div style={{
+              minWidth:280,
+              maxWidth:320,
+              flexShrink:0,
+              scrollSnapAlign:"start",
+              "@media (max-width: 768px)": {
+                minWidth:"auto",
+                maxWidth:"100%",
+                width:"100%",
+                scrollSnapAlign:"none"
+              }
+            }}>
               <ProjectCard project={project} theme={theme} onSelect={setSel}/>
             </div>
           </ScrollReveal>
