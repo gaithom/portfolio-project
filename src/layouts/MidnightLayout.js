@@ -66,8 +66,8 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </div>
 
     {/* ABOUT — editorial split */}
-    <section ref={aboutRef} id="about" style={{padding:"100px 60px",maxWidth:1200,margin:"0 auto",position:"relative","@media (max-width: 768px)":{padding:"60px 20px"}}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1.2fr",gap:100,alignItems:"center","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"60px"}}}>
+    <section ref={aboutRef} id="about" style={{padding:"100px 60px",maxWidth:1200,margin:"0 auto",position:"relative"}}>
+      <div className="about-img-container" style={{display:"grid",gridTemplateColumns:"1fr 1.2fr",gap:100,alignItems:"center"}}>
         <div ref={aboutImgRef} style={{position:"relative"}}>
           <div style={{width:"100%",maxWidth:400,aspectRatio:"1",borderRadius:"2px",background:`linear-gradient(135deg,${theme.surface},${theme.bgAlt})`,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:88,boxShadow:theme.shadowMd,position:"relative",overflow:"hidden"}}>
             <div style={{position:"absolute",inset:0,background:`radial-gradient(circle at 40% 40%,${theme.animOrb},transparent 70%)`,opacity:.6}}/>
@@ -78,12 +78,12 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
             <div style={{fontWeight:600,fontSize:13,color:theme.text,fontFamily:"'Space Mono',monospace"}}>📍 Nakuru, Kenya</div>
           </div>
         </div>
-        <div ref={aboutTxtRef}>
+        <div ref={aboutTxtRef} className="about-content">
           <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>About</span>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,lineHeight:.95,letterSpacing:"-.03em",marginBottom:24,color:theme.text}}>
             Crafting digital<br/><span style={{color:theme.accent}}>experiences that matter</span>
           </h2>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,marginBottom:32}}>
+          <div className="expertise-education" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,marginBottom:32}}>
             <div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Expertise</h3>
               <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Frontend Developer & UI/UX Designer specializing in AI-powered interfaces and real-time analytics.</p>
@@ -93,7 +93,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
               <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Bachelor of IT student focusing on software engineering and human-computer interaction.</p>
             </div>
           </div>
-          <div style={{display:"flex",gap:12}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:2,letterSpacing:".08em"}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Work →</button></div>
+          <div className="about-buttons" style={{display:"flex",gap:12}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:2,letterSpacing:".08em"}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Work →</button></div>
         </div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
@@ -150,13 +150,13 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* SERVICES — editorial grid */}
-    <section ref={servicesRef} id="services" style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
+    <section ref={servicesRef} id="services" style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,"@media (max-width: 768px)":{padding:"60px 20px"}}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
           <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Services</span>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",color:theme.text}}>What I Offer</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"20px"}}}>
           {SERVICES.map(s=><div key={s.title} className="srv-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:32,boxShadow:theme.shadow,transition:"all .25s",cursor:"default"}}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=theme.shadowMd;e.currentTarget.style.borderColor=theme.borderMid;}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow=theme.shadow;e.currentTarget.style.borderColor=theme.border;}}>
@@ -170,23 +170,23 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* TIMELINE — editorial */}
-    <section ref={timelineRef} id="experience" style={{padding:"100px 60px",position:"relative"}}>
+    <section ref={timelineRef} id="experience" style={{padding:"100px 60px",position:"relative","@media (max-width: 768px)":{padding:"60px 20px"}}}>
       <div style={{maxWidth:900,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
           <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Journey</span>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",color:theme.text}}>Experience</h2>
         </div>
         <div style={{position:"relative"}}>
-          <div style={{position:"absolute",left:24,top:0,bottom:0,width:1,background:theme.borderMid,opacity:.5}}/>
-          {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:32,marginBottom:48}}>
-            <div style={{width:48,height:48,borderRadius:2,background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,boxShadow:theme.shadow}}>{t.type==="edu"?"🎓":"💼"}</div>
+          <div style={{position:"absolute",left:24,top:0,bottom:0,width:1,background:theme.borderMid,opacity:.5,"@media (max-width: 768px)":{left:16}}}/>
+          {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:32,marginBottom:48,"@media (max-width: 768px)":{gap:"20px",marginBottom:"32px"}}}>
+            <div style={{width:48,height:48,borderRadius:2,background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,boxShadow:theme.shadow,"@media (max-width: 768px)":{width:40,height:40,fontSize:16}}}>{t.type==="edu"?"🎓":"💼"}</div>
             <div style={{flex:1}}>
               <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:8,flexWrap:"wrap"}}>
-                <span style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"4px 10px",borderRadius:2,border:`1px solid ${theme.border}`}}>{t.year}</span>
-                <span style={{fontSize:12,color:theme.accent,fontWeight:600,fontFamily:"'Space Mono',monospace",letterSpacing:".04em"}}>{t.place}</span>
+                <span style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"4px 10px",borderRadius:2,border:`1px solid ${theme.border}`,"@media (max-width: 768px)":{fontSize:10,padding:"3px 8px"}}}>{t.year}</span>
+                <span style={{fontSize:12,color:theme.accent,fontWeight:600,fontFamily:"'Space Mono',monospace",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:11}}}>{t.place}</span>
               </div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,marginBottom:8,color:theme.text,letterSpacing:"-.01em"}}>{t.title}</h3>
-              <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.8}}>{t.desc}</p>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,marginBottom:8,color:theme.text,letterSpacing:"-.01em","@media (max-width: 768px)":{fontSize:16,marginBottom:6}}}>{t.title}</h3>
+              <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.8,"@media (max-width: 768px)":{fontSize:13,lineHeight:1.7}}}>{t.desc}</p>
             </div>
           </div>)}
         </div>
@@ -195,12 +195,12 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* GET IN TOUCH */}
-    <section style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
+    <section style={{padding:"100px 60px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,"@media (max-width: 768px)":{padding:"60px 20px"}}}>
       <div style={{maxWidth:800,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Connect</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:40,color:theme.text}}>Let's Work Together</h2>
-        <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40,fontFamily:"'DM Sans',sans-serif"}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:24,marginBottom:40}}>
+        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:40,color:theme.text,"@media (max-width: 768px)":{marginBottom:30}}}>Let's Work Together</h2>
+        <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40,fontFamily:"'DM Sans',sans-serif","@media (max-width: 768px)":{fontSize:15,marginBottom:30}}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:24,marginBottom:40,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"20px",marginBottom:30}}}>
           {CONTACT_INFO.map((c,i)=>(
             <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:16,padding:"32px 24px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:16,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:40}}>{c.icon}</div>
@@ -213,26 +213,26 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     </section>
 
     {/* CONTACT */}
-    <section ref={contactRef} id="contact" style={{padding:"100px 60px",position:"relative"}}>
+    <section ref={contactRef} id="contact" style={{padding:"100px 60px",position:"relative","@media (max-width: 768px)":{padding:"60px 20px"}}}>
       <div style={{maxWidth:700,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{fontFamily:"'Space Mono',monospace",letterSpacing:".18em"}}>Contact</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:32,color:theme.text}}>Let's Connect</h2>
-        <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:40,boxShadow:theme.shadow}}>
+        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,4vw,56px)",fontWeight:800,letterSpacing:"-.03em",marginBottom:32,color:theme.text,"@media (max-width: 768px)":{marginBottom:24}}}>Let's Connect</h2>
+        <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:40,boxShadow:theme.shadow,"@media (max-width: 768px)":{padding:"24px 20px"}}}>
           {sent?<div style={{textAlign:"center",padding:"40px 0"}}><div style={{fontSize:52,marginBottom:20}}>✅</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:theme.text,letterSpacing:"-.01em"}}>Thank You</h3><p style={{color:theme.textMuted,fontSize:15,fontFamily:"'DM Sans',sans-serif"}}>Your message has been received. I'll respond within 24 hours.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your full name"},{l:"Email",k:"email",t:"email",p:"your@email.com"},{l:"Subject",k:"subject",t:"text",p:"Project details"}].map(f=><div key={f.k} style={{marginBottom:16,textAlign:"left"}}>
               <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.7}}>{f.l}</label>
-              <input style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",transition:"border-color .2s"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
+              <input style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",transition:"border-color .2s","@media (max-width: 768px)":{padding:"12px 14px",fontSize:14}}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
             </div>)}
             <div style={{marginBottom:24,textAlign:"left"}}>
               <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.7}}>Message</label>
-              <textarea style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s"}} rows={6} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
+              <textarea style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s","@media (max-width: 768px)":{padding:"12px 14px",fontSize:14}}} rows={6} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
             <button className="bp" onClick={()=>{
               const subject = encodeURIComponent(form.subject || "Portfolio Contact");
               const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
               window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
               setSent(true);
-            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"16px",borderRadius:2,letterSpacing:".08em"}}>Send Message →</button>
+            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"16px",borderRadius:2,letterSpacing:".08em","@media (max-width: 768px)":{fontSize:13,padding:"14px"}}}>Send Message →</button>
           </>}
         </div>
       </div>

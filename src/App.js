@@ -132,6 +132,20 @@ export default function App() {
       .forest-projects .project-card { max-width: 100% !important; }
       
       .forest-services { padding: 60px 30px !important; }
+      
+      /* MidnightLayout responsive styles */
+      #about { padding: 60px 20px !important; }
+      #about > div { grid-template-columns: 1fr !important; gap: 40px !important; text-align: center !important; }
+      #about .about-img-container { display: flex !important; flex-direction: column !important; align-items: center !important; margin-bottom: 20px !important; }
+      #about .about-img-container > div:first-child { max-width: 280px !important; font-size: 64px !important; }
+      #about .about-img-container > div:last-child { position: static !important; margin-top: 16px !important; right: auto !important; bottom: auto !important; display: inline-block !important; }
+      #about .about-content h2 { text-align: center !important; margin-bottom: 20px !important; }
+      #about .expertise-education { grid-template-columns: 1fr !important; gap: 24px !important; margin-bottom: 24px !important; }
+      #about .expertise-education h3 { text-align: center !important; font-size: 13px !important; margin-bottom: 8px !important; }
+      #about .expertise-education p { text-align: center !important; font-size: 13px !important; line-height: 1.8 !important; margin-bottom: 16px !important; }
+      #about .about-buttons { flex-direction: column !important; gap: 10px !important; align-items: center !important; }
+      #about .about-buttons button { width: 100% !important; max-width: 280px !important; }
+    }
       .forest-services .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
       .forest-services .services-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
       
