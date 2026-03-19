@@ -24,9 +24,9 @@ export const SERVICES = [
 ];
 
 export const TIMELINE = [
-  {year:"2023",type:"edu",title:"Diploma — Information Technology",place:"Technical College",desc:"Two-year diploma covering web development, databases, networking, and software engineering."},
+  {year:"2023",type:"edu",title:"Diploma — Information Technology",place:"Kabarak University",desc:"Two-year diploma covering web development, databases, networking, and software engineering."},
   {year:"2024",type:"work",title:"Frontend Developer",place:"Freelance, Nakuru",desc:"Building modern web interfaces and dashboards for clients. Leading UI/UX and frontend architecture."},
-  {year:"2025",type:"edu",title:"Bachelor of IT (Ongoing)",place:"Online Learning",desc:"Degree specializing in software engineering and human-computer interaction."}
+  {year:"2025",type:"edu",title:"Bachelor of IT (Ongoing)",place:"Kabarak University",desc:"Degree specializing in software engineering and human-computer interaction."}
 ];
 
 export const CONTACT_INFO = [
