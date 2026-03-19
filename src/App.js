@@ -98,7 +98,87 @@ export default function App() {
       footer .copyright { font-size: 9px !important; }
     }
     
-    /* LightLayout responsive styles */
+    /* ForestLayout responsive styles */
+    @media (max-width: 768px) {
+      .forest-hero { padding: 80px 20px 60px !important; min-height: 85vh !important; }
+      .forest-hero .hero-content { max-width: 100% !important; }
+      .forest-hero .hero-title { font-size: clamp(28px, 8vw, 48px) !important; }
+      .forest-hero .hero-subtitle { font-size: 14px !important; max-width: 100% !important; }
+      .forest-hero .hero-description { font-size: 12px !important; max-width: 100% !important; }
+      .forest-hero .hero-cta { gap: 8px !important; }
+      .forest-hero .hero-stats { gap: 24px !important; margin-top: 40px !important; flex-direction: column !important; align-items: center !important; }
+      .forest-hero .stat-number { font-size: 24px !important; }
+      .forest-hero .stat-label { text-align: center !important; }
+      
+      .forest-about { padding: 60px 30px !important; }
+      .forest-about .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
+      .forest-about .about-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+      .forest-about .about-card { padding: 24px !important; }
+      .forest-about .about-card .icon { font-size: 32px !important; }
+      .forest-about .about-card h3 { font-size: 16px !important; }
+      .forest-about .about-card p { font-size: 12px !important; }
+      
+      .forest-skills { padding: 60px 30px !important; }
+      .forest-skills .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
+      .forest-skills .skills-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+      
+      .forest-projects { padding: 60px 30px !important; }
+      .forest-projects .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
+      .forest-projects .projects-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+      .forest-projects .project-card { max-width: 100% !important; }
+      
+      .forest-services { padding: 60px 30px !important; }
+      .forest-services .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
+      .forest-services .services-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+      
+      .forest-timeline { padding: 60px 30px !important; }
+      .forest-timeline .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
+      .forest-timeline .timeline-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+      .forest-timeline .timeline-line { display: none !important; }
+      
+      .forest-contact { padding: 60px 30px !important; }
+      .forest-contact .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
+      .forest-contact .contact-form { max-width: 100% !important; padding: 28px !important; }
+      .forest-contact .contact-info-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+      
+      .forest-game { margin: 40px 20px !important; }
+      .forest-game .game-container { transform: scale(0.8) !important; max-width: 100% !important; }
+    }
+    
+    @media (max-width: 480px) {
+      .forest-hero { padding: 60px 16px 40px !important; min-height: 80vh !important; }
+      .forest-hero .hero-title { font-size: clamp(24px, 8vw, 40px) !important; }
+      .forest-hero .hero-subtitle { font-size: 13px !important; }
+      .forest-hero .hero-description { font-size: 11px !important; }
+      .forest-hero .hero-stats { gap: 20px !important; margin-top: 30px !important; }
+      .forest-hero .stat-number { font-size: 20px !important; }
+      
+      .forest-about { padding: 40px 20px !important; }
+      .forest-about .about-grid { gap: 16px !important; }
+      .forest-about .about-card { padding: 20px !important; }
+      .forest-about .about-card .icon { font-size: 28px !important; }
+      .forest-about .about-card h3 { font-size: 15px !important; }
+      .forest-about .about-card p { font-size: 11px !important; }
+      
+      .forest-skills { padding: 40px 20px !important; }
+      .forest-skills .skills-grid { gap: 20px !important; }
+      
+      .forest-projects { padding: 40px 20px !important; }
+      .forest-projects .projects-grid { gap: 16px !important; }
+      
+      .forest-services { padding: 40px 20px !important; }
+      .forest-services .services-grid { gap: 12px !important; }
+      
+      .forest-timeline { padding: 40px 20px !important; }
+      .forest-timeline .timeline-grid { gap: 20px !important; }
+      
+      .forest-contact { padding: 40px 20px !important; }
+      .forest-contact .contact-form { padding: 24px !important; }
+      .forest-contact .contact-info-grid { gap: 12px !important; }
+      
+      .forest-game { margin: 20px 16px !important; }
+      .forest-game .game-container { transform: scale(0.7) !important; }
+    }
     @media (max-width: 768px) {
       .hero-section { padding: 100px 20px 60px !important; min-height: 85vh !important; }
       .hero-content { max-width: 100% !important; }
@@ -182,13 +262,34 @@ export default function App() {
       border: none;
       cursor: pointer;
       padding: 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+    }
+    
+    .hamburger:hover {
+      background-color: ${theme.border}22;
     }
     
     .hamburger span {
-      width: 20px;
-      height: 2px;
+      width: 24px;
+      height: 3px;
       background: ${theme.text};
       transition: all 0.3s ease;
+      border-radius: 2px;
+      transform-origin: center;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      transform: scale(0);
+    }
+    
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
     }
     
     .mobile-menu {
@@ -202,17 +303,36 @@ export default function App() {
       z-index: 999;
       padding: 20px;
       box-shadow: ${theme.shadow};
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
     }
     
     .mobile-menu.active {
       display: block;
+      max-height: 400px;
+      padding: 20px;
     }
     
     @media (max-width: 768px) {
-      .hamburger { display: flex; }
+      .hamburger { 
+        display: flex; 
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+      }
       .desktop-nav { display: none; }
-      .mobile-menu { display: none; }
-      .mobile-menu.active { display: block; }
+      .mobile-menu { 
+        display: block; 
+        max-height: 0;
+        padding: 0 20px;
+      }
+      .mobile-menu.active { 
+        display: block; 
+        max-height: 400px;
+        padding: 20px;
+      }
     }
     
     /* Theme transition */
@@ -297,21 +417,15 @@ export default function App() {
 
         {/* Mobile Hamburger Menu */}
         <button 
-          className="hamburger" 
+          className={`hamburger ${mobileMenuOpen ? 'active' : ''}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
             display: 'none'
           }}
         >
-          <span style={{
-            transform: mobileMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none'
-          }}></span>
-          <span style={{
-            opacity: mobileMenuOpen ? 0 : 1
-          }}></span>
-          <span style={{
-            transform: mobileMenuOpen ? 'rotate(-45deg) translate(7px, -6px)' : 'none'
-          }}></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </nav>
 

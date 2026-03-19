@@ -92,7 +92,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
 
   return <>
     {/* HERO — organic curved bottom with car game */}
-    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)"}}>
+    <section ref={heroRef} id="hero" className="forest-hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)"}}>
       <ParallaxElement theme={theme} speed={0.3}>
         <ParticleCanvas theme={theme}/>
         <div style={{position:"absolute",inset:0,pointerEvents:"none",backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"64px 64px",maskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)",WebkitMaskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)"}}/>
@@ -101,27 +101,29 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <div style={{position:"absolute",width:480,height:480,borderRadius:"50%",background:`radial-gradient(circle,${theme.animOrb} 0%,transparent 68%)`,top:"50%",left:"50%",transform:"translate(-50%,-50%)",animation:"breathe 6s ease-in-out infinite",pointerEvents:"none"}}/>
       </ParallaxElement>
       
-      <div style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%"}}>
+      <div className="hero-content" style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%"}}>
         {/* Hero content */}
         <div style={{textAlign:"center"}}>
           <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted,opacity:.9}}>
             <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Available for Freelance Projects
           </div>
-          <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
-          <div ref={heroSubRef} style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(13px,1.8vw,17px)",marginBottom:32,minHeight:26}}><Typewriter words={["Frontend Developer","UI/UX Designer","Creative Coder","Problem Solver"]} theme={theme}/></div>
-          <p style={{fontSize:15,color:theme.textMuted,maxWidth:460,margin:"0 auto 36px",lineHeight:1.9,opacity:.85}}>Building premium digital experiences — Nakuru, Kenya 🇰🇪</p>
-          <div ref={heroCtaRef} style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap"}}>
+          <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
+          <div ref={heroSubRef} className="hero-subtitle" style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(13px,1.8vw,17px)",marginBottom:32,minHeight:26}}><Typewriter words={["Frontend Developer","UI/UX Designer","Creative Coder","Problem Solver"]} theme={theme}/></div>
+          <p className="hero-description" style={{fontSize:15,color:theme.textMuted,maxWidth:460,margin:"0 auto 36px",lineHeight:1.9,opacity:.85}}>Building premium digital experiences — Nakuru, Kenya 🇰🇪</p>
+          <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap"}}>
             <button className="bp" onClick={()=>scrollTo("projects")}>View My Work ↓</button>
             <button className="bg" onClick={()=>scrollTo("contact")}>Let's Build</button>
           </div>
         </div>
         
         {/* Car Driving Game */}
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+        <div className="forest-game" style={{display:"flex",flexDirection:"column",alignItems:"center",margin:"60px auto"}}>
           <div style={{marginBottom:15,fontSize:12,letterSpacing:".1em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.7}}>
             Drive Through the Forest 🌲
           </div>
-          <CarDrivingGame theme={theme} scrollTo={scrollTo} />
+          <div className="game-container" style={{transform: "scale(1)", transition: "transform 0.3s ease"}}>
+            <CarDrivingGame theme={theme} scrollTo={scrollTo} />
+          </div>
         </div>
       </div>
       
@@ -136,9 +138,9 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </div>
 
     {/* ABOUT — diagonal offset */}
-    <section ref={aboutRef} id="about" style={{padding:"110px 40px",maxWidth:1010,margin:"0 auto",position:"relative"}}>
+    <section ref={aboutRef} id="about" className="forest-about" style={{padding:"110px 40px",maxWidth:1010,margin:"0 auto",position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.1}>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1.3fr",gap:80,alignItems:"center"}}>
+        <div className="about-grid" style={{display:"grid",gridTemplateColumns:"1fr 1.3fr",gap:80,alignItems:"center"}}>
         <div ref={aboutImgRef} style={{position:"relative"}}>
           {/* Organic shape frame */}
           <div style={{width:"100%",maxWidth:350,aspectRatio:"1",borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:`linear-gradient(140deg,${theme.surface},${theme.bgAlt})`,border:`1px solid ${theme.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:82,boxShadow:theme.shadowMd,position:"relative",overflow:"hidden"}}>
@@ -170,11 +172,11 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* SKILLS — organic layout */}
-    <section id="skills" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section id="skills" className="forest-skills" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.2}>
         <div style={{maxWidth:1010,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:62}}>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
+        <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:62}}>
           <div>{SKILLS.map((s,i)=><SkillBar key={s.label} {...s} theme={theme} delay={i*.09}/>)}</div>
           <div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:700,marginBottom:20,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.7}}>Tech Stack</h3>
@@ -191,29 +193,29 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* PROJECTS — horizontal scroll */}
-    <section id="projects" style={{padding:"80px 0 0",position:"relative"}}>
+    <section id="projects" className="forest-projects" style={{padding:"80px 0 0",position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
           <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
-          <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>My Projects</h2>
+          <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:32,color:theme.text,opacity:.9}}>Recent Work</h2>
         </div>
-      </ScrollReveal>
-      <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(400px,1fr))",gap:40,padding:"0 40px"}}>
+        <div className="projects-grid" style={{display:"flex",gap:24,padding:"0 40px",overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none"}}>
         {PROJECTS.map((project,i)=>(
           <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
             <ProjectCard project={project} theme={theme} onSelect={setSel}/>
           </ScrollReveal>
         ))}
-      </div>
+        </div>
+      </ScrollReveal>
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
     </section>
 
     {/* SERVICES — organic asymmetric grid */}
-    <section ref={servicesRef} id="services" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1010,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
+        <div className="services-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
           {SERVICES.map((s,i)=><div key={s.title} className="srv-card" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:["18px 4px 18px 4px","4px 18px 4px 18px","18px 4px 18px 4px","4px 18px 4px 18px"][i],padding:26,backdropFilter:"blur(12px)",transition:"transform .3s,box-shadow .3s,border-color .3s",cursor:"default",marginTop:i%2===1?24:0}}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow=theme.shadowMd;e.currentTarget.style.borderColor=theme.borderMid;}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=theme.border;}}>
@@ -228,12 +230,12 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* TIMELINE — branch style */}
-    <section ref={timelineRef} id="experience" style={{padding:"110px 40px",position:"relative"}}>
+    <section ref={timelineRef} id="experience" className="forest-timeline" style={{padding:"110px 40px",position:"relative"}}>
       <ScrollReveal theme={theme} direction="left" delay={0.4}>
         <div style={{maxWidth:660,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
         <div style={{position:"relative"}}>
-          <div style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
+          <div className="timeline-line" style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
           {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:26,marginBottom:42}}>
             <div style={{width:43,height:43,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,flexShrink:0,boxShadow:theme.shadow,opacity:.85}}>{t.type==="edu"?"🎓":"💼"}</div>
             <div style={{paddingTop:5}}>
@@ -252,12 +254,12 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* GET IN TOUCH */}
-    <section style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
+    <section className="forest-contact" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{display:"block",textAlign:"center"}}>Connect</span>
-        <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Work Together</h2>
+        <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Work Together</h2>
         <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
+        <div className="contact-info-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
           {CONTACT_INFO.map((c,i)=>(
             <a key={i} href={c.link} onClick={(e)=>{if(c.action==="scroll"){e.preventDefault();scrollTo("contact");}}} target={c.action==="scroll"?"_self":"_blank"} rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:32}}>{c.icon}</div>
@@ -270,12 +272,12 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* CONTACT */}
-    <section ref={contactRef} id="contact" style={{padding:"110px 40px",position:"relative"}}>
+    <section ref={contactRef} id="contact" className="forest-contact" style={{padding:"110px 40px",position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.5}>
         <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{display:"block",textAlign:"center"}}>Get In Touch</span>
-        <h2 className="gsap-h-f" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Create Together</h2>
-        <div style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
+        <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Create Together</h2>
+        <div className="contact-form" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:46,marginBottom:16}}>✅</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
               <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.6}}>{f.l}</label>
