@@ -28,7 +28,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     {/* HERO — brutalist full bleed left-aligned */}
     <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"140px 60px 100px",textAlign:"left",position:"relative",background:theme.bg}}>
       <div style={{position:"relative",zIndex:1,maxWidth:1000,width:"100%"}}>
-        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:10,border:`2px solid ${theme.borderMid}`,borderRadius:0,padding:"8px 20px",marginBottom:40,background:theme.surface,fontSize:11,letterSpacing:".2em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",fontWeight:700}}>
+        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:10,border:`2px solid ${theme.borderMid}`,borderRadius:0,padding:"8px 20px",marginBottom:40,background:theme.surface,fontSize:13,letterSpacing:".2em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",fontWeight:700}}>
           <span style={{width:6,height:6,borderRadius:0,background:theme.accent,display:"inline-block",opacity:.8,transform:"rotate(45deg)"}}/>AVAILABLE FOR WORK
         </div>
         <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(56px,10vw,120px)",fontWeight:800,lineHeight:.85,letterSpacing:"-.05em",marginBottom:32,color:theme.text,textTransform:"uppercase"}}>
@@ -46,25 +46,25 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
 
     <div style={{overflow:"hidden",borderBottom:`2px solid ${theme.borderMid}`,padding:"10px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 18s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:10,fontWeight:700,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,opacity:.4,fontFamily:"'Space Mono',monospace"}}>{t}<span style={{marginLeft:16,opacity:.2}}>&times;</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:12,fontWeight:700,letterSpacing:".18em",textTransform:"uppercase",color:theme.text,opacity:.6,fontFamily:"'Space Mono',monospace"}}>{t}<span style={{marginLeft:16,opacity:.2}}>&times;</span></span>)}
       </div>
     </div>
 
     {/* ABOUT — raw, text-heavy */}
     <section id="about" style={{padding:"80px 60px",borderBottom:`2px solid ${theme.borderMid}`,position:"relative"}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ ABOUT</div></div>
+        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6}}>/ ABOUT</div></div>
         <div>
           <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,5vw,64px)",fontWeight:800,lineHeight:.9,letterSpacing:"-.03em",marginBottom:40,color:theme.text,textTransform:"uppercase"}}>BUILDING<br/>THINGS<br/><span style={{color:theme.accent,opacity:.85}}>THAT WORK</span></h2>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40}}>
             <div style={{borderTop:`2px solid ${theme.borderMid}`,paddingTop:20}}>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
+              <p style={{color:theme.text,lineHeight:1.9,fontSize:16}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
             </div>
             <div style={{borderTop:`2px solid ${theme.borderMid}`,paddingTop:20}}>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14}}>Pursuing Bachelor of IT. Bridging academic theory with real-world production code.</p>
+              <p style={{color:theme.text,lineHeight:1.9,fontSize:16}}>Pursuing Bachelor of IT. Bridging academic theory with real-world production code.</p>
             </div>
           </div>
-          <div style={{marginTop:40,display:"flex",gap:10}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>RESUME.PDF</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:11}}>WORK →</button></div>
+          <div style={{marginTop:40,display:"flex",gap:10}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:13}}>RESUME.PDF</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:0,letterSpacing:".08em",textTransform:"uppercase",fontSize:13}}>WORK →</button></div>
         </div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
@@ -73,7 +73,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     {/* SKILLS — big numbers */}
     <section id="skills" style={{padding:"80px 60px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`,position:"relative"}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ SKILLS</div></div>
+        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6}}>/ SKILLS</div></div>
         <div>
           {SKILLS.map((s,i)=><div key={s.label} style={{display:"grid",gridTemplateColumns:"1fr 120px",gap:30,alignItems:"center",borderTop:`1px solid ${theme.border}`,padding:"16px 0"}}>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,color:theme.text,opacity:.85,textTransform:"uppercase",letterSpacing:".04em"}}>{s.label}</div>
@@ -83,7 +83,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
             </div>
           </div>)}
           <div style={{marginTop:30,display:"flex",flexWrap:"wrap",gap:6,borderTop:`1px solid ${theme.border}`,paddingTop:20}}>
-            {TECH.map(t=><span key={t} style={{padding:"4px 10px",background:"transparent",border:`1px solid ${theme.borderMid}`,fontSize:10,fontWeight:700,color:theme.textMuted,textTransform:"uppercase",letterSpacing:".06em",transition:"all .15s",cursor:"default"}}
+            {TECH.map(t=><span key={t} style={{padding:"4px 10px",background:"transparent",border:`1px solid ${theme.borderMid}`,fontSize:12,fontWeight:700,color:theme.text,textTransform:"uppercase",letterSpacing:".06em",transition:"all .15s",cursor:"default"}}
               onMouseEnter={e=>{e.target.style.background=theme.accent;e.target.style.color=theme.bg;e.target.style.borderColor=theme.accent;}}
               onMouseLeave={e=>{e.target.style.background="transparent";e.target.style.color=theme.textMuted;e.target.style.borderColor=theme.borderMid;}}>{t}</span>)}
           </div>
@@ -95,10 +95,8 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     {/* PROJECTS — brutalist numbered list */}
     <section id="projects" style={{borderBottom:`2px solid ${theme.borderMid}`,position:"relative"}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60,padding:"80px 60px 30px"}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6}}>/ WORK</div></div>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-          <span style={{fontSize:10,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>Projects</span>
-        </div>
+        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6}}>/ WORK</div></div>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><span style={{fontSize:12,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace"}}>Projects</span></div>
       </div>
       {PROJECTS.map((p,i)=>{
         const [h,setH]=useState(false);

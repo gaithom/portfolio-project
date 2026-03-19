@@ -48,7 +48,7 @@ function ProjectCard({ project, theme, onSelect }) {
       <div style={{ padding: "15px 20px 22px" }}>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 9 }}>
           {project.tags.map(t => (
-            <span key={t} style={{ fontSize: 9, fontWeight: 600, letterSpacing: ".11em", textTransform: "uppercase", color: theme.textMuted, border: `1px solid ${theme.border}`, borderRadius: 99, padding: "2px 8px", opacity: .8 }}>
+            <span key={t} style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".11em", textTransform: "uppercase", color: theme.text, border: `1px solid ${theme.border}`, borderRadius: 99, padding: "2px 8px", opacity: .9 }}>
               {t}
             </span>
           ))}
@@ -103,7 +103,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       <div className="hero-content" style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%"}}>
         {/* Hero content */}
         <div style={{textAlign:"center"}}>
-          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted,opacity:.9}}>
+          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:12,letterSpacing:".14em",textTransform:"uppercase",color:theme.text,opacity:.9}}>
             <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Available for Freelance Projects
           </div>
           <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
@@ -122,7 +122,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     {/* Marquee */}
     <div style={{overflow:"hidden",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,padding:"10px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 22s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:10,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,opacity:.45}}>{t}<span style={{marginLeft:16,opacity:.25}}>·</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:12,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t}<span style={{marginLeft:16,opacity:.25}}>·</span></span>)}
       </div>
     </div>
 
@@ -138,12 +138,12 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           </div>
           <div style={{position:"absolute",inset:-16,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",border:`1px dashed ${theme.animDot}`,animation:"spinSlow 30s linear infinite",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:8,right:-18,background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 4px 12px 4px",padding:"9px 15px",backdropFilter:"blur(12px)",animation:"floatY 5s ease-in-out infinite",boxShadow:theme.shadow}}>
-            <div style={{fontSize:8,color:theme.textMuted,letterSpacing:".12em",marginBottom:2,opacity:.65}}>BASED IN</div>
-            <div style={{fontWeight:600,fontSize:12,color:theme.text,opacity:.85}}>📍 Nakuru, Kenya</div>
+            <div style={{fontSize:10,color:theme.text,letterSpacing:".12em",marginBottom:2,opacity:.75}}>BASED IN</div>
+            <div style={{fontWeight:600,fontSize:14,color:theme.text,opacity:.9}}>📍 Nakuru, Kenya</div>
           </div>
           <div style={{position:"absolute",top:8,left:-18,background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"4px 12px 4px 12px",padding:"9px 15px",backdropFilter:"blur(12px)",animation:"floatYR 4.5s ease-in-out infinite .4s",boxShadow:theme.shadow}}>
-            <div style={{fontSize:8,color:theme.textMuted,letterSpacing:".12em",marginBottom:2,opacity:.65}}>AT</div>
-            <div style={{fontWeight:600,fontSize:12,color:theme.text,opacity:.85}}>🧠 AI Interfaces</div>
+            <div style={{fontSize:10,color:theme.text,letterSpacing:".12em",marginBottom:2,opacity:.75}}>AT</div>
+            <div style={{fontWeight:600,fontSize:14,color:theme.text,opacity:.9}}>🧠 AI Interfaces</div>
           </div>
         </div>
         <div ref={aboutTxtRef}>
@@ -168,7 +168,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:62}}>
           <div>{SKILLS.map((s,i)=><SkillBar key={s.label} {...s} theme={theme} delay={i*.09}/>)}</div>
           <div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:700,marginBottom:20,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.7}}>Tech Stack</h3>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,marginBottom:20,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.8}}>Tech Stack</h3>
             <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
               {TECH.map(t=><span key={t} style={{padding:"6px 13px",background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",fontSize:12,fontWeight:500,color:theme.text,opacity:.7,backdropFilter:"blur(10px)",transition:"all .2s",cursor:"default"}}
                 onMouseEnter={e=>{e.target.style.opacity=1;e.target.style.borderColor=theme.borderMid;}}
@@ -296,11 +296,11 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <div className="contact-form" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:46,marginBottom:16}}>✅</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
-              <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.6}}>{f.l}</label>
+              <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>{f.l}</label>
               <input style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
             </div>)}
             <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.6}}>Message</label>
+              <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
             <button className="bp" onClick={()=>{

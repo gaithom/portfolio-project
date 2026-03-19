@@ -33,7 +33,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
       <div style={{position:"relative",zIndex:1,display:"flex",gap:"60px",alignItems:"center",width:"100%",maxWidth:1200,"@media (max-width: 768px)":{flexDirection:"column",gap:"40px"}}}>
         {/* Left side - Hero content */}
         <div style={{flex:1}}>
-          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:10,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>
+          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:12,letterSpacing:".18em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace"}}>
             <span style={{width:5,height:5,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>Available for Select Projects
           </div>
           <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(48px,9vw,110px)",fontWeight:800,lineHeight:.95,letterSpacing:"-.04em",marginBottom:24,color:theme.text}}>
@@ -49,7 +49,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         
         {/* Right side - Pac-Man Game */}
         <div style={{flex:0,display:"flex",flexDirection:"column",alignItems:"center"}}>
-          <div style={{marginBottom:20,fontSize:12,letterSpacing:".1em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.7}}>
+          <div style={{marginBottom:20,fontSize:14,letterSpacing:".1em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.9}}>
             Take a Break & Play
           </div>
           <PacManGame theme={theme} />
@@ -61,7 +61,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
     {/* Marquee */}
     <div style={{overflow:"hidden",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,padding:"10px 0"}}>
       <div style={{display:"flex",gap:32,whiteSpace:"nowrap",animation:"marquee 20s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:10,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",color:theme.textMuted,opacity:.4,fontFamily:"'Space Mono',monospace"}}>{t}<span style={{marginLeft:18,opacity:.2}}>&times;</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:12,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",color:theme.text,opacity:.6,fontFamily:"'Space Mono',monospace"}}>{t}<span style={{marginLeft:18,opacity:.2}}>&times;</span></span>)}
       </div>
     </div>
 
@@ -74,8 +74,8 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
             <span style={{position:"relative",zIndex:1}}>👨🏾‍💻</span>
           </div>
           <div style={{position:"absolute",bottom:12,right:-20,background:theme.surface,border:`1px solid ${theme.borderMid}`,borderRadius:2,padding:"12px 18px",boxShadow:theme.shadow}}>
-            <div style={{fontSize:9,color:theme.textMuted,letterSpacing:".12em",marginBottom:3,opacity:.6,fontFamily:"'Space Mono',monospace"}}>LOCATION</div>
-            <div style={{fontWeight:600,fontSize:13,color:theme.text,fontFamily:"'Space Mono',monospace"}}>📍 Nakuru, Kenya</div>
+            <div style={{fontSize:11,color:theme.text,letterSpacing:".12em",marginBottom:3,opacity:.8,fontFamily:"'Space Mono',monospace"}}>LOCATION</div>
+            <div style={{fontWeight:600,fontSize:15,color:theme.text,fontFamily:"'Space Mono',monospace"}}>📍 Nakuru, Kenya</div>
           </div>
         </div>
         <div ref={aboutTxtRef} className="about-content">
@@ -85,12 +85,12 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
           </h2>
           <div className="expertise-education" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,marginBottom:32}}>
             <div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Expertise</h3>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Frontend Developer & UI/UX Designer specializing in AI-powered interfaces and real-time analytics.</p>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Expertise</h3>
+              <p style={{color:theme.text,lineHeight:1.9,fontSize:16,marginBottom:20}}>Frontend Developer & UI/UX Designer specializing in AI-powered interfaces and real-time analytics.</p>
             </div>
             <div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Education</h3>
-              <p style={{color:theme.textMuted,lineHeight:1.9,fontSize:14,marginBottom:20}}>Bachelor of IT student focusing on software engineering and human-computer interaction.</p>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:12,color:theme.accent,letterSpacing:".08em",textTransform:"uppercase"}}>Education</h3>
+              <p style={{color:theme.text,lineHeight:1.9,fontSize:16,marginBottom:20}}>Bachelor of IT student focusing on software engineering and human-computer interaction.</p>
             </div>
           </div>
           <div className="about-buttons" style={{display:"flex",gap:12}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:2,letterSpacing:".08em"}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:2,letterSpacing:".08em"}}>View Work →</button></div>
@@ -108,7 +108,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:40,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:"30px"}}}>
           {SKILLS.map((s,i)=><div key={s.label} style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:24,boxShadow:theme.shadow}}>
-            <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.accent,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:12}}>{s.pct}%</div>
+            <div style={{fontFamily:"'Space Mono',monospace",fontSize:13,color:theme.accent,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:12}}>{s.pct}%</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:8,color:theme.text}}>{s.label}</h3>
             <div style={{height:2,background:theme.border,borderRadius:99}}>
               <div style={{height:"100%",width:`${s.pct}%`,background:theme.accent,borderRadius:99,opacity:.7}}/>
@@ -116,7 +116,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
           </div>)}
         </div>
         <div style={{marginTop:48,textAlign:"center"}}>
-          <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,marginBottom:20,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase"}}>Tech Stack</h3>
+          <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:20,color:theme.text,letterSpacing:".08em",textTransform:"uppercase"}}>Tech Stack</h3>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>
             {TECH.map(t=><span key={t} style={{padding:"8px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,fontSize:12,fontWeight:500,color:theme.text,fontFamily:"'Space Mono',monospace",letterSpacing:".04em",transition:"all .2s",cursor:"default"}}
               onMouseEnter={e=>{e.target.style.borderColor=theme.accent;e.target.style.color=theme.accent;}}
@@ -182,8 +182,8 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
             <div style={{width:48,height:48,borderRadius:2,background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,boxShadow:theme.shadow,"@media (max-width: 768px)":{width:40,height:40,fontSize:16}}}>{t.type==="edu"?"🎓":"💼"}</div>
             <div style={{flex:1}}>
               <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:8,flexWrap:"wrap"}}>
-                <span style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"4px 10px",borderRadius:2,border:`1px solid ${theme.border}`,"@media (max-width: 768px)":{fontSize:10,padding:"3px 8px"}}}>{t.year}</span>
-                <span style={{fontSize:12,color:theme.accent,fontWeight:600,fontFamily:"'Space Mono',monospace",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:11}}}>{t.place}</span>
+                <span style={{fontFamily:"'Space Mono',monospace",fontSize:12,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"4px 10px",borderRadius:2,border:`1px solid ${theme.border}`,"@media (max-width: 768px)":{fontSize:11,padding:"3px 8px"}}}>{t.year}</span>
+                <span style={{fontSize:13,color:theme.accent,fontWeight:600,fontFamily:"'Space Mono',monospace",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:12}}}>{t.place}</span>
               </div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,marginBottom:8,color:theme.text,letterSpacing:"-.01em","@media (max-width: 768px)":{fontSize:16,marginBottom:6}}}>{t.title}</h3>
               <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.8,"@media (max-width: 768px)":{fontSize:13,lineHeight:1.7}}}>{t.desc}</p>
@@ -205,7 +205,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
             <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:16,padding:"32px 24px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:16,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:40}}>{c.icon}</div>
               <div style={{fontSize:16,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-              <div style={{fontSize:13,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+              <div style={{fontSize:14,color:theme.textMuted,opacity:.8}}>{c.value}</div>
             </a>
           ))}
         </div>
@@ -220,11 +220,11 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:2,padding:40,boxShadow:theme.shadow,"@media (max-width: 768px)":{padding:"24px 20px"}}}>
           {sent?<div style={{textAlign:"center",padding:"40px 0"}}><div style={{fontSize:52,marginBottom:20}}>✅</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:theme.text,letterSpacing:"-.01em"}}>Thank You</h3><p style={{color:theme.textMuted,fontSize:15,fontFamily:"'DM Sans',sans-serif"}}>Your message has been received. I'll respond within 24 hours.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your full name"},{l:"Email",k:"email",t:"email",p:"your@email.com"},{l:"Subject",k:"subject",t:"text",p:"Project details"}].map(f=><div key={f.k} style={{marginBottom:16,textAlign:"left"}}>
-              <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.7}}>{f.l}</label>
+              <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.8}}>{f.l}</label>
               <input style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",transition:"border-color .2s","@media (max-width: 768px)":{padding:"12px 14px",fontSize:14}}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
             </div>)}
             <div style={{marginBottom:24,textAlign:"left"}}>
-              <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.7}}>Message</label>
+              <label style={{display:"block",fontSize:11,fontWeight:700,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
               <textarea style={{width:"100%",padding:"14px 16px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:2,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s","@media (max-width: 768px)":{padding:"12px 14px",fontSize:14}}} rows={6} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
             <button className="bp" onClick={()=>{
