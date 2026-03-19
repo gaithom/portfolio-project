@@ -397,8 +397,7 @@ export default function App() {
       <GSAPLoader/><style>{css}</style>
       <CustomCursor theme={theme}/>
       <ScrollBar theme={theme}/>
-      <ScrollProgress theme={theme}/>
-      <ScrollIndicator theme={theme}/>
+      {/* ScrollIndicator component removed - mouse icon with "Scroll" text */}
       <GridGuide showGrid={showGrid} theme={theme}/>
 
       {/* NAV */}
