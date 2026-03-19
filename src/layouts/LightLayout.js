@@ -22,26 +22,26 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
   return <>
     {/* HERO — clean left-aligned */}
-    <section ref={heroRef} id="hero" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 40px 80px",textAlign:"left",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    <section ref={heroRef} id="hero" className="hero-section" style={{minHeight:"92vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"120px 40px 80px",textAlign:"left",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"48px 48px",pointerEvents:"none"}}/>
-      <div style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
+      <div className="hero-content" style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:theme.textMuted}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>
           Available for Freelance
         </div>
-        <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(40px,8vw,88px)",fontWeight:800,lineHeight:1.0,letterSpacing:"-.03em",marginBottom:20,color:theme.text}}>
+        <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,6vw,72px)",fontWeight:800,lineHeight:1.0,letterSpacing:"-.03em",marginBottom:20,color:theme.text}}>
           Michael Gaitho.<span style={{color:theme.accent}}>DEV</span>
         </h1>
-        <p style={{fontSize:16,color:theme.textMuted,maxWidth:440,margin:"0 0 12px 0",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
-        <p style={{fontSize:13,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
-        <div ref={heroCtaRef} style={{display:"flex",gap:12,justifyContent:"flex-start",flexWrap:"wrap"}}>
+        <p className="hero-subtitle" style={{fontSize:16,color:theme.textMuted,maxWidth:440,margin:"0 0 12px 0",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
+        <p className="hero-description" style={{fontSize:13,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
+        <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:12,justifyContent:"flex-start",flexWrap:"wrap"}}>
           <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>View Projects</button>
           <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:4}}>Say Hello →</button>
         </div>
-        <div style={{display:"flex",gap:48,justifyContent:"flex-start",marginTop:60}}>
-          {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} style={{textAlign:"left"}}>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.text,lineHeight:1,opacity:.8}}>{s.n}</div>
-            <div style={{fontSize:9,color:theme.textMuted,letterSpacing:".14em",textTransform:"uppercase",marginTop:5,opacity:.6}}>{s.l}</div>
+        <div className="hero-stats" style={{display:"flex",gap:48,justifyContent:"flex-start",marginTop:60}}>
+          {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} className="stat-item" style={{textAlign:"left"}}>
+            <div className="stat-number" style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.text,lineHeight:1,opacity:.8}}>{s.n}</div>
+            <div className="stat-label" style={{fontSize:9,color:theme.textMuted,letterSpacing:".14em",textTransform:"uppercase",marginTop:5,opacity:.6}}>{s.l}</div>
           </div>)}
         </div>
       </div>
@@ -55,25 +55,25 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </div>
 
     {/* ABOUT — three-column open cards */}
-    <section id="about" style={{padding:"100px 60px",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    <section id="about" className="about-section" style={{padding:"100px 60px",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
           <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>About</span>
-          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
-          <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
-            <div style={{fontSize:36,marginBottom:18,opacity:.8}}>👨🏾‍💻</div>
+        <div className="about-cards" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
+          <div className="about-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
+            <div className="icon" style={{fontSize:36,marginBottom:18,opacity:.8}}>👨🏾‍💻</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>Michael Gaitho</h3>
             <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
           </div>
-          <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
-            <div style={{fontSize:36,marginBottom:18,opacity:.8}}>🧠</div>
+          <div className="about-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
+            <div className="icon" style={{fontSize:36,marginBottom:18,opacity:.8}}>🧠</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>AI Development</h3>
             <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Building AI-powered web interfaces and dashboards. Leading frontend architecture and UI/UX design decisions.</p>
           </div>
-          <div style={{background:theme.accent,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
-            <div style={{fontSize:36,marginBottom:18}}>🎓</div>
+          <div className="about-card" style={{background:theme.accent,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
+            <div className="icon" style={{fontSize:36,marginBottom:18}}>🎓</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.bg}}>Education</h3>
             <p style={{color:theme.bg,fontSize:13,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction. Expected 2026.</p>
           </div>
@@ -84,14 +84,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* SKILLS — dot-grid indicators */}
-    <section id="skills" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section id="skills" className="skills-section" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
           <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Expertise</span>
-          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50}}>
-          <div>{SKILLS.map((s,i)=><div key={s.label} style={{marginBottom:18}}>
+        <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
+          <div>{SKILLS.map((s,i)=><div key={s.label} className="skill-item" style={{marginBottom:18}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
               <span style={{fontSize:13,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
               <span style={{fontSize:11,color:theme.textMuted,fontFamily:"'Space Mono',monospace"}}>{s.pct}%</span>
@@ -115,13 +115,13 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* PROJECTS — clean card grid */}
-    <section id="projects" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section id="projects" className="projects-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:40}}>
           <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Portfolio</span>
-          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:24,color:theme.text}}>Projects</h2>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:24,color:theme.text}}>Projects</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(310px,1fr))",gap:18}}>
+        <div className="projects-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(310px,1fr))",gap:18}}>
           {PROJECTS.map((p)=>{
             const [h,setH]=useState(false);
             return <div key={p.id} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setSel(p)} style={{background:theme.surface,border:`1px solid ${h?theme.borderMid:theme.border}`,borderRadius:8,overflow:"hidden",cursor:"pointer",transform:h?"translateY(-4px)":"translateY(0)",transition:"all .28s",boxShadow:h?theme.shadowMd:theme.shadow}}>
@@ -138,10 +138,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* SERVICES — two-column minimal */}
-    <section ref={servicesRef} id="services" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+        <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
+        <div className="services-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
           {SERVICES.map(s=><div key={s.title} className="srv-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:"28px 28px 28px 28px",display:"flex",gap:20,alignItems:"flex-start",transition:"all .25s",boxShadow:theme.shadow}}
             onMouseEnter={e=>{e.currentTarget.style.borderColor=theme.borderMid;e.currentTarget.style.boxShadow=theme.shadowMd;e.currentTarget.style.transform="translateY(-3px)";}}
             onMouseLeave={e=>{e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.boxShadow=theme.shadow;e.currentTarget.style.transform="translateY(0)";}}>
@@ -157,13 +157,13 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* TIMELINE — horizontal stepper */}
-    <section ref={timelineRef} id="experience" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={timelineRef} id="experience" className="timeline-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
+        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
         {/* Horizontal stepper */}
         <div style={{position:"relative"}}>
-          <div style={{position:"absolute",top:22,left:"calc(50px)",right:"calc(50px)",height:1,background:`linear-gradient(to right,${theme.borderMid},transparent)`,opacity:.5}}/>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
+          <div className="timeline-line" style={{position:"absolute",top:22,left:"calc(50px)",right:"calc(50px)",height:1,background:`linear-gradient(to right,${theme.borderMid},transparent)`,opacity:.5}}/>
+          <div className="timeline-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
             {TIMELINE.map((t,i)=><div key={i} className="tl-step" style={{textAlign:"center",paddingTop:0}}>
               <div style={{width:44,height:44,borderRadius:8,background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,margin:"0 auto 20px",boxShadow:theme.shadow}}>{t.type==="edu"?"🎓":"💼"}</div>
               <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,fontWeight:700,color:theme.textMuted,marginBottom:8,opacity:.7,letterSpacing:".06em"}}>{t.year} · {t.place}</div>
@@ -177,12 +177,12 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* GET IN TOUCH */}
-    <section style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`}}>
+    <section className="contact-section" style={{padding:"100px 60px",background:theme.bgAlt,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
-        <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
+        <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
         <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
+        <div className="contact-info-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
           {CONTACT_INFO.map((c,i)=>(
             <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:32}}>{c.icon}</div>
@@ -195,13 +195,13 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* CONTACT */}
-    <section ref={contactRef} id="contact" style={{padding:"100px 60px",position:"relative"}}>
-      <div style={{maxWidth:560,margin:"0 auto"}}>
+    <section ref={contactRef} id="contact" className="contact-section" style={{padding:"100px 60px",position:"relative"}}>
+      <div className="contact-form" style={{maxWidth:560,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:40}}>
           <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Contact</span>
-          <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:12,color:theme.text}}>Let's Build<br/><span style={{color:theme.accent}}>Something Great</span></h2>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:12,color:theme.text}}>Let's Build<br/><span style={{color:theme.accent}}>Something Great</span></h2>
         </div>
-        <div style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:34,boxShadow:theme.shadow}}>
+        <div className="contact-form" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:34,boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:46,marginBottom:16}}>✅</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
               <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>{f.l}</label>
