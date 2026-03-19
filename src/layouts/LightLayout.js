@@ -102,7 +102,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <div className="about-card" style={{background:theme.accent,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:36,marginBottom:18}}>🎓</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.bg}}>Education</h3>
-            <p style={{color:theme.bg,fontSize:13,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction. Expected 2026.</p>
+            <p style={{color:theme.bg,fontSize:13,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction.</p>
           </div>
         </div>
         <div style={{marginTop:24,display:"flex",gap:10,justifyContent:"center"}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:4}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>See Work →</button></div>
