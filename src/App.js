@@ -26,8 +26,8 @@ export default function App() {
   const [mobileMenuOpen,setMobileMenuOpen]=useState(false);
   const navRef=useRef(null);
 
-  useEffect(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*22;setLoadPct(Math.min(p,100));if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),400);}},80);return()=>clearInterval(iv);},[]);
-  const scrollTo=id=>document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+  useEffect(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*35;setLoadPct(Math.min(p,100));if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),150);}},50);return()=>clearInterval(iv);},[]);
+  const scrollTo=id=>{const element=document.getElementById(id);if(element){element.scrollIntoView({behavior:'smooth',block:'start',inline:'nearest'});}};
 
   // NAV labels per layout
   const navLabels={forest:["About","Skills","Projects","Services","Experience","Contact"],midnight:["About","Skills","Projects","Services","Experience","Contact"],void:["About","Skills","Projects","Services","Experience","Contact"],light:["About","Skills","Projects","Services","Experience","Contact"]};
@@ -38,8 +38,8 @@ export default function App() {
   const css=`
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:hidden;}
+    html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+    body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;}
     ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:${theme.bg}}::-webkit-scrollbar-thumb{background:${theme.textMuted};border-radius:99px;opacity:.45}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -52,12 +52,19 @@ export default function App() {
     @keyframes pulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.1);opacity:.75}}
     @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     @keyframes scrollBounce{0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-8px)}60%{transform:translateX(-50%) translateY(-4px)}}
-    .nl{opacity:.5;transition:opacity .2s,color .2s;background:none;border:none;cursor:pointer;font-family:${theme.bodyFont};color:${theme.text};font-size:11px;font-weight:700;letterSpacing:.1em;text-transform:uppercase;}
-    .nl:hover{opacity:.9;color:${theme.accent};}
-    .bp{display:inline-block;padding:12px 26px;background:${theme.accent};color:${theme.bg};border:none;border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:${theme.bodyFont};transition:transform .2s,box-shadow .2s,opacity .2s;text-decoration:none;opacity:.88;}
-    .bp:hover{transform:translateY(-2px);box-shadow:${theme.shadowMd};opacity:1;}
-    .bg{display:inline-block;padding:12px 26px;background:transparent;color:${theme.text};border:1px solid ${theme.borderMid};border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:${theme.bodyFont};transition:all .2s;text-decoration:none;opacity:.65;}
-    .bg:hover{border-color:${theme.accent};color:${theme.accent};transform:translateY(-2px);opacity:1;}
+    @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @media (max-width: 768px) {
+      * { -webkit-tap-highlight-color: transparent; }
+      body { -webkit-transform: translateZ(0); transform: translateZ(0); }
+      .main-nav { -webkit-backdrop-filter: none; backdrop-filter: none; }
+    }
+    .nl{opacity:.5;transition:opacity .15s,color .15s,transform .15s,background .15s;background:none;border:none;cursor:pointer;font-family:${theme.bodyFont};color:${theme.text};font-size:11px;font-weight:700;letterSpacing:.1em;text-transform:uppercase;-webkit-transform: translateZ(0);transform: translateZ(0);}
+    .nl:hover{opacity:.9;color:${theme.accent};transform: translateY(-1px);}
+    .bp{display:inline-block;padding:12px 26px;background:${theme.accent};color:${theme.bg};border:none;border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:${theme.bodyFont};transition:transform .15s,box-shadow .15s,opacity .15s,text-decoration:none;opacity:.88;-webkit-transform: translateZ(0);transform: translateZ(0);}
+    .bp:hover{transform:translateY(-2px) translateZ(0);box-shadow:${theme.shadowMd};opacity:1;}
+    .bg{display:inline-block;padding:12px 26px;background:transparent;color:${theme.text};border:1px solid ${theme.borderMid};border-radius:${theme.cardRadius||"8px"};font-weight:700;font-size:13px;cursor:pointer;letterSpacing:.05em;font-family:${theme.bodyFont};transition:all .15s;text-decoration:none;opacity:.65;-webkit-transform: translateZ(0);transform: translateZ(0);}
+    .bg:hover{border-color:${theme.accent};color:${theme.accent};transform:translateY(-2px) translateZ(0);opacity:1;}
     .sec-label{font-size:10px;letterSpacing:.25em;text-transform:uppercase;color:${theme.textMuted};font-family:${theme.monoFont};opacity:.65;}
     input::placeholder,textarea::placeholder{color:${theme.textMuted};opacity:.5;}
     /* Dev mode outline */
@@ -513,7 +520,7 @@ export default function App() {
         zIndex: 999,
         maxHeight: mobileMenuOpen ? '400px' : '0',
         overflow: 'hidden',
-        transition: 'all 0.3s ease',
+        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         opacity: mobileMenuOpen ? 1 : 0,
         transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(-10px)',
         '@media (max-width: 768px)': {
