@@ -414,16 +414,20 @@ export default function App() {
         ...(isVoid && {clipPath:"polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%)"}),
         ...(isForest && {borderLeft:`4px solid ${theme.accent}`}),
       }}>
-        <div className="nav-logo" style={{
-          fontFamily:isVoid?theme.monoFont:theme.headingFont, 
-          fontWeight:isVoid?400:800, 
-          fontSize:isVoid?12:isMidnight?18:17, 
-          letterSpacing:isVoid?".2em":isMidnight?".01em":"-.02em",
-          color:theme.text, 
-          opacity:isVoid?.7:.9, 
-          textTransform:isVoid?"uppercase":"none",
-          ...(isForest && {textShadow:"0 1px 3px rgba(0,0,0,0.3)"})
-        }}>
+        <div 
+          className="nav-logo" 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            fontFamily:isVoid?theme.monoFont:theme.headingFont, 
+            fontWeight:isVoid?400:800, 
+            fontSize:isVoid?12:isMidnight?18:17, 
+            letterSpacing:isVoid?".2em":isMidnight?".01em":"-.02em",
+            color:theme.text, 
+            opacity:isVoid?.7:.9, 
+            textTransform:isVoid?"uppercase":"none",
+            cursor:"pointer",
+            ...(isForest && {textShadow:"0 1px 3px rgba(0,0,0,0.3)"})
+          }}>
           {isVoid?"MG":isMidnight?"MICHAEL GAITHO":"M"}<span style={{color:theme.accent}}>{isVoid?"_":isMidnight?"":"."}</span>{isVoid?"":isMidnight?"":"Gaitho"}
         </div>
         
