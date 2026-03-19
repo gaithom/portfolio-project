@@ -81,7 +81,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         top:"50%",
         left:"50%",
         transform:"translate(-50%, -50%)",
-        fontSize:"clamp(200px,28vw,420px)",
+        fontSize:"clamp(120px,25vw,420px)",
         fontWeight:900,
         fontFamily:"'Syne', sans-serif",
         color:theme.accent,
@@ -91,7 +91,11 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         pointerEvents:"none",
         zIndex:0,
         whiteSpace:"nowrap",
-        textTransform:"uppercase"
+        textTransform:"uppercase",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(80px,20vw,300px)",
+          opacity:0.08
+        }
       }}>GAITHO</div>
       
       {/* Additional floating name elements for 3D effect */}
@@ -99,7 +103,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         position:"absolute",
         top:"15%",
         right:"12%",
-        fontSize:"clamp(70px,9vw,140px)",
+        fontSize:"clamp(50px,7vw,140px)",
         fontWeight:800,
         fontFamily:"'Space Mono', monospace",
         color:theme.animOrb,
@@ -107,14 +111,20 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         filter:"blur(3px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(8deg)"
+        transform:"rotate(8deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(40px,6vw,100px)",
+          opacity:0.06,
+          top:"10%",
+          right:"8%"
+        }
       }}>MICHAEL</div>
       
       <div className="name-float-2" style={{
         position:"absolute",
         bottom:"20%",
         left:"8%",
-        fontSize:"clamp(55px,8vw,110px)",
+        fontSize:"clamp(40px,6vw,110px)",
         fontWeight:700,
         fontFamily:"'Syne', sans-serif",
         color:theme.animDot,
@@ -122,7 +132,13 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         filter:"blur(3.5px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(-12deg)"
+        transform:"rotate(-12deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(30px,5vw,80px)",
+          opacity:0.05,
+          bottom:"15%",
+          left:"5%"
+        }
       }}>DEVELOPER</div>
     </div>
     
@@ -135,7 +151,7 @@ export function MidnightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, s
         {/* Left side - Hero content */}
         <div style={{flex:1}}>
           <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:8,border:`1px solid ${theme.border}`,borderRadius:2,padding:"7px 18px",marginBottom:32,background:theme.surfaceAlt,backdropFilter:"blur(16px)",fontSize:12,letterSpacing:".18em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace"}}>
-            <span style={{width:5,height:5,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>Available for Select Projects
+            <span style={{width:5,height:5,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>Open to Opportunities
           </div>
           <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(48px,9vw,110px)",fontWeight:800,lineHeight:.95,letterSpacing:"-.04em",marginBottom:24,color:theme.text}}>
             Michael<br/>Gaitho

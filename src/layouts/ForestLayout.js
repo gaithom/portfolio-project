@@ -145,17 +145,21 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         top:"50%",
         left:"50%",
         transform:"translate(-50%, -50%)",
-        fontSize:"clamp(180px,25vw,380px)",
+        fontSize:"clamp(150px,25vw,450px)",
         fontWeight:900,
         fontFamily:"'Syne', sans-serif",
         color:theme.accent,
-        opacity:0.08,
+        opacity:0.05,
         filter:"blur(3px)",
-        letterSpacing:"-0.05em",
+        letterSpacing:"-0.03em",
         pointerEvents:"none",
         zIndex:0,
         whiteSpace:"nowrap",
-        textTransform:"uppercase"
+        textTransform:"uppercase",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(100px,20vw,320px)",
+          opacity:0.07
+        }
       }}>GAITHO</div>
       
       {/* Additional floating name elements for 3D effect */}
@@ -163,7 +167,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         position:"absolute",
         top:"20%",
         left:"10%",
-        fontSize:"clamp(60px,8vw,120px)",
+        fontSize:"clamp(45px,6vw,120px)",
         fontWeight:800,
         fontFamily:"'Syne', sans-serif",
         color:theme.animOrb,
@@ -171,14 +175,20 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         filter:"blur(2px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(-15deg)"
+        transform:"rotate(-15deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(35px,5vw,90px)",
+          opacity:0.08,
+          top:"15%",
+          left:"6%"
+        }
       }}>MICHAEL</div>
       
       <div className="name-float-2" style={{
         position:"absolute",
         bottom:"25%",
         right:"15%",
-        fontSize:"clamp(50px,7vw,100px)",
+        fontSize:"clamp(40px,6vw,100px)",
         fontWeight:700,
         fontFamily:"'Space Mono', monospace",
         color:theme.animDot,
@@ -186,7 +196,13 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         filter:"blur(2.5px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(10deg)"
+        transform:"rotate(5deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(30px,4vw,70px)",
+          opacity:0.07,
+          bottom:"20%",
+          right:"10%"
+        }
       }}>DEVELOPER</div>
     </div>
     
@@ -207,7 +223,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         {/* Hero content */}
         <div style={{textAlign:"center"}}>
           <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:12,letterSpacing:".14em",textTransform:"uppercase",color:theme.text,opacity:.9}}>
-            <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Available for Freelance Projects
+            <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Open to Opportunities
           </div>
           <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
           <div ref={heroSubRef} className="hero-subtitle" style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(13px,1.8vw,17px)",marginBottom:32,minHeight:26}}><Typewriter words={["Frontend Developer","UI/UX Designer","Creative Coder","Problem Solver"]} theme={theme}/></div>

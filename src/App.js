@@ -551,17 +551,47 @@ export default function App() {
       </div>
 
       {/* Theme Switcher */}
-      <div className="theme-switcher" style={{position:"fixed",right:14,top:"50%",transform:"translateY(-50%)",zIndex:1001,display:"flex",flexDirection:"column",gap:6}}>
+      <div className="theme-switcher" style={{
+        position:"fixed",
+        right:14,
+        top:"50%",
+        transform:"translateY(-50%)",
+        zIndex:1001,
+        display:"flex",
+        flexDirection:"column",
+        gap:6,
+        "@media (max-width: 768px)": {
+          position:"absolute",
+          right:"20px",
+          top:"50%",
+          transform:"translateY(-50%)",
+          flexDirection:"row",
+          gap:4,
+          background:theme.surface,
+          padding:"4px",
+          borderRadius:themeKey==="void"?"0":"20px",
+        }
+      }}>
         {Object.entries(THEMES).map(([k,t])=>(
           <button key={k} onClick={()=>{setThemeKey(k);setSent(false);}} title={`${t.name} — ${t.layout} layout`}
-            style={{width:35,height:35,borderRadius:themeKey==="void"?"0":"50%",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s"}}
+            style={{
+              width:35,height:35,borderRadius:themeKey==="void"?"0":"50%",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s",
+              "@media (max-width: 768px)": {
+                width:28,height:28,fontSize:11
+              }
+            }}
             onMouseEnter={e=>e.currentTarget.style.opacity=.9}
             onMouseLeave={e=>e.currentTarget.style.opacity=themeKey===k?.9:.35}>
             {t.icon}
           </button>
         ))}
         {/* Layout label */}
-        <div className="layout-label" style={{marginTop:4,fontSize:8,fontFamily:"'Space Mono',monospace",color:theme.textMuted,opacity:.45,textAlign:"center",letterSpacing:".06em",textTransform:"uppercase",lineHeight:1.4}}>
+        <div className="layout-label" style={{
+          marginTop:4,fontSize:8,fontFamily:"'Space Mono',monospace",color:theme.textMuted,opacity:.45,textAlign:"center",letterSpacing:".06em",textTransform:"uppercase",lineHeight:1.4,
+          "@media (max-width: 768px)": {
+            display:"none"
+          }
+        }}>
           {theme.layout}
         </div>
       </div>

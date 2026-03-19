@@ -103,7 +103,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         top:"50%",
         left:"50%",
         transform:"translate(-50%, -50%)",
-        fontSize:"clamp(160px,24vw,360px)",
+        fontSize:"clamp(120px,20vw,360px)",
         fontWeight:900,
         fontFamily:"'Syne', sans-serif",
         color:theme.accent,
@@ -113,7 +113,11 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         pointerEvents:"none",
         zIndex:0,
         whiteSpace:"nowrap",
-        textTransform:"uppercase"
+        textTransform:"uppercase",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(80px,16vw,280px)",
+          opacity:0.06
+        }
       }}>GAITHO</div>
       
       {/* Additional floating name elements for 3D effect */}
@@ -121,7 +125,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         position:"absolute",
         top:"25%",
         right:"15%",
-        fontSize:"clamp(60px,8vw,120px)",
+        fontSize:"clamp(45px,6vw,120px)",
         fontWeight:800,
         fontFamily:"'Space Mono', monospace",
         color:theme.animOrb,
@@ -129,14 +133,20 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         filter:"blur(2.5px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(12deg)"
+        transform:"rotate(12deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(35px,5vw,80px)",
+          opacity:0.05,
+          top:"20%",
+          right:"10%"
+        }
       }}>MICHAEL</div>
       
       <div className="name-float-2" style={{
         position:"absolute",
         bottom:"30%",
         left:"12%",
-        fontSize:"clamp(45px,7vw,90px)",
+        fontSize:"clamp(35px,5vw,90px)",
         fontWeight:700,
         fontFamily:"'Syne', sans-serif",
         color:theme.animDot,
@@ -144,12 +154,18 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         filter:"blur(3px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(-8deg)"
+        transform:"rotate(-8deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(25px,4vw,60px)",
+          opacity:0.04,
+          bottom:"25%",
+          left:"8%"
+        }
       }}>DEVELOPER</div>
       <div className="hero-content" style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:12,letterSpacing:".14em",textTransform:"uppercase",color:theme.text}}>
           <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>
-          Available for Freelance
+          Open to Opportunities
         </div>
         <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,6vw,72px)",fontWeight:800,lineHeight:1.0,letterSpacing:"-.03em",marginBottom:20,color:theme.text}}>
           Michael Gaitho.<span style={{color:theme.accent}}>DEV</span>

@@ -79,7 +79,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
         top:"50%",
         left:"50%",
         transform:"translate(-50%, -50%)",
-        fontSize:"clamp(220px,30vw,450px)",
+        fontSize:"clamp(180px,25vw,450px)",
         fontWeight:900,
         fontFamily:"'Space Mono', monospace",
         color:theme.accent,
@@ -89,7 +89,11 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
         pointerEvents:"none",
         zIndex:0,
         whiteSpace:"nowrap",
-        textTransform:"uppercase"
+        textTransform:"uppercase",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(120px,20vw,320px)",
+          opacity:0.07
+        }
       }}>GAITHO</div>
       
       {/* Additional floating name elements for 3D effect */}
@@ -97,7 +101,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
         position:"absolute",
         top:"18%",
         right:"8%",
-        fontSize:"clamp(65px,9vw,130px)",
+        fontSize:"clamp(50px,7vw,130px)",
         fontWeight:800,
         fontFamily:"'Syne', sans-serif",
         color:theme.animOrb,
@@ -105,14 +109,20 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
         filter:"blur(3px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(-6deg)"
+        transform:"rotate(-6deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(35px,5vw,90px)",
+          opacity:0.05,
+          top:"12%",
+          right:"5%"
+        }
       }}>MICHAEL</div>
       
       <div className="name-float-2" style={{
         position:"absolute",
         bottom:"22%",
         left:"10%",
-        fontSize:"clamp(50px,7vw,100px)",
+        fontSize:"clamp(40px,6vw,100px)",
         fontWeight:700,
         fontFamily:"'Space Mono', monospace",
         color:theme.animDot,
@@ -120,11 +130,17 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
         filter:"blur(3.5px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(9deg)"
+        transform:"rotate(3deg)",
+        "@media (max-width: 768px)": {
+          fontSize:"clamp(30px,4vw,70px)",
+          opacity:0.045,
+          bottom:"18%",
+          left:"6%"
+        }
       }}>DEVELOPER</div>
       <div style={{position:"relative",zIndex:1,maxWidth:1000,width:"100%"}}>
         <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:10,border:`2px solid ${theme.borderMid}`,borderRadius:0,padding:"8px 20px",marginBottom:40,background:theme.surface,fontSize:13,letterSpacing:".2em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",fontWeight:700,"@media (max-width: 768px)":{fontSize:11,padding:"6px 16px",marginBottom:24}}}>
-          <span style={{width:6,height:6,borderRadius:0,background:theme.accent,display:"inline-block",opacity:.8,transform:"rotate(45deg)"}}/>AVAILABLE FOR WORK
+          <span style={{width:6,height:6,borderRadius:0,background:theme.accent,display:"inline-block",opacity:.8,transform:"rotate(45deg)"}}/>OPEN TO OPPORTUNITIES
         </div>
         <h1 ref={heroTitleRef} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(48px,8vw,96px)",fontWeight:800,lineHeight:.85,letterSpacing:"-.05em",marginBottom:32,color:theme.text,textTransform:"uppercase","@media (max-width: 768px)":{fontSize:"clamp(32px,6vw,64px)",marginBottom:20}}}>
           MICHAEL<br/>GAITHO

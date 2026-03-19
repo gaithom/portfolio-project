@@ -259,7 +259,7 @@ export function Modal({ project, theme, onClose }) {
         <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:22}}>{project.stack.map(s=><span key={s} style={{background:theme.bgAlt,color:theme.text,border:`1px solid ${theme.border}`,borderRadius:6,padding:"4px 10px",fontSize:12,opacity:.85}}>{s}</span>)}</div>
         <div style={{display:"flex",gap:10}}>
           {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" style={{flex:1,textAlign:"center",padding:"12px",background:theme.accent,color:theme.bg,borderRadius:8,fontWeight:700,fontSize:13,textDecoration:"none",opacity:.9}}>Live Demo ↗</a>}
-          <a href="#" style={{flex:1,textAlign:"center",padding:"12px",background:"transparent",color:theme.text,border:`1px solid ${theme.borderMid}`,borderRadius:8,fontWeight:700,fontSize:13,textDecoration:"none"}}>GitHub →</a>
+          <a href="#" onClick={onClose} style={{flex:1,textAlign:"center",padding:"12px",background:"transparent",color:theme.text,border:`1px solid ${theme.borderMid}`,borderRadius:8,fontWeight:700,fontSize:13,textDecoration:"none"}}>Close →</a>
         </div>
       </div>
       <button onClick={onClose} style={{position:"absolute",top:12,right:12,background:"rgba(0,0,0,.4)",border:"none",color:"#fff",width:30,height:30,borderRadius:"50%",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",opacity:.65}}>✕</button>
