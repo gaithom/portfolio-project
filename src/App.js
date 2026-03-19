@@ -58,6 +58,18 @@ export default function App() {
       * { -webkit-tap-highlight-color: transparent; }
       body { -webkit-transform: translateZ(0); transform: translateZ(0); }
       .main-nav { -webkit-backdrop-filter: none; backdrop-filter: none; }
+      /* Prevent horizontal scrolling */
+      * { box-sizing: border-box; }
+      html, body { overflow-x: hidden; }
+      img, video, iframe { max-width: 100%; height: auto; }
+      /* Forest theme specific fixes */
+      .forest-hero { width: 100% !important; }
+      .forest-about { width: 100% !important; }
+      .forest-projects { width: 100% !important; }
+      .forest-skills { width: 100% !important; }
+      .forest-services { width: 100% !important; }
+      .forest-timeline { width: 100% !important; }
+      .forest-contact { width: 100% !important; }
     }
     .nl{opacity:.5;transition:opacity .15s,color .15s,transform .15s,background .15s;background:none;border:none;cursor:pointer;font-family:${theme.bodyFont};color:${theme.text};font-size:11px;font-weight:700;letterSpacing:.1em;text-transform:uppercase;-webkit-transform: translateZ(0);transform: translateZ(0);}
     .nl:hover{opacity:.9;color:${theme.accent};transform: translateY(-1px);}
@@ -112,11 +124,25 @@ export default function App() {
     /* ForestLayout responsive styles */
     @media (max-width: 768px) {
       .forest-hero { padding: 80px 20px 60px !important; min-height: 85vh !important; }
-      .forest-hero .hero-content { max-width: 100% !important; }
+      .forest-hero .hero-content { max-width: 100% !important; width: 100% !important; }
       .forest-hero .hero-title { font-size: clamp(28px, 8vw, 48px) !important; }
       .forest-hero .hero-subtitle { font-size: 14px !important; max-width: 100% !important; }
       .forest-hero .hero-description { font-size: 12px !important; max-width: 100% !important; }
       .forest-hero .hero-cta { gap: 8px !important; }
+      .forest-about { padding: 60px 20px !important; max-width: 100% !important; }
+      .forest-about .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+      .forest-about .about-grid > div { max-width: 100% !important; }
+      .forest-projects { padding: 60px 20px !important; }
+      .forest-projects .projects-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+      .forest-projects .project-card { max-width: 100% !important; }
+      .forest-skills { padding: 60px 20px !important; }
+      .forest-skills .skills-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+      .forest-services { padding: 60px 20px !important; }
+      .forest-services .services-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+      .forest-timeline { padding: 60px 20px !important; }
+      .forest-timeline .timeline-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+      .forest-contact { padding: 60px 20px !important; }
+      .forest-contact .contact-form { max-width: 100% !important; }
       .forest-hero .hero-stats { gap: 24px !important; margin-top: 40px !important; flex-direction: column !important; align-items: center !important; }
       .forest-hero .stat-number { font-size: 24px !important; }
       .forest-hero .stat-label { text-align: center !important; }
