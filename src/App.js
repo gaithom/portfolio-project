@@ -537,48 +537,95 @@ export default function App() {
       {/* Mobile Menu */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`} style={{
         position: 'fixed',
-        top: isForest ? 62 : isVoid ? 72 : isMidnight ? 68 : 62,
-        left: 0,
+        top: 0,
+        left: 'auto',
         right: 0,
+        width: '85vw',
+        maxWidth: '400px',
+        height: '100vh',
         background: theme.surface,
-        borderBottom: `1px solid ${theme.border}`,
+        borderLeft: `1px solid ${theme.border}`,
+        boxShadow: '-4px 0 20px rgba(0,0,0,0.15)',
         backdropFilter: 'blur(12px)',
         zIndex: 999,
-        maxHeight: mobileMenuOpen ? '400px' : '0',
-        overflow: 'hidden',
-        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-        opacity: mobileMenuOpen ? 1 : 0,
-        transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(-10px)',
+        transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         '@media (max-width: 768px)': {
           display: 'block'
         }
       }}>
-        <div style={{display:"flex",flexDirection:"column",gap:8,padding:"20px"}}>
-          {navLabels[themeKey].map(l=><button 
-            key={l} 
-            className="nl" 
-            onClick={() => {
-              scrollTo(l.toLowerCase());
-              setMobileMenuOpen(false);
-            }}
-            style={{
-              fontFamily:isVoid?theme.monoFont:theme.bodyFont,
-              fontSize:14,
-              fontWeight:isVoid?700:isMidnight?600:500,
-              letterSpacing:isVoid?".15em":isMidnight?".08em":".02em",
-              textTransform:isVoid?"uppercase":"none",
-              padding:"12px 16px",
-              borderRadius:isVoid?"0":isMidnight?"2px":"4px",
-              border:isVoid?`1px solid ${theme.border}`:isMidnight?`1px solid ${theme.border}33`:"none",
-              background:isVoid?"transparent":isMidnight?"transparent":isLight?"rgba(58,122,82,0.1)":"transparent",
-              color:theme.text,
-              opacity:isVoid?.6:.8,
-              transition:"all .2s ease",
-              cursor:"pointer",
-              textAlign:"left",
-              width:"100%"
-            }}
-          >{isVoid?l.toUpperCase():isMidnight?l:l}</button>)}
+        <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
+          {/* Sidebar Header */}
+          <div style={{padding:"20px 20px 16px",borderBottom:`1px solid ${theme.border}`,background:theme.bgAlt}}>
+            <div style={{fontSize:16,fontWeight:700,fontFamily:isVoid?theme.monoFont:theme.headingFont,color:theme.text,marginBottom:4}}>
+              Menu
+            </div>
+            <div style={{fontSize:12,color:theme.textMuted,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>
+              {isVoid?"VOID":isMidnight?"MIDNIGHT":isForest?"FOREST":"LIGHT"} Theme
+            </div>
+          </div>
+          
+          {/* Navigation Section */}
+          <div style={{flex:1,overflowY:"auto",padding:"16px 20px"}}>
+            <div style={{fontSize:11,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:16,fontFamily:isVoid?theme.monoFont:theme.bodyFont,opacity:.8}}>
+              Navigation
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:4}}>
+              {navLabels[themeKey].map(l=><button 
+                key={l} 
+                className="nl" 
+                onClick={() => {
+                  scrollTo(l.toLowerCase());
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  fontFamily:isVoid?theme.monoFont:theme.bodyFont,
+                  fontSize:15,
+                  fontWeight:isVoid?600:isMidnight?500:400,
+                  letterSpacing:isVoid?".1em":isMidnight?".05em":".01em",
+                  textTransform:isVoid?"uppercase":"none",
+                  padding:"14px 20px",
+                  borderRadius:isVoid?"0":isMidnight?"2px":"8px",
+                  border:isVoid?`1px solid ${theme.border}`:isMidnight?`1px solid ${theme.border}33`:"none",
+                  background:isVoid?"transparent":isMidnight?"transparent":isLight?"rgba(58,122,82,0.05)":"transparent",
+                  color:theme.text,
+                  opacity:isVoid?.7:.85,
+                  transition:"all .2s ease",
+                  cursor:"pointer",
+                  textAlign:"left",
+                  width:"100%",
+                  justifyContent:"flex-start"
+                }}
+              >{isVoid?l.toUpperCase():isMidnight?l:l}</button>)}
+            </div>
+            
+            {/* Theme Switcher Section */}
+            <div style={{marginTop:32,paddingTop:16,borderTop:`1px solid ${theme.border}`}}>
+              <div style={{fontSize:11,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:16,fontFamily:isVoid?theme.monoFont:theme.bodyFont,opacity:.8}}>
+                Themes
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:12}}>
+                {Object.entries(THEMES).map(([k,t])=>(
+                  <button key={k} onClick={()=>{setThemeKey(k);setSent(false);setMobileMenuOpen(false);}} title={`${t.name} — ${t.layout} layout`}
+                    style={{
+                      width:"100%",height:50,borderRadius:themeKey==="void"?"0":"8px",cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"8px 12px",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s"
+                    }}
+                    onMouseEnter={e=>e.currentTarget.style.opacity=.9}
+                    onMouseLeave={e=>e.currentTarget.style.opacity=themeKey===k?.9:.35}>
+                    <span style={{fontSize:16}}>{t.icon}</span>
+                    <span style={{fontSize:10,fontWeight:500,textAlign:"left"}}>{t.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Sidebar Footer */}
+          <div style={{padding:"20px",borderTop:`1px solid ${theme.border}`,background:theme.bgAlt}}>
+            <div style={{fontSize:12,color:theme.textMuted,fontFamily:isVoid?theme.monoFont:theme.bodyFont,textAlign:"center"}}>
+              © 2025 Michael Gaitho
+            </div>
+          </div>
         </div>
       </div>
 
@@ -593,15 +640,7 @@ export default function App() {
         flexDirection:"column",
         gap:6,
         "@media (max-width: 768px)": {
-          position:"absolute",
-          right:"20px",
-          top:"50%",
-          transform:"translateY(-50%)",
-          flexDirection:"row",
-          gap:4,
-          background:theme.surface,
-          padding:"4px",
-          borderRadius:themeKey==="void"?"0":"20px",
+          display: "none"
         }
       }}>
         {Object.entries(THEMES).map(([k,t])=>(
