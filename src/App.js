@@ -69,6 +69,8 @@ export default function App() {
       /* Navigation responsive */
       nav { padding: 0 20px !important; }
       .nav-logo { font-size: 16px !important; }
+      .desktop-nav { display: none !important; }
+      .hamburger { display: flex !important; }
       /* Footer responsive */
       footer { padding: 20px 30px !important; }
       footer > div { flex-direction: column !important; text-align: center !important; gap: 12px !important; }
@@ -92,6 +94,8 @@ export default function App() {
       /* Navigation responsive */
       nav { padding: 0 16px !important; }
       .nav-logo { font-size: 15px !important; }
+      .desktop-nav { display: none !important; }
+      .hamburger { display: flex !important; }
       /* Footer responsive */
       footer { padding: 16px 20px !important; }
       footer .social-links { gap: 12px !important; }
@@ -420,23 +424,67 @@ export default function App() {
           className={`hamburger ${mobileMenuOpen ? 'active' : ''}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
-            display: 'none'
+            display: 'none',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 32,
+            height: 32,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0,
+            '@media (max-width: 768px)': {
+              display: 'flex'
+            }
           }}
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span style={{
+            width: 20,
+            height: 2,
+            background: theme.text,
+            margin: '2px 0',
+            transition: 'all 0.3s ease',
+            transform: mobileMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none'
+          }}></span>
+          <span style={{
+            width: 20,
+            height: 2,
+            background: theme.text,
+            margin: '2px 0',
+            transition: 'all 0.3s ease',
+            opacity: mobileMenuOpen ? 0 : 1
+          }}></span>
+          <span style={{
+            width: 20,
+            height: 2,
+            background: theme.text,
+            margin: '2px 0',
+            transition: 'all 0.3s ease',
+            transform: mobileMenuOpen ? 'rotate(-45deg) translate(7px, -6px)' : 'none'
+          }}></span>
         </button>
       </nav>
 
       {/* Mobile Menu */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`} style={{
+        position: 'fixed',
+        top: isForest ? 62 : isVoid ? 72 : isMidnight ? 68 : 62,
+        left: 0,
+        right: 0,
+        background: theme.surface,
+        borderBottom: `1px solid ${theme.border}`,
+        backdropFilter: 'blur(12px)',
+        zIndex: 999,
         display: 'none',
+        maxHeight: mobileMenuOpen ? '400px' : '0',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
         '@media (max-width: 768px)': {
-          display: mobileMenuOpen ? 'block' : 'none'
+          display: 'block'
         }
       }}>
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        <div style={{display:"flex",flexDirection:"column",gap:8,padding:"20px"}}>
           {navLabels[themeKey].map(l=><button 
             key={l} 
             className="nl" 

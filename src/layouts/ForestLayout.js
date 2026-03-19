@@ -193,16 +193,18 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* PROJECTS — horizontal scroll */}
-    <section id="projects" className="forest-projects" style={{padding:"80px 0 0",position:"relative"}}>
+    <section id="projects" className="forest-projects" style={{padding:"60px 20px 0",position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
           <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
-          <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:32,color:theme.text,opacity:.9}}>Recent Work</h2>
+          <h2 className="gsap-h-f section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,5vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:28,color:theme.text,opacity:.9}}>Recent Work</h2>
         </div>
-        <div className="projects-grid" style={{display:"flex",gap:24,padding:"0 40px",overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none"}}>
+        <div className="projects-grid" style={{display:"flex",gap:16,padding:"0 20px",overflowX:"auto",scrollbarWidth:"none",msOverflowStyle:"none",scrollSnapType:"x mandatory"}}>
         {PROJECTS.map((project,i)=>(
           <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
-            <ProjectCard project={project} theme={theme} onSelect={setSel}/>
+            <div style={{minWidth:280,maxWidth:320,flexShrink:0,scrollSnapAlign:"start"}}>
+              <ProjectCard project={project} theme={theme} onSelect={setSel}/>
+            </div>
           </ScrollReveal>
         ))}
         </div>
