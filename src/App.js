@@ -29,6 +29,17 @@ export default function App() {
   useEffect(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*35;setLoadPct(Math.min(p,100));if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),150);}},50);return()=>clearInterval(iv);},[]);
   const scrollTo=id=>{const element=document.getElementById(id);if(element){element.scrollIntoView({behavior:'smooth',block:'start',inline:'nearest'});}};
 
+  // Close mobile menu on window resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mobileMenuOpen]);
+
   // NAV labels per layout
   const navLabels={forest:["About","Skills","Projects","Services","Experience","Contact"],midnight:["About","Skills","Projects","Services","Experience","Contact"],void:["About","Skills","Projects","Services","Experience","Contact"],light:["About","Skills","Projects","Services","Experience","Contact"]};
 
@@ -534,14 +545,13 @@ export default function App() {
         </button>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Regular Right Sidebar */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`} style={{
         position: 'fixed',
         top: 0,
         left: 'auto',
         right: 0,
-        width: '85vw',
-        maxWidth: '400px',
+        width: '350px',
         height: '100vh',
         background: theme.surface,
         borderLeft: `1px solid ${theme.border}`,
@@ -553,16 +563,23 @@ export default function App() {
         '@media (max-width: 768px)': {
           display: 'block'
         }
-      }}>
-        <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
-          {/* Sidebar Header */}
-          <div style={{padding:"20px 20px 16px",borderBottom:`1px solid ${theme.border}`,background:theme.bgAlt}}>
-            <div style={{fontSize:16,fontWeight:700,fontFamily:isVoid?theme.monoFont:theme.headingFont,color:theme.text,marginBottom:4}}>
-              Menu
+      }}
+      onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
+          {/* Sidebar Header with Close Button */}
+          <div style={{padding:"20px 20px 16px",borderBottom:`1px solid ${theme.border}`,background:theme.bgAlt,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div>
+              <div style={{fontSize:16,fontWeight:700,fontFamily:isVoid?theme.monoFont:theme.headingFont,color:theme.text,marginBottom:4}}>
+                Menu
+              </div>
+              <div style={{fontSize:12,color:theme.textMuted,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>
+                {isVoid?"VOID":isMidnight?"MIDNIGHT":isForest?"FOREST":"LIGHT"} Theme
+              </div>
             </div>
-            <div style={{fontSize:12,color:theme.textMuted,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>
-              {isVoid?"VOID":isMidnight?"MIDNIGHT":isForest?"FOREST":"LIGHT"} Theme
-            </div>
+            <button onClick={() => setMobileMenuOpen(false)} style={{background:"transparent",border:"none",color:theme.text,cursor:"pointer",fontSize:24,display:"flex",alignItems:"center",justifyContent:"center",width:32,height:32,borderRadius:"50%",transition:"all .2s"}}>
+              ✕
+            </button>
           </div>
           
           {/* Navigation Section */}
