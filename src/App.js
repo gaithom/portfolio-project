@@ -475,7 +475,7 @@ export default function App() {
         </div>
         
         {/* Desktop Navigation */}
-        <div className="desktop-nav" style={{display:"flex",gap:isVoid?24:isMidnight?28:22,alignItems:"center"}}>
+        <div className="desktop-nav" style={{display:"flex",gap:isVoid?24:isMidnight?28:22,alignItems:"center","@media (max-width: 768px)":{display:"none"}}}>
           {navLabels[themeKey].map(l=><button 
             key={l} 
             className="nl" 
@@ -545,6 +545,23 @@ export default function App() {
         </button>
       </nav>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 998,
+            backdropFilter: 'blur(4px)'
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Mobile Menu - Regular Right Sidebar */}
       <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`} style={{
         position: 'fixed',
@@ -561,14 +578,17 @@ export default function App() {
         transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
         transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         '@media (max-width: 768px)': {
-          display: 'block'
+          width: '280px'
+        },
+        '@media (max-width: 480px)': {
+          width: '100vw'
         }
       }}
       onClick={(e) => e.stopPropagation()}
       >
         <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
           {/* Sidebar Header with Close Button */}
-          <div style={{padding:"20px 20px 16px",borderBottom:`1px solid ${theme.border}`,background:theme.bgAlt,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div style={{padding:"20px 20px 16px",borderBottom:`1px solid ${theme.border}`,background:theme.bgAlt,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center","@media (max-width: 480px)":{padding:"16px 16px 12px"}}}>
             <div>
               <div style={{fontSize:16,fontWeight:700,fontFamily:isVoid?theme.monoFont:theme.headingFont,color:theme.text,marginBottom:4}}>
                 Menu
@@ -583,7 +603,7 @@ export default function App() {
           </div>
           
           {/* Navigation Section */}
-          <div style={{flex:1,overflowY:"auto",padding:"16px 20px"}}>
+          <div style={{flex:1,overflowY:"auto",padding:"16px 20px","@media (max-width: 480px)":{padding:"12px 16px"}}}>
             <div style={{fontSize:11,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:16,fontFamily:isVoid?theme.monoFont:theme.bodyFont,opacity:.8}}>
               Navigation
             </div>

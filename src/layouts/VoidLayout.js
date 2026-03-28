@@ -72,7 +72,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
 
   return <>
     {/* HERO — brutalist stacked */}
-    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"140px 60px 100px",textAlign:"left",position:"relative",background:theme.bg,"@media (max-width: 768px)":{padding:"60px 20px",alignItems:"center",textAlign:"center"}}}>
+    <section ref={heroRef} id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",padding:"140px 60px 100px",textAlign:"left",position:"relative",background:theme.bg,"@media (max-width: 1024px)":{padding:"120px 40px 80px"},"@media (max-width: 768px)":{padding:"80px 24px 60px",alignItems:"center",textAlign:"center"},"@media (max-width: 480px)":{padding:"60px 16px 40px",alignItems:"center",textAlign:"center"}}}>
       {/* Large blurred name in background */}
       <div className="name-bg" style={{
         position:"absolute",
@@ -162,7 +162,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     </div>
 
     {/* ABOUT — raw, text-heavy */}
-    <section id="about" style={{padding:"80px 60px",borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 768px)":{padding:"40px 20px"}}}>
+    <section id="about" style={{padding:"80px 60px",borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 1024px)":{padding:"60px 40px"},"@media (max-width: 768px)":{padding:"40px 24px"},"@media (max-width: 480px)":{padding:"32px 16px"}}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:30,textAlign:"center"}}}>
         <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6,"@media (max-width: 768px)":{fontSize:10}}}>/ ABOUT</div></div>
         <div>
@@ -182,7 +182,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     </section>
 
     {/* SKILLS — big numbers */}
-    <section id="skills" style={{padding:"80px 60px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 768px)":{padding:"40px 20px"}}}>
+    <section id="skills" style={{padding:"80px 60px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 1024px)":{padding:"60px 40px"},"@media (max-width: 768px)":{padding:"40px 24px"},"@media (max-width: 480px)":{padding:"32px 16px"}}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:30,textAlign:"center"}}}>
         <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6,"@media (max-width: 768px)":{fontSize:10}}}>/ SKILLS</div></div>
         <div>
@@ -205,7 +205,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
 
     {/* PROJECTS — brutalist numbered list */}
     <section id="projects" style={{borderBottom:`2px solid ${theme.borderMid}`,position:"relative"}}>
-      <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:40,padding:"60px 40px 20px","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:20,padding:"30px 16px 16px",textAlign:"center"}}}>
+      <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:40,padding:"60px 40px 20px","@media (max-width: 1024px)":{padding:"40px 24px 16px"},"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:20,padding:"30px 20px 16px",textAlign:"center"},"@media (max-width: 480px)":{padding:"24px 16px 12px"}}}>
         <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6,"@media (max-width: 768px)":{fontSize:10}}}>/ WORK</div></div>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><span style={{fontSize:12,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace","@media (max-width: 768px)":{fontSize:10}}}>Projects</span></div>
       </div>
@@ -281,7 +281,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     </section>
 
     {/* CONTACT */}
-    <section ref={contactRef} id="contact" style={{padding:"80px 60px",position:"relative","@media (max-width: 768px)":{padding:"30px 16px"}}}>
+    <section ref={contactRef} id="contact" style={{padding:"80px 60px",position:"relative","@media (max-width: 1024px)":{padding:"60px 40px"},"@media (max-width: 768px)":{padding:"40px 24px"},"@media (max-width: 480px)":{padding:"32px 16px"}}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:24,textAlign:"center"}}}>
         <div>
           <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:theme.text,letterSpacing:".17em",textTransform:"uppercase",opacity:.8,marginBottom:5,"@media (max-width: 768px)":{fontSize:9}}}>/ CONTACT</div>
