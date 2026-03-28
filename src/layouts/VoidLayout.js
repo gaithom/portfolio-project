@@ -8,6 +8,7 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroSubRef=useRef(null),heroCtaRef=useRef(null);
   const aboutRef=useRef(null),aboutImgRef=useRef(null),aboutTxtRef=useRef(null);
   const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
+  const [hoveredProject, setHoveredProject] = useState(null);
 
   useGSAP((gsap,ST)=>{
     const tl=gsap.timeline({delay:.15});
@@ -186,14 +187,14 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:60,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:30,textAlign:"center"}}}>
         <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.7,marginTop:6,"@media (max-width: 768px)":{fontSize:10}}}>/ SKILLS</div></div>
         <div>
-          {SKILLS.map((s,i)=><div key={s.label} style={{display:"grid",gridTemplateColumns:"1fr 80px",gap:20,alignItems:"center",borderTop:`1px solid ${theme.border}`,padding:"12px 0","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,textAlign:"center",padding:"8px 0"}}}>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,color:theme.text,opacity:.85,textTransform:"uppercase",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:13,marginBottom:8}}}>{s.label}</div>
-            <div style={{textAlign:"right","@media (max-width: 768px)":{textAlign:"center"}}}>
-              <span style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.textMuted,opacity:.45,lineHeight:1,"@media (max-width: 768px)":{fontSize:24}}}>{s.pct}<span style={{fontSize:14,opacity:.5,"@media (max-width: 768px)":{fontSize:12}}}>%</span></span>
-              <div style={{height:2,background:theme.border,marginTop:6}}><div style={{height:"100%",width:`${s.pct}%`,background:theme.accent,opacity:.55}}/></div>
+          {SKILLS.map((s,i)=><div key={s.label} style={{display:"grid",gridTemplateColumns:"1fr 80px",gap:20,alignItems:"center",borderTop:`1px solid ${theme.border}`,padding:"12px 0","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:16,textAlign:"left",padding:"16px 0"},"@media (max-width: 480px)":{gap:12,padding:"12px 0"}}}>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,color:theme.text,opacity:.85,textTransform:"uppercase",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:14,marginBottom:8},"@media (max-width: 480px)":{fontSize:13}}}>{s.label}</div>
+            <div style={{textAlign:"right","@media (max-width: 768px)":{textAlign:"left",order:2}}}>
+              <span style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.textMuted,opacity:.45,lineHeight:1,"@media (max-width: 768px)":{fontSize:24,display:"block",marginBottom:8},"@media (max-width: 480px)":{fontSize:20}}}>{s.pct}<span style={{fontSize:14,opacity:.5,"@media (max-width: 768px)":{fontSize:12},"@media (max-width: 480px)":{fontSize:10}}}>%</span></span>
+              <div style={{height:2,background:theme.border,marginTop:6,"@media (max-width: 768px)":{marginTop:0}}}><div style={{height:"100%",width:`${s.pct}%`,background:theme.accent,opacity:.55}}/></div>
             </div>
           </div>)}
-          <div style={{marginTop:24,display:"flex",flexWrap:"wrap",gap:6,borderTop:`1px solid ${theme.border}`,paddingTop:20,"@media (max-width: 768px)":{justifyContent:"center",gap:4}}}>
+          <div style={{marginTop:24,display:"flex",flexWrap:"wrap",gap:6,borderTop:`1px solid ${theme.border}`,paddingTop:20,"@media (max-width: 768px)":{justifyContent:"center",gap:4,marginTop:20,paddingTop:16},"@media (max-width: 480px)":{gap:3,marginTop:16,paddingTop:12}}}>
             {TECH.map(t=><span key={t} style={{padding:"4px 8px",background:"transparent",border:`1px solid ${theme.borderMid}`,fontSize:10,fontWeight:700,color:theme.text,textTransform:"uppercase",letterSpacing:".06em",transition:"all .15s",cursor:"default","@media (max-width: 768px)":{fontSize:8,padding:"2px 6px"}}}
               onMouseEnter={e=>{e.target.style.background=theme.accent;e.target.style.color=theme.bg;e.target.style.borderColor=theme.accent;}}
               onMouseLeave={e=>{e.target.style.background="transparent";e.target.style.color=theme.textMuted;e.target.style.borderColor=theme.borderMid;}}>{t}</span>)}
@@ -210,8 +211,8 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><span style={{fontSize:12,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace","@media (max-width: 768px)":{fontSize:10}}}>Projects</span></div>
       </div>
       {PROJECTS.map((p,i)=>{
-        const [h,setH]=useState(false);
-        return <div key={p.id} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setSel(p)} style={{display:"grid",gridTemplateColumns:"200px 1fr auto",gap:20,padding:"20px 40px",borderTop:`1px solid ${theme.border}`,cursor:"pointer",background:h?theme.surfaceAlt:"transparent",transition:"background .15s","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,padding:"12px 16px",textAlign:"center"}}}>
+        const isHovered = hoveredProject === p.id;
+        return <div key={p.id} onMouseEnter={()=>setHoveredProject(p.id)} onMouseLeave={()=>setHoveredProject(null)} onClick={()=>setSel(p)} style={{display:"grid",gridTemplateColumns:"200px 1fr auto",gap:20,padding:"20px 40px",borderTop:`1px solid ${theme.border}`,cursor:"pointer",background:isHovered?theme.surfaceAlt:"transparent",transition:"background .15s","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,padding:"12px 16px",textAlign:"center"}}}>
           <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,opacity:.4,paddingTop:6,"@media (max-width: 768px)":{display:"none"}}}>{String(i+1).padStart(2,"0")}</div>
           <div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:theme.text,opacity:.9,textTransform:"uppercase",letterSpacing:".02em",marginBottom:4,"@media (max-width: 768px)":{fontSize:16,marginBottom:6}}}>{p.title}</h3>
@@ -224,17 +225,35 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     </section>
 
     {/* SERVICES — table layout */}
-    <section ref={servicesRef} id="services" style={{padding:"30px 16px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 768px)":{padding:"20px 12px"}}}>
-      <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:20,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,textAlign:"center"}}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6,"@media (max-width: 768px)":{fontSize:8}}}>/ SERVICES</div></div>
+    <section ref={servicesRef} id="services" style={{padding:"30px 16px",background:theme.bgAlt,borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 1024px)":{padding:"24px 20px"},"@media (max-width: 768px)":{padding:"20px 16px"},"@media (max-width: 480px)":{padding:"16px 12px"}}}>
+      {/* Header - Desktop: Sidebar, Mobile: Top */}
+      <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.8,marginTop:6,marginBottom:20,"@media (max-width: 768px)":{fontSize:12,textAlign:"center",marginBottom:24}}}>/ SERVICES</div>
+      
+      {/* Services Content */}
+      <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:20,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:0}}}>
+        <div style={{display:"none","@media (min-width: 769px)":{display:"block"}}}></div>
         <div>
-          {SERVICES.map((s,i)=><div key={s.title} className="srv-card" style={{display:"grid",gridTemplateColumns:"60px 200px 1fr",borderBottom:i<SERVICES.length-1?"1px solid ${theme.border}":"none",transition:"background .15s",cursor:"default","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:8,padding:"12px 8px",textAlign:"center",borderBottom:i<SERVICES.length-1?"1px solid ${theme.border}":"none"}}}
-            onMouseEnter={e=>e.currentTarget.style.background=theme.surface}
-            onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-            <div style={{padding:"20px 0 20px 20px",borderRight:`1px solid ${theme.border}`,fontSize:24,opacity:.6,"@media (max-width: 768px)":{borderRight:"none",padding:"0 0 12px 0",textAlign:"center",fontSize:20}}}>{s.icon}</div>
-            <div style={{padding:"20px",borderRight:`1px solid ${theme.border}`,"@media (max-width: 768px)":{borderRight:"none",padding:"0 0 12px 0"}}}><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:700,color:theme.text,opacity:.85,textTransform:"uppercase",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:12}}}>{s.title}</h3></div>
-            <div style={{padding:"20px","@media (max-width: 768px)":{padding:"0"}}}><p style={{fontSize:11,color:theme.textMuted,lineHeight:1.6,opacity:.8,"@media (max-width: 768px)":{fontSize:10}}}>{s.desc}</p></div>
-          </div>)}
+          {SERVICES.map((s,i)=>{
+            const borderBottom = i < SERVICES.length - 1 ? `1px solid ${theme.border}` : "none";
+            return (
+              <div key={s.title} className="srv-card" style={{
+                display:"grid",
+                gridTemplateColumns:"60px 200px 1fr",
+                borderBottom,
+                transition:"background .15s",
+                cursor:"default",
+                "@media (max-width: 1024px)":{gridTemplateColumns:"50px 180px 1fr",gap:16},
+                "@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,padding:"16px 12px",textAlign:"center",borderBottom},
+                "@media (max-width: 480px)":{padding:"12px 8px",gap:8}
+              }}
+              onMouseEnter={e=>e.currentTarget.style.background=theme.surface}
+              onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                <div style={{padding:"20px 0 20px 20px",borderRight:`1px solid ${theme.border}`,fontSize:24,opacity:.7,"@media (max-width: 1024px)":{fontSize:22,padding:"16px 0 16px 16px"},"@media (max-width: 768px)":{borderRight:"none",padding:"0 0 12px 0",textAlign:"center",fontSize:20},"@media (max-width: 480px)":{fontSize:18}}}>{s.icon}</div>
+                <div style={{padding:"20px",borderRight:`1px solid ${theme.border}`,"@media (max-width: 1024px)":{padding:"16px"},"@media (max-width: 768px)":{borderRight:"none",padding:"0 0 12px 0"}}}><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,color:theme.text,opacity:.95,textTransform:"uppercase",letterSpacing:".04em","@media (max-width: 768px)":{fontSize:13},"@media (max-width: 480px)":{fontSize:12}}}>{s.title}</h3></div>
+                <div style={{padding:"20px","@media (max-width: 1024px)":{padding:"16px"},"@media (max-width: 768px)":{padding:"0"}}}><p style={{fontSize:12,color:theme.text,lineHeight:1.7,opacity:.9,"@media (max-width: 768px)":{fontSize:11,lineHeight:1.6},"@media (max-width: 480px)":{fontSize:10}}}>{s.desc}</p></div>
+              </div>
+            );
+          })}
         </div>
       </div>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
@@ -243,14 +262,14 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
     {/* TIMELINE */}
     <section ref={timelineRef} id="experience" style={{padding:"30px 16px",borderBottom:`2px solid ${theme.borderMid}`,position:"relative","@media (max-width: 768px)":{padding:"20px 12px"}}}>
       <div style={{display:"grid",gridTemplateColumns:"200px 1fr",gap:20,"@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,textAlign:"center"}}}>
-        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:theme.textMuted,letterSpacing:".25em",textTransform:"uppercase",opacity:.5,marginTop:6,"@media (max-width: 768px)":{fontSize:8}}}>/ EXPERIENCE</div></div>
+        <div><div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:theme.text,letterSpacing:".25em",textTransform:"uppercase",opacity:.8,marginTop:6,"@media (max-width: 768px)":{fontSize:10}}}>/ EXPERIENCE</div></div>
         <div>
           {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"grid",gridTemplateColumns:"100px 1fr",gap:16,borderTop:`1px solid ${theme.border}`,padding:"16px 0","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:12,padding:"12px 0",textAlign:"center"}}}>
-            <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:700,color:theme.textMuted,opacity:.7,"@media (max-width: 768px)":{marginBottom:4,fontSize:11}}}>{t.year}</div>
+            <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:700,color:theme.text,opacity:.8,"@media (max-width: 768px)":{marginBottom:4,fontSize:11}}}>{t.year}</div>
             <div>
-              <div style={{fontFamily:"'Space Mono',monospace",fontSize:8,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:theme.accent,opacity:.7,marginBottom:8,"@media (max-width: 768px)":{fontSize:7,marginBottom:6}}}>{t.place}</div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:8,color:theme.text,opacity:.88,textTransform:"uppercase",letterSpacing:".02em","@media (max-width: 768px)":{fontSize:14,marginBottom:6}}}>{t.title}</h3>
-              <p style={{fontSize:12,color:theme.textMuted,lineHeight:1.7,opacity:.7,"@media (max-width: 768px)":{fontSize:11,lineHeight:1.6}}}>{t.desc}</p>
+              <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",color:theme.accent,opacity:.8,marginBottom:8,"@media (max-width: 768px)":{fontSize:8,marginBottom:6}}}>{t.place}</div>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:8,color:theme.text,opacity:.92,textTransform:"uppercase",letterSpacing:".02em","@media (max-width: 768px)":{fontSize:14,marginBottom:6}}}>{t.title}</h3>
+              <p style={{fontSize:12,color:theme.text,lineHeight:1.7,opacity:.8,"@media (max-width: 768px)":{fontSize:11,lineHeight:1.6}}}>{t.desc}</p>
             </div>
           </div>)}
         </div>
@@ -308,5 +327,5 @@ export function VoidLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSe
       </div>
       {devMode&&<DevBadge id="contact" devMode={devMode} theme={theme}/>}
     </section>
-  </>;
+  </>
 }
