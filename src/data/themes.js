@@ -19,46 +19,8 @@ export const THEMES = {
     cardRadius:"18px 4px 18px 4px",
     sectionShape:"organic",
   },
-  midnight: {
-    name:"Midnight", icon:"🌙", layout:"editorial",
-    bg:"#04091A", bgAlt:"#070E24", surface:"#0A142E", surfaceAlt:"rgba(10,20,46,0.55)",
-    accent:"#5A8BC8", accentSub:"#3A6AAA",
-    text:"#CDD8F0", textMuted:"#4F6D9A",
-    border:"rgba(90,139,200,0.10)", borderMid:"rgba(90,139,200,0.20)",
-    animFg:"rgba(160,185,235,0.08)", animDot:"rgba(160,185,235,0.12)", animOrb:"rgba(90,139,200,0.06)",
-    shadow:"0 4px 28px rgba(0,0,0,0.44)", shadowMd:"0 8px 44px rgba(0,0,0,0.52)",
-    particleRgb:"155,182,232",
-    devAccent:"#4DBBFF", devBg:"rgba(0,4,18,0.97)", devBorder:"rgba(77,187,255,0.22)",
-    // Fonts
-    fontFamily:"'Merriweather', serif",
-    headingFont:"'Merriweather', serif",
-    bodyFont:"'Lora', serif",
-    monoFont:"'Fira Code', monospace",
-    // Layout personality: editorial, magazine, wide typography
-    heroRadius:"0",
-    cardRadius:"2px",
-    sectionShape:"editorial",
-  },
-  void: {
-    name:"Void", icon:"🌑", layout:"brutalist",
-    bg:"#080808", bgAlt:"#0F0F0F", surface:"#161616", surfaceAlt:"rgba(22,22,22,0.55)",
-    accent:"#8A6EBE", accentSub:"#6B52A0",
-    text:"#E0E0E0", textMuted:"#606060",
-    border:"rgba(138,110,190,0.09)", borderMid:"rgba(138,110,190,0.18)",
-    animFg:"rgba(210,205,230,0.06)", animDot:"rgba(210,205,230,0.11)", animOrb:"rgba(138,110,190,0.06)",
-    shadow:"0 4px 28px rgba(0,0,0,0.55)", shadowMd:"0 8px 44px rgba(0,0,0,0.65)",
-    particleRgb:"200,195,225",
-    devAccent:"#BB86FC", devBg:"rgba(4,2,10,0.97)", devBorder:"rgba(187,134,252,0.22)",
-    // Fonts
-    fontFamily:"'Space Grotesk', sans-serif",
-    headingFont:"'Space Grotesk', sans-serif",
-    bodyFont:"'Space Mono', monospace",
-    monoFont:"'IBM Plex Mono', monospace",
-    // Layout personality: brutalist, bold, raw
-    heroRadius:"0",
-    cardRadius:"0",
-    sectionShape:"brutalist",
-  },
+  
+  
   light: {
     name:"Light", icon:"☀️", layout:"minimal",
     bg:"#F3F6EF", bgAlt:"#E9EDE4", surface:"#FFFFFF", surfaceAlt:"rgba(255,255,255,0.72)",

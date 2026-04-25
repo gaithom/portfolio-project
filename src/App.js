@@ -4,8 +4,6 @@ import { THEMES } from "./data/themes";
 import { ParticleCanvas, CustomCursor, ScrollBar, Modal, ScrollProgress, ParallaxElement, ScrollReveal, ScrollIndicator } from "./components/Shared";
 import { DevBadge, PerfMeter, AnimDebugBand, GridGuide } from "./components/DeveloperMode";
 import { ForestLayout } from "./layouts/ForestLayout";
-import { MidnightLayout } from "./layouts/MidnightLayout";
-import { VoidLayout } from "./layouts/VoidLayout";
 import { LightLayout } from "./layouts/LightLayout";
 
 export default function App() {
