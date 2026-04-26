@@ -178,7 +178,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     <div style={{overflow:"hidden",borderBottom:`1px solid ${theme.border}`,padding:"9px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 25s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:13,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t.name}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:14,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t.name}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
       </div>
     </div>
 
@@ -186,7 +186,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="about" className="about-section" style={{padding:"100px 60px",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
-          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>About</span>
+          <span style={{fontSize:14,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>About</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
         </div>
         <div className="about-cards" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
@@ -215,14 +215,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="skills" className="skills-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
-          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
+          <span style={{fontSize:14,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
         </div>
         <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
           <div>{SKILLS.map((s,i)=><div key={s.label} className="skill-item" style={{marginBottom:18}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
               <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
-              <span style={{fontSize:12,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
+              <span style={{fontSize:14,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
             </div>
             {/* Dot progress */}
             <div style={{display:"flex",gap:4}}>
@@ -260,7 +260,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                         transition:"all .2s"
                       }}
                     />
-                    <span style={{fontSize:13,fontWeight:500,color:theme.text,opacity:.8}}>{t.name}</span>
+                    <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.8}}>{t.name}</span>
                   </div>
                 );
               })}
@@ -275,7 +275,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="projects" className="projects-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"left",marginBottom:40}}>
-          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Selected Work</span>
+          <span style={{fontSize:14,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Selected Work</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(30px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:16,color:theme.text}}>Selected Work</h2>
           <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,maxWidth:600}}>A selection of enterprise engagements — from greenfield architecture to complex systems integration at scale.</p>
         </div>
@@ -332,7 +332,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                     zIndex:2
                   }}>
                     <div style={{width:6,height:6,borderRadius:"50%",background:"#00FF88",boxShadow:"0 0 8px #00FF88"}} />
-                    <span style={{fontSize:12,fontWeight:600,color:"#fff",letterSpacing:".1em",textTransform:"uppercase"}}>LIVE</span>
+                    <span style={{fontSize:14,fontWeight:600,color:"#fff",letterSpacing:".1em",textTransform:"uppercase"}}>LIVE</span>
                   </div>
                   
                   {/* Title & Category */}
@@ -348,7 +348,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                     zIndex:2
                   }}>{p.title}</h3>
                   <span style={{
-                    fontSize:11,
+                    fontSize:14,
                     letterSpacing:".2em",
                     textTransform:"uppercase",
                     color:"rgba(255,255,255,0.7)",
@@ -371,15 +371,15 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                     borderBottom:`1px solid ${theme.border}`
                   }}>
                     <div>
-                      <div style={{fontSize:10,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>CLIENT</div>
+                      <div style={{fontSize:12,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>CLIENT</div>
                       <div style={{fontSize:14,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.client}</div>
                     </div>
                     <div>
-                      <div style={{fontSize:10,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>YEAR</div>
+                      <div style={{fontSize:12,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>YEAR</div>
                       <div style={{fontSize:14,fontWeight:700,color:theme.text,letterSpacing:".05em"}}>{p.year}</div>
                     </div>
                     <div>
-                      <div style={{fontSize:10,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>OUTCOME</div>
+                      <div style={{fontSize:12,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>OUTCOME</div>
                       <div style={{fontSize:14,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.outcome}</div>
                     </div>
                   </div>
@@ -400,7 +400,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                             padding:"6px 12px",
                             border:`1px solid ${tH?theme.accent:theme.border}`,
                             borderRadius:6,
-                            fontSize:12,
+                            fontSize:14,
                             fontWeight:500,
                             color:theme.text,
                             opacity:.75,
@@ -427,7 +427,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                         padding:"8px 16px",
                         border:`1px solid ${theme.border}`,
                         borderRadius:6,
-                        fontSize:12,
+                        fontSize:14,
                         fontWeight:600,
                         color:theme.text,
                         textDecoration:"none",
@@ -460,7 +460,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* SERVICES — single card with vertical layout */}
     <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
+        <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
         {(() => {
           const [cardHover, setCardHover] = useState(false);
           return (
@@ -488,21 +488,28 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* TIMELINE — horizontal stepper */}
+    {/* TIMELINE — creative horizontal with large year badges */}
     <section ref={timelineRef} id="experience" className="timeline-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
-        {/* Horizontal stepper */}
-        <div style={{position:"relative"}}>
-          <div className="timeline-line" style={{position:"absolute",top:22,left:"calc(50px)",right:"calc(50px)",height:1,background:`linear-gradient(to right,${theme.borderMid},transparent)`,opacity:.5}}/>
-          <div className="timeline-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
-            {TIMELINE.map((t,i)=><div key={i} className="tl-step" style={{textAlign:"center",paddingTop:0}}>
-              <div style={{width:44,height:44,borderRadius:8,background:"transparent",border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,margin:"0 auto 20px",boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
-              <div style={{fontFamily:"'Space Mono',monospace",fontSize:13,fontWeight:700,color:theme.textMuted,marginBottom:8,opacity:.7,letterSpacing:".06em"}}>{t.year} · {t.place}</div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.88}}>{t.title}</h3>
-              <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
-            </div>)}
-          </div>
+        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
+        {/* Creative horizontal layout */}
+        <div style={{display:"flex",flexDirection:"column",gap:40}}>
+          {TIMELINE.map((t,i)=><div key={i} style={{display:"flex",gap:32,alignItems:"center",position:"relative"}}>
+            <div style={{width:120,flexShrink:0,textAlign:"right"}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:800,color:theme.accent,opacity:.3,lineHeight:1}}>{t.year.slice(-2)}</div>
+              <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:700,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.7}}>{t.place}</div>
+            </div>
+            <div style={{width:16,height:16,borderRadius:"50%",background:theme.accent,flexShrink:0}}/>
+            <div style={{flex:1,background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:24,transition:"all .3s"}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.transform="translateX(8px)";}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.transform="translateX(0)";}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                <span style={{fontSize:20,opacity:.5}}>{t.type==="edu"?"◦":"■"}</span>
+                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:theme.text,opacity:.9}}>{t.title}</h3>
+              </div>
+              <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
+            </div>
+          </div>)}
         </div>
       </div>
       {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
@@ -511,7 +518,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* GET IN TOUCH */}
     <section className="contact-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
-        <span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
+        <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
         <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
         <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
         <div className="contact-info-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
@@ -519,7 +526,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:22,opacity:.4}}>{c.icon}</div>
               <div style={{fontSize:15,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-              <div style={{fontSize:13,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+              <div style={{fontSize:14,color:theme.textMuted,opacity:.8}}>{c.value}</div>
             </a>
           ))}
         </div>
@@ -530,17 +537,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section ref={contactRef} id="contact" className="contact-section" style={{padding:"100px 60px",position:"relative"}}>
       <div className="contact-form" style={{maxWidth:560,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:40}}>
-          <span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Contact</span>
+          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Contact</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:12,color:theme.text}}>Let's Build<br/><span style={{color:theme.accent}}>Something Great</span></h2>
         </div>
         <div className="contact-form" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:8,padding:34,boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
-              <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>{f.l}</label>
+              <label style={{display:"block",fontSize:12,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>{f.l}</label>
               <input style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",transition:"border-color .2s"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
             </div>)}
             <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>Message</label>
+              <label style={{display:"block",fontSize:12,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
             </div>
             <button className="bp" onClick={()=>{
