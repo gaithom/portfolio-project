@@ -27,7 +27,7 @@ export const TECH = [
   {name:"Next.js",logo:"https://cdn.simpleicons.org/nextdotjs/000000",colorLogo:"https://cdn.simpleicons.org/nextdotjs/000000"},
   {name:"Vercel",logo:"https://cdn.simpleicons.org/vercel/000000",colorLogo:"https://cdn.simpleicons.org/vercel/000000"},
   {name:"Storybook",logo:"https://cdn.simpleicons.org/storybook/000000",colorLogo:"https://cdn.simpleicons.org/storybook/ff4785"},
-  {name:"D3.js",logo:"https://cdn.simpleicons.org/d3dotjs/000000",colorLogo:"https://cdn.simpleicons.org/d3dotjs/f9a03c"}
+  {name:"Python",logo:"https://cdn.simpleicons.org/python/000000",colorLogo:"https://cdn.simpleicons.org/python/3776ab"}
 ];
 
 export const SERVICES = [
