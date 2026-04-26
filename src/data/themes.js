@@ -1,9 +1,9 @@
 export const THEMES = {
   forest: {
     name:"Forest", icon:"🌿", layout:"organic",
-    bg:"#07180D", bgAlt:"#0A2114", surface:"#0D2C19", surfaceAlt:"rgba(13,44,25,0.55)",
+    bg:"#3c6057", bgAlt:"#0A2114", surface:"#0D2C19", surfaceAlt:"rgba(13,44,25,0.55)",
     accent:"#4E9E74", accentSub:"#317A52",
-    text:"#D2E8DA", textMuted:"#5E8A6E",
+    text:"#f2efe7", textMuted:"#f2efe7",
     border:"rgba(78,158,116,0.11)", borderMid:"rgba(78,158,116,0.22)",
     animFg:"rgba(160,210,180,0.09)", animDot:"rgba(160,210,180,0.13)", animOrb:"rgba(78,158,116,0.07)",
     shadow:"0 4px 28px rgba(0,0,0,0.38)", shadowMd:"0 8px 44px rgba(0,0,0,0.46)",
@@ -23,7 +23,7 @@ export const THEMES = {
   
   light: {
     name:"Light", icon:"☀️", layout:"minimal",
-    bg:"#F3F6EF", bgAlt:"#E9EDE4", surface:"#FFFFFF", surfaceAlt:"rgba(255,255,255,0.72)",
+    bg:"#f2efe7", bgAlt:"#E9EDE4", surface:"#FFFFFF", surfaceAlt:"rgba(255,255,255,0.72)",
     accent:"#3A7A52", accentSub:"#2A5E3E",
     text:"#1A2B1E", textMuted:"#5E7A66",
     border:"rgba(58,122,82,0.11)", borderMid:"rgba(58,122,82,0.22)",

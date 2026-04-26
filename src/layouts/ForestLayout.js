@@ -174,7 +174,7 @@ function ProjectCard({ project, theme, onSelect }) {
               padding:"8px 16px",
               border:`1px solid ${theme.border}`,
               borderRadius:6,
-              fontSize:12,
+              fontSize:14,
               fontWeight:600,
               color:theme.text,
               textDecoration:"none",
@@ -357,7 +357,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       <div className="hero-content" style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%","@media (max-width: 768px)":{maxWidth:"100%",gap:"30px"}}}>
         {/* Hero content */}
         <div style={{textAlign:"center"}}>
-          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:13,letterSpacing:".14em",textTransform:"uppercase",color:theme.text,opacity:.9}}>
+          <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:14,letterSpacing:".14em",textTransform:"uppercase",color:theme.text,opacity:.9}}>
             <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.65,animation:"pulse 2.8s ease-in-out infinite"}}/>Open to Opportunities
           </div>
           <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
@@ -374,9 +374,9 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* Marquee */}
-    <div style={{overflow:"hidden",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,padding:"10px 0"}}>
+    <div style={{overflow:"hidden",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,padding:"10px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 22s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:13,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t.name}<span style={{marginLeft:16,opacity:.25}}>·</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:14,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t.name}<span style={{marginLeft:16,opacity:.25}}>·</span></span>)}
       </div>
     </div>
 
@@ -392,11 +392,11 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           </div>
           <div style={{position:"absolute",inset:-16,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",border:`1px dashed ${theme.animDot}`,animation:"spinSlow 30s linear infinite",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:8,right:-18,background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 4px 12px 4px",padding:"9px 15px",backdropFilter:"blur(12px)",animation:"floatY 5s ease-in-out infinite",boxShadow:theme.shadow}}>
-            <div style={{fontSize:10,color:theme.text,letterSpacing:".12em",marginBottom:2,opacity:.75}}>BASED IN</div>
+            <div style={{fontSize:12,color:theme.text,letterSpacing:".12em",marginBottom:2,opacity:.75}}>BASED IN</div>
             <div style={{fontWeight:600,fontSize:14,color:theme.text,opacity:.9}}>■ Nakuru, Kenya</div>
           </div>
           <div style={{position:"absolute",top:8,left:-18,background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"4px 12px 4px 12px",padding:"9px 15px",backdropFilter:"blur(12px)",animation:"floatYR 4.5s ease-in-out infinite .4s",boxShadow:theme.shadow}}>
-            <div style={{fontSize:10,color:theme.text,letterSpacing:".12em",marginBottom:2,opacity:.75}}>AT</div>
+            <div style={{fontSize:12,color:theme.text,letterSpacing:".12em",marginBottom:2,opacity:.75}}>AT</div>
             <div style={{fontWeight:600,fontSize:14,color:theme.text,opacity:.9}}>◦ AI Interfaces</div>
           </div>
         </div>
@@ -415,7 +415,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* SKILLS — organic layout */}
-    <section id="skills" className="forest-skills" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section id="skills" className="forest-skills" style={{padding:"110px 40px",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.2}>
         <div style={{maxWidth:1010,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
@@ -453,7 +453,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
                         transition:"all .2s"
                       }}
                     />
-                    <span style={{fontSize:13,fontWeight:500,color:theme.text,opacity:.7}}>{t.name}</span>
+                    <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.7}}>{t.name}</span>
                   </div>
                 );
               })}
@@ -494,23 +494,33 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* SERVICES — single card with vertical layout */}
-    <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
-        <div className="services-card" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:"30px"}}>
-          <div style={{display:"flex",flexDirection:"column",gap:32}}>
-            {SERVICES.map(s=><div key={s.title} className="srv-item" style={{display:"flex",alignItems:"flex-start",gap:28,padding:"35px 40px",background:"transparent",borderRadius:8,transition:"background .2s",cursor:"default"}}
-              onMouseEnter={e=>{e.currentTarget.style.background="rgba(0,0,0,0.03)";}}
-              onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
-              <div style={{fontSize:36,opacity:.4,lineHeight:1,flexShrink:0,marginTop:2}}>{s.icon}</div>
-              <div>
-                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>{s.title}</h3>
-                <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
+        {(() => {
+          const [cardHover, setCardHover] = useState(false);
+          return (
+            <div 
+              className="services-card" 
+              onMouseEnter={() => setCardHover(true)}
+              onMouseLeave={() => setCardHover(false)}
+              style={{background:"transparent",border:`1px solid rgba(242, 239, 231, ${cardHover ? 0.7 : 0.3})`,borderRadius:12,padding:"30px",transition:"border-color .2s"}}
+            >
+              <div style={{display:"flex",flexDirection:"column",gap:0}}>
+                {SERVICES.map((s,i)=><div key={s.title} className="srv-item" style={{display:"flex",alignItems:"flex-start",gap:28,padding:"35px 40px",background:"transparent",borderRadius:8,transition:"background .2s",cursor:"default",borderBottom:i===SERVICES.length-1?"none":`1px solid rgba(242, 239, 231, ${cardHover ? 0.7 : 0.3})`}}
+                  onMouseEnter={e=>{e.currentTarget.style.background="rgba(0,0,0,0.03)";}}
+                  onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+                  <div style={{fontSize:36,opacity:.4,lineHeight:1,flexShrink:0,marginTop:2}}>{s.icon}</div>
+                  <div>
+                    <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>{s.title}</h3>
+                    <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
+                  </div>
+                </div>)}
               </div>
-            </div>)}
-          </div>
-        </div>
+            </div>
+          );
+        })()}
         </div>
       </ScrollReveal>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
@@ -527,7 +537,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             <div style={{width:43,height:43,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
             <div style={{paddingTop:5}}>
               <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>
-                <span style={{fontFamily:"'Space Mono',monospace",fontSize:13,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"3px 9px",borderRadius:"8px 2px 8px 2px",border:`1px solid ${theme.border}`}}>{t.year}</span>
+                <span style={{fontFamily:"'Space Mono',monospace",fontSize:14,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"3px 9px",borderRadius:"8px 2px 8px 2px",border:`1px solid ${theme.border}`}}>{t.year}</span>
                 <span style={{fontSize:14,color:theme.accent,fontWeight:700,opacity:.8}}>{t.place}</span>
               </div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.9}}>{t.title}</h3>
@@ -541,7 +551,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* GET IN TOUCH */}
-    <section className="forest-contact" style={{padding:"110px 40px",background:theme.bgAlt,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
+    <section className="forest-contact" style={{padding:"110px 40px",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
         <span className="sec-label" style={{display:"block",textAlign:"center"}}>Connect</span>
         <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Work Together</h2>
@@ -551,7 +561,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
             <a key={i} href={c.link} onClick={(e)=>{if(c.action==="scroll"){e.preventDefault();scrollTo("contact");}}} target={c.action==="scroll"?"_self":"_blank"} rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
               <div style={{fontSize:22,opacity:.4}}>{c.icon}</div>
               <div style={{fontSize:15,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-              <div style={{fontSize:13,color:theme.text,opacity:.9}}>{c.value}</div>
+              <div style={{fontSize:14,color:theme.text,opacity:.9}}>{c.value}</div>
             </a>
           ))}
         </div>
@@ -567,11 +577,11 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <div className="contact-form" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
-              <label style={{display:"block",fontSize:12,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>{f.l}</label>
+              <label style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>{f.l}</label>
               <input style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
             </div>)}
             <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:12,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
+              <label style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
               <textarea style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
             </div>
             <button className="bp" onClick={()=>{

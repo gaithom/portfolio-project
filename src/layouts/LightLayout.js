@@ -190,17 +190,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
         </div>
         <div className="about-cards" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
-          <div className="about-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
+          <div className="about-card" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:16,marginBottom:18,opacity:.3}}>•</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>Michael Gaitho</h3>
             <p style={{color:theme.textMuted,fontSize:15,lineHeight:1.8}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
           </div>
-          <div className="about-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
+          <div className="about-card" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:16,marginBottom:18,opacity:.3}}>–</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>AI Development</h3>
             <p style={{color:theme.textMuted,fontSize:15,lineHeight:1.8}}>Building AI-powered web interfaces and dashboards. Leading frontend architecture and UI/UX design decisions.</p>
           </div>
-          <div className="about-card" style={{background:theme.accent,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
+          <div className="about-card" style={{background:"transparent",border:`1px solid ${theme.accent}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:16,marginBottom:18,opacity:.35}}>◦</div>
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.bg}}>Education</h3>
             <p style={{color:theme.bg,fontSize:15,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction.</p>
@@ -244,7 +244,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                       alignItems:"center",
                       gap:8,
                       padding:"10px 16px",
-                      background:h?"rgba(0,0,0,0.05)":theme.surface,
+                      background:h?"rgba(0,0,0,0.05)":"transparent",
                       borderRadius:8,
                       transition:"all .2s",
                       cursor:"default",
@@ -288,7 +288,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                 onMouseEnter={()=>setH(true)} 
                 onMouseLeave={()=>setH(false)} 
                 style={{
-                  background:theme.surface,
+                  background:"transparent",
                   border:`1px solid ${h?theme.borderMid:theme.border}`,
                   borderRadius:16,
                   overflow:"hidden",
@@ -461,19 +461,29 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
-        <div className="services-card" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:"30px"}}>
-          <div style={{display:"flex",flexDirection:"column",gap:32}}>
-            {SERVICES.map(s=><div key={s.title} className="srv-item" style={{display:"flex",alignItems:"flex-start",gap:28,padding:"35px 40px",background:"transparent",borderRadius:8,transition:"background .2s",cursor:"default"}}
-              onMouseEnter={e=>{e.currentTarget.style.background="rgba(0,0,0,0.03)";}}
-              onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
-              <div style={{fontSize:36,opacity:.4,lineHeight:1,flexShrink:0,marginTop:2}}>{s.icon}</div>
-              <div>
-                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>{s.title}</h3>
-                <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
+        {(() => {
+          const [cardHover, setCardHover] = useState(false);
+          return (
+            <div 
+              className="services-card" 
+              onMouseEnter={() => setCardHover(true)}
+              onMouseLeave={() => setCardHover(false)}
+              style={{background:"transparent",border:`1px solid rgba(60, 96, 87, ${cardHover ? 0.7 : 0.3})`,borderRadius:12,padding:"30px",transition:"border-color .2s"}}
+            >
+              <div style={{display:"flex",flexDirection:"column",gap:0}}>
+                {SERVICES.map((s,i)=><div key={s.title} className="srv-item" style={{display:"flex",alignItems:"flex-start",gap:28,padding:"35px 40px",background:"transparent",borderRadius:8,transition:"background .2s",cursor:"default",borderBottom:i===SERVICES.length-1?"none":`1px solid rgba(60, 96, 87, ${cardHover ? 0.7 : 0.3})`}}
+                  onMouseEnter={e=>{e.currentTarget.style.background="rgba(0,0,0,0.03)";}}
+                  onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+                  <div style={{fontSize:36,opacity:.4,lineHeight:1,flexShrink:0,marginTop:2}}>{s.icon}</div>
+                  <div>
+                    <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>{s.title}</h3>
+                    <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
+                  </div>
+                </div>)}
               </div>
-            </div>)}
-          </div>
-        </div>
+            </div>
+          );
+        })()}
       </div>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
     </section>
@@ -487,7 +497,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <div className="timeline-line" style={{position:"absolute",top:22,left:"calc(50px)",right:"calc(50px)",height:1,background:`linear-gradient(to right,${theme.borderMid},transparent)`,opacity:.5}}/>
           <div className="timeline-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
             {TIMELINE.map((t,i)=><div key={i} className="tl-step" style={{textAlign:"center",paddingTop:0}}>
-              <div style={{width:44,height:44,borderRadius:8,background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,margin:"0 auto 20px",boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
+              <div style={{width:44,height:44,borderRadius:8,background:"transparent",border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,margin:"0 auto 20px",boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
               <div style={{fontFamily:"'Space Mono',monospace",fontSize:13,fontWeight:700,color:theme.textMuted,marginBottom:8,opacity:.7,letterSpacing:".06em"}}>{t.year} · {t.place}</div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.88}}>{t.title}</h3>
               <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
@@ -523,7 +533,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Contact</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:12,color:theme.text}}>Let's Build<br/><span style={{color:theme.accent}}>Something Great</span></h2>
         </div>
-        <div className="contact-form" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:34,boxShadow:theme.shadow}}>
+        <div className="contact-form" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:8,padding:34,boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
               <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>{f.l}</label>
