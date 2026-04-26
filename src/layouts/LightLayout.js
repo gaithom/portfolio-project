@@ -163,24 +163,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         }
       }}>DEVELOPER</div>
       <div className="hero-content" style={{position:"relative",zIndex:1,maxWidth:680,width:"100%"}}>
-        <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:4,padding:"6px 16px",marginBottom:32,background:"rgba(255,255,255,0.8)",backdropFilter:"blur(12px)",fontSize:12,letterSpacing:".14em",textTransform:"uppercase",color:theme.text}}>
-          <span style={{width:6,height:6,borderRadius:"50%",background:theme.accent,display:"inline-block",opacity:.7,animation:"pulse 2.5s ease-in-out infinite"}}/>
-          Open to Opportunities
-        </div>
         <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(32px,6vw,72px)",fontWeight:800,lineHeight:1.0,letterSpacing:"-.03em",marginBottom:20,color:theme.text}}>
           Michael Gaitho.<span style={{color:theme.accent}}>DEV</span>
         </h1>
-        <p className="hero-subtitle" style={{fontSize:16,color:theme.textMuted,maxWidth:440,margin:"0 0 12px 0",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
-        <p className="hero-description" style={{fontSize:13,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
+        <p className="hero-subtitle" style={{fontSize:18,color:theme.textMuted,maxWidth:440,margin:"0 0 12px 0",lineHeight:1.9}}>UI/UX Designer & Creative Coder based in Nakuru, Kenya 🇰🇪</p>
+        <p className="hero-description" style={{fontSize:15,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Building clean, performant React applications with beautiful motion design.</p>
         <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:12,justifyContent:"flex-start",flexWrap:"wrap"}}>
           <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>View Projects</button>
           <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:4}}>Say Hello →</button>
-        </div>
-        <div className="hero-stats" style={{display:"flex",gap:48,justifyContent:"flex-start",marginTop:60}}>
-          {[{n:"2+",l:"Years"},{n:"15+",l:"Projects"},{n:"∞",l:"Coffee"}].map(s=><div key={s.l} className="stat-item" style={{textAlign:"left"}}>
-            <div className="stat-number" style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:theme.text,lineHeight:1,opacity:.8}}>{s.n}</div>
-            <div className="stat-label" style={{fontSize:11,color:theme.text,letterSpacing:".14em",textTransform:"uppercase",marginTop:5,opacity:.8}}>{s.l}</div>
-          </div>)}
         </div>
       </div>
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
@@ -188,7 +178,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     <div style={{overflow:"hidden",borderBottom:`1px solid ${theme.border}`,padding:"9px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 25s linear infinite"}}>
-        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:12,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
+        {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:13,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t.name}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
       </div>
     </div>
 
@@ -196,24 +186,24 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="about" className="about-section" style={{padding:"100px 60px",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}>
-          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>About</span>
-          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
+          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>About</span>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
         </div>
         <div className="about-cards" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
           <div className="about-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:16,marginBottom:18,opacity:.3}}>•</div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>Michael Gaitho</h3>
-            <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>Michael Gaitho</h3>
+            <p style={{color:theme.textMuted,fontSize:15,lineHeight:1.8}}>Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics.</p>
           </div>
           <div className="about-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:16,marginBottom:18,opacity:.3}}>–</div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.text}}>AI Development</h3>
-            <p style={{color:theme.textMuted,fontSize:13,lineHeight:1.8}}>Building AI-powered web interfaces and dashboards. Leading frontend architecture and UI/UX design decisions.</p>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>AI Development</h3>
+            <p style={{color:theme.textMuted,fontSize:15,lineHeight:1.8}}>Building AI-powered web interfaces and dashboards. Leading frontend architecture and UI/UX design decisions.</p>
           </div>
           <div className="about-card" style={{background:theme.accent,borderRadius:8,padding:32,boxShadow:theme.shadow}}>
             <div className="icon" style={{fontSize:16,marginBottom:18,opacity:.35}}>◦</div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:10,color:theme.bg}}>Education</h3>
-            <p style={{color:theme.bg,fontSize:13,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction.</p>
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.bg}}>Education</h3>
+            <p style={{color:theme.bg,fontSize:15,lineHeight:1.8,opacity:.8}}>Bachelor of IT — Specializing in software engineering and human-computer interaction.</p>
           </div>
         </div>
         <div style={{marginTop:24,display:"flex",gap:10,justifyContent:"center"}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:4}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>See Work →</button></div>
@@ -225,14 +215,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="skills" className="skills-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
-          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
-          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
+          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
         </div>
         <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
           <div>{SKILLS.map((s,i)=><div key={s.label} className="skill-item" style={{marginBottom:18}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
-              <span style={{fontSize:13,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
-              <span style={{fontSize:11,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
+              <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
+              <span style={{fontSize:12,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
             </div>
             {/* Dot progress */}
             <div style={{display:"flex",gap:4}}>
@@ -240,11 +230,40 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             </div>
           </div>)}</div>
           <div>
-            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,marginBottom:18,color:theme.text,letterSpacing:".08em",textTransform:"uppercase",opacity:.8}}>Tech Stack</h3>
-            <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
-              {TECH.map(t=><span key={t} style={{padding:"6px 12px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:4,fontSize:12,fontWeight:500,color:theme.text,opacity:.75,transition:"all .2s",cursor:"default",boxShadow:theme.shadow}}
-                onMouseEnter={e=>{e.target.style.borderColor=theme.accent;e.target.style.opacity=1;}}
-                onMouseLeave={e=>{e.target.style.borderColor=theme.border;e.target.style.opacity=.75;}}>{t}</span>)}
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:18,color:theme.text,letterSpacing:".08em",textTransform:"uppercase",opacity:.8}}>Tech Stack</h3>
+            <div style={{display:"flex",flexWrap:"wrap",gap:12}}>
+              {TECH.map((t,i)=>{
+                const [h,setH]=useState(false);
+                return (
+                  <div 
+                    key={i} 
+                    onMouseEnter={()=>setH(true)} 
+                    onMouseLeave={()=>setH(false)}
+                    style={{
+                      display:"flex",
+                      alignItems:"center",
+                      gap:8,
+                      padding:"10px 16px",
+                      background:h?"rgba(0,0,0,0.05)":theme.surface,
+                      borderRadius:8,
+                      transition:"all .2s",
+                      cursor:"default",
+                      boxShadow:h?theme.shadowMd:theme.shadow
+                    }}
+                  >
+                    <img 
+                      src={t.colorLogo} 
+                      alt={t.name}
+                      style={{
+                        width:28,
+                        height:28,
+                        transition:"all .2s"
+                      }}
+                    />
+                    <span style={{fontSize:13,fontWeight:500,color:theme.text,opacity:.8}}>{t.name}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -256,9 +275,9 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section id="projects" className="projects-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"left",marginBottom:40}}>
-          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Selected Work</span>
-          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:16,color:theme.text}}>Selected Work</h2>
-          <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.75,maxWidth:600}}>A selection of enterprise engagements — from greenfield architecture to complex systems integration at scale.</p>
+          <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Selected Work</span>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(30px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:16,color:theme.text}}>Selected Work</h2>
+          <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,maxWidth:600}}>A selection of enterprise engagements — from greenfield architecture to complex systems integration at scale.</p>
         </div>
         <div className="projects-grid" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24,'@media (max-width: 768px)': {gridTemplateColumns:"1fr"}}}>
           {PROJECTS.map((p)=>{
@@ -313,7 +332,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                     zIndex:2
                   }}>
                     <div style={{width:6,height:6,borderRadius:"50%",background:"#00FF88",boxShadow:"0 0 8px #00FF88"}} />
-                    <span style={{fontSize:11,fontWeight:600,color:"#fff",letterSpacing:".1em",textTransform:"uppercase"}}>LIVE</span>
+                    <span style={{fontSize:12,fontWeight:600,color:"#fff",letterSpacing:".1em",textTransform:"uppercase"}}>LIVE</span>
                   </div>
                   
                   {/* Title & Category */}
@@ -352,21 +371,21 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                     borderBottom:`1px solid ${theme.border}`
                   }}>
                     <div>
-                      <div style={{fontSize:9,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>CLIENT</div>
-                      <div style={{fontSize:13,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.client}</div>
+                      <div style={{fontSize:10,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>CLIENT</div>
+                      <div style={{fontSize:14,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.client}</div>
                     </div>
                     <div>
-                      <div style={{fontSize:9,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>YEAR</div>
-                      <div style={{fontSize:13,fontWeight:700,color:theme.text,letterSpacing:".05em"}}>{p.year}</div>
+                      <div style={{fontSize:10,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>YEAR</div>
+                      <div style={{fontSize:14,fontWeight:700,color:theme.text,letterSpacing:".05em"}}>{p.year}</div>
                     </div>
                     <div>
-                      <div style={{fontSize:9,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>OUTCOME</div>
-                      <div style={{fontSize:13,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.outcome}</div>
+                      <div style={{fontSize:10,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>OUTCOME</div>
+                      <div style={{fontSize:14,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.outcome}</div>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p style={{fontSize:13,color:theme.textMuted,lineHeight:1.75,marginBottom:20,opacity:.9}}>{p.longDesc}</p>
+                  <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.75,marginBottom:20,opacity:.9}}>{p.longDesc}</p>
 
                   {/* Tech Stack Tags */}
                   <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
@@ -381,7 +400,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                             padding:"6px 12px",
                             border:`1px solid ${tH?theme.accent:theme.border}`,
                             borderRadius:6,
-                            fontSize:11,
+                            fontSize:12,
                             fontWeight:500,
                             color:theme.text,
                             opacity:.75,
@@ -408,7 +427,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                         padding:"8px 16px",
                         border:`1px solid ${theme.border}`,
                         borderRadius:6,
-                        fontSize:11,
+                        fontSize:12,
                         fontWeight:600,
                         color:theme.text,
                         textDecoration:"none",
@@ -438,20 +457,22 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* SERVICES — two-column minimal */}
+    {/* SERVICES — single card with vertical layout */}
     <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
-        <div className="services-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-          {SERVICES.map(s=><div key={s.title} className="srv-card" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:"28px 28px 28px 28px",display:"flex",gap:20,alignItems:"flex-start",transition:"all .25s",boxShadow:theme.shadow}}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor=theme.borderMid;e.currentTarget.style.boxShadow=theme.shadowMd;e.currentTarget.style.transform="translateY(-3px)";}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.boxShadow=theme.shadow;e.currentTarget.style.transform="translateY(0)";}}>
-            <div style={{fontSize:18,opacity:.35,flexShrink:0,marginTop:2}}>{s.icon}</div>
-            <div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,marginBottom:8,color:theme.text}}>{s.title}</h3>
-              <p style={{fontSize:13,color:theme.textMuted,lineHeight:1.78}}>{s.desc}</p>
-            </div>
-          </div>)}
+        <div style={{textAlign:"center",marginBottom:56}}><span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Services</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>What I Do</h2></div>
+        <div className="services-card" style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:"30px"}}>
+          <div style={{display:"flex",flexDirection:"column",gap:32}}>
+            {SERVICES.map(s=><div key={s.title} className="srv-item" style={{display:"flex",alignItems:"flex-start",gap:28,padding:"35px 40px",background:"transparent",borderRadius:8,transition:"background .2s",cursor:"default"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="rgba(0,0,0,0.03)";}}
+              onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+              <div style={{fontSize:36,opacity:.4,lineHeight:1,flexShrink:0,marginTop:2}}>{s.icon}</div>
+              <div>
+                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>{s.title}</h3>
+                <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
+              </div>
+            </div>)}
+          </div>
         </div>
       </div>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
@@ -460,16 +481,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* TIMELINE — horizontal stepper */}
     <section ref={timelineRef} id="experience" className="timeline-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
+        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
         {/* Horizontal stepper */}
         <div style={{position:"relative"}}>
           <div className="timeline-line" style={{position:"absolute",top:22,left:"calc(50px)",right:"calc(50px)",height:1,background:`linear-gradient(to right,${theme.borderMid},transparent)`,opacity:.5}}/>
           <div className="timeline-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
             {TIMELINE.map((t,i)=><div key={i} className="tl-step" style={{textAlign:"center",paddingTop:0}}>
               <div style={{width:44,height:44,borderRadius:8,background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,margin:"0 auto 20px",boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
-              <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,fontWeight:700,color:theme.textMuted,marginBottom:8,opacity:.7,letterSpacing:".06em"}}>{t.year} · {t.place}</div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,marginBottom:8,color:theme.text,opacity:.88}}>{t.title}</h3>
-              <p style={{fontSize:12,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
+              <div style={{fontFamily:"'Space Mono',monospace",fontSize:13,fontWeight:700,color:theme.textMuted,marginBottom:8,opacity:.7,letterSpacing:".06em"}}>{t.year} · {t.place}</div>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.88}}>{t.title}</h3>
+              <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
             </div>)}
           </div>
         </div>
@@ -480,15 +501,15 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* GET IN TOUCH */}
     <section className="contact-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
-        <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
-        <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
-        <p style={{fontSize:15,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
+        <span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
+        <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,marginBottom:40}}>Let's Work Together</h2>
+        <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
         <div className="contact-info-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
           {CONTACT_INFO.map((c,i)=>(
             <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
-              <div style={{fontSize:20,opacity:.4}}>{c.icon}</div>
-              <div style={{fontSize:14,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-              <div style={{fontSize:12,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+              <div style={{fontSize:22,opacity:.4}}>{c.icon}</div>
+              <div style={{fontSize:15,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
+              <div style={{fontSize:13,color:theme.textMuted,opacity:.8}}>{c.value}</div>
             </a>
           ))}
         </div>
@@ -499,25 +520,25 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section ref={contactRef} id="contact" className="contact-section" style={{padding:"100px 60px",position:"relative"}}>
       <div className="contact-form" style={{maxWidth:560,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:40}}>
-          <span style={{fontSize:10,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Contact</span>
-          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:12,color:theme.text}}>Let's Build<br/><span style={{color:theme.accent}}>Something Great</span></h2>
+          <span style={{fontSize:11,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Contact</span>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:12,color:theme.text}}>Let's Build<br/><span style={{color:theme.accent}}>Something Great</span></h2>
         </div>
         <div className="contact-form" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:8,padding:34,boxShadow:theme.shadow}}>
           {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
             {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
-              <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>{f.l}</label>
-              <input style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",transition:"border-color .2s"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
+              <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>{f.l}</label>
+              <input style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",transition:"border-color .2s"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
             </div>)}
             <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:9,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>Message</label>
-              <textarea style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:14,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
+              <label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.textMuted,marginBottom:6,fontFamily:"'Space Mono',monospace",opacity:.65}}>Message</label>
+              <textarea style={{width:"100%",padding:"12px 15px",background:theme.bgAlt,border:`1px solid ${theme.border}`,borderRadius:5,color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical",transition:"border-color .2s"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))} onFocus={e=>e.target.style.borderColor=theme.borderMid} onBlur={e=>e.target.style.borderColor=theme.border}/>
             </div>
             <button className="bp" onClick={()=>{
               const subject = encodeURIComponent(form.subject || "Portfolio Contact");
               const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
               window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
               setSent(true);
-            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:13,padding:"12px 15px",borderRadius:4}}>Send Message →</button>
+            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"12px 15px",borderRadius:4}}>Send Message →</button>
           </>}
         </div>
       </div>

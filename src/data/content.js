@@ -13,7 +13,21 @@ export const SKILLS = [
 ];
 
 export const TECH = [
-  "React","JavaScript","TypeScript","TailwindCSS","GSAP","Figma","Node.js","Git","Firebase","MongoDB","Framer Motion","Next.js","Vercel","Storybook","D3.js"
+  {name:"React",logo:"https://cdn.simpleicons.org/react/000000",colorLogo:"https://cdn.simpleicons.org/react/61dafb"},
+  {name:"JavaScript",logo:"https://cdn.simpleicons.org/javascript/000000",colorLogo:"https://cdn.simpleicons.org/javascript/f7df1e"},
+  {name:"TypeScript",logo:"https://cdn.simpleicons.org/typescript/000000",colorLogo:"https://cdn.simpleicons.org/typescript/3178c6"},
+  {name:"TailwindCSS",logo:"https://cdn.simpleicons.org/tailwindcss/000000",colorLogo:"https://cdn.simpleicons.org/tailwindcss/06b6d4"},
+  {name:"GSAP",logo:"https://cdn.simpleicons.org/greensock/000000",colorLogo:"https://cdn.simpleicons.org/greensock/88ce02"},
+  {name:"Figma",logo:"https://cdn.simpleicons.org/figma/000000",colorLogo:"https://cdn.simpleicons.org/figma/f24e1e"},
+  {name:"Node.js",logo:"https://cdn.simpleicons.org/nodedotjs/000000",colorLogo:"https://cdn.simpleicons.org/nodedotjs/339933"},
+  {name:"Git",logo:"https://cdn.simpleicons.org/git/000000",colorLogo:"https://cdn.simpleicons.org/git/f05032"},
+  {name:"Firebase",logo:"https://cdn.simpleicons.org/firebase/000000",colorLogo:"https://cdn.simpleicons.org/firebase/ffca28"},
+  {name:"MongoDB",logo:"https://cdn.simpleicons.org/mongodb/000000",colorLogo:"https://cdn.simpleicons.org/mongodb/47a248"},
+  {name:"Framer Motion",logo:"https://cdn.simpleicons.org/framer/000000",colorLogo:"https://cdn.simpleicons.org/framer/0055ff"},
+  {name:"Next.js",logo:"https://cdn.simpleicons.org/nextdotjs/000000",colorLogo:"https://cdn.simpleicons.org/nextdotjs/000000"},
+  {name:"Vercel",logo:"https://cdn.simpleicons.org/vercel/000000",colorLogo:"https://cdn.simpleicons.org/vercel/000000"},
+  {name:"Storybook",logo:"https://cdn.simpleicons.org/storybook/000000",colorLogo:"https://cdn.simpleicons.org/storybook/ff4785"},
+  {name:"D3.js",logo:"https://cdn.simpleicons.org/d3dotjs/000000",colorLogo:"https://cdn.simpleicons.org/d3dotjs/f9a03c"}
 ];
 
 export const SERVICES = [
