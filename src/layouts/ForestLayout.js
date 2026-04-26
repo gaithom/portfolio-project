@@ -14,8 +14,8 @@ function ProjectCard({ project, theme, onSelect }) {
   const handleMouseMove = (e) => {
     const rect = ref.current.getBoundingClientRect();
     setTilt({
-      x: ((e.clientY - rect.top - rect.height / 2) / rect.height) * -7,
-      y: ((e.clientX - rect.left - rect.width / 2) / rect.width) * 7
+      x: ((e.clientY - rect.top - rect.height / 2) / rect.height) * -4,
+      y: ((e.clientX - rect.left - rect.width / 2) / rect.width) * 4
     });
   };
   
@@ -25,41 +25,176 @@ function ProjectCard({ project, theme, onSelect }) {
       onMouseEnter={() => setHovered(true)} 
       onMouseLeave={() => { setHovered(false); setTilt({ x: 0, y: 0 }); }} 
       onMouseMove={handleMouseMove} 
-      onClick={() => onSelect(project)} 
       style={{
         width: "100%",
-        maxWidth: 450,
-        flexShrink: 0,
         background: hovered ? theme.surface : theme.surfaceAlt,
         border: `1px solid ${hovered ? theme.borderMid : theme.border}`,
-        borderRadius: "18px 4px 18px 4px",
+        borderRadius: 16,
         overflow: "hidden",
-        cursor: "pointer",
         transform: hovered 
-          ? `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-5px)` 
+          ? `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-4px)` 
           : "perspective(700px) rotateX(0) rotateY(0)",
         transition: "all .3s",
-        boxShadow: hovered ? theme.shadowMd : theme.shadow,
-        backdropFilter: "blur(12px)"
+        boxShadow: hovered ? theme.shadowMd : theme.shadow
       }}
     >
-      <div style={{ height: 148, background: project.cardBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 46 }}>
-        {project.emoji}
-      </div>
-      <div style={{ padding: "15px 20px 22px" }}>
-        <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 9 }}>
-          {project.tags.map(t => (
-            <span key={t} style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".11em", textTransform: "uppercase", color: theme.text, border: `1px solid ${theme.border}`, borderRadius: 99, padding: "2px 8px", opacity: .9 }}>
-              {t}
-            </span>
-          ))}
+      {/* Card Top — Background Area */}
+      <div style={{ 
+        height: 320, 
+        background: project.image ? `url(${project.image}) center/cover no-repeat` : project.cardBg, 
+        display: "flex", 
+        flexDirection: "column",
+        alignItems: "center", 
+        justifyContent: "center",
+        position: "relative",
+        padding: "0 40px"
+      }}>
+        {/* Dark Overlay */}
+        {project.image && <div style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(0,0,0,0.5)",
+          zIndex: 1
+        }} />}
+        
+        {/* LIVE Badge */}
+        <div style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          background: "rgba(0,0,0,0.4)",
+          backdropFilter: "blur(10px)",
+          padding: "6px 12px",
+          borderRadius: 6,
+          border: "1px solid rgba(255,255,255,0.15)",
+          zIndex: 2
+        }}>
+          <div style={{width: 6, height: 6, borderRadius: "50%", background: "#00FF88", boxShadow: "0 0 8px #00FF88"}} />
+          <span style={{fontSize: 11, fontWeight: 600, color: "#fff", letterSpacing: ".1em", textTransform: "uppercase"}}>LIVE</span>
         </div>
-        <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 6px", fontFamily: "'Syne', sans-serif", color: theme.text }}>
+        
+        {/* Title & Category */}
+        <h3 style={{
+          fontSize: "clamp(20px,3vw,28px)",
+          fontWeight: 800,
+          fontFamily: "'Syne',sans-serif",
+          color: "#fff",
+          textAlign: "center",
+          margin: 0,
+          textShadow: "0 2px 20px rgba(0,0,0,0.3)",
+          position: "relative",
+          zIndex: 2
+        }}>
           {project.title}
         </h3>
-        <p style={{ fontSize: 12, color: theme.textMuted, margin: 0, lineHeight: 1.75 }}>
-          {project.desc}
+        <span style={{
+          fontSize: 11,
+          letterSpacing: ".2em",
+          textTransform: "uppercase",
+          color: "rgba(255,255,255,0.7)",
+          marginTop: 8,
+          fontWeight: 600,
+          position: "relative",
+          zIndex: 2
+        }}>
+          {project.category}
+        </span>
+      </div>
+
+      {/* Card Bottom — Meta Info */}
+      <div style={{ padding: "24px 28px 28px" }}>
+        {/* Meta Row — CLIENT / YEAR / OUTCOME */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gap: 16,
+          marginBottom: 20,
+          paddingBottom: 20,
+          borderBottom: `1px solid ${theme.border}`
+        }}>
+          <div>
+            <div style={{fontSize: 9, letterSpacing: ".15em", textTransform: "uppercase", color: theme.textMuted, marginBottom: 4, fontWeight: 700}}>CLIENT</div>
+            <div style={{fontSize: 13, fontWeight: 700, color: theme.accent, letterSpacing: ".05em"}}>{project.client}</div>
+          </div>
+          <div>
+            <div style={{fontSize: 9, letterSpacing: ".15em", textTransform: "uppercase", color: theme.textMuted, marginBottom: 4, fontWeight: 700}}>YEAR</div>
+            <div style={{fontSize: 13, fontWeight: 700, color: theme.text, letterSpacing: ".05em"}}>{project.year}</div>
+          </div>
+          <div>
+            <div style={{fontSize: 9, letterSpacing: ".15em", textTransform: "uppercase", color: theme.textMuted, marginBottom: 4, fontWeight: 700}}>OUTCOME</div>
+            <div style={{fontSize: 13, fontWeight: 700, color: theme.accent, letterSpacing: ".05em"}}>{project.outcome}</div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p style={{fontSize: 13, color: theme.textMuted, lineHeight: 1.75, marginBottom: 20, opacity: .9}}>
+          {project.longDesc}
         </p>
+
+        {/* Tech Stack Tags */}
+        <div style={{display: "flex", flexWrap: "wrap", gap: 8}}>
+          {project.stack.map((tech) => {
+            const [tH, setTH] = useState(false);
+            return (
+              <span 
+                key={tech} 
+                onMouseEnter={() => setTH(true)} 
+                onMouseLeave={() => setTH(false)}
+                style={{
+                  padding: "6px 12px",
+                  border: `1px solid ${tH ? theme.accent : theme.border}`,
+                  borderRadius: 6,
+                  fontSize: 11,
+                  fontWeight: 500,
+                  color: theme.text,
+                  opacity: .75,
+                  transition: "all .2s",
+                  cursor: "default",
+                  letterSpacing: ".02em"
+                }}
+              >{tech}</span>
+            );
+          })}
+        </div>
+        
+        {/* Live Demo Arrow */}
+        {project.liveUrl && (
+          <a 
+            href={project.liveUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display:"inline-flex",
+              alignItems:"center",
+              gap:8,
+              marginTop:20,
+              padding:"8px 16px",
+              border:`1px solid ${theme.border}`,
+              borderRadius:6,
+              fontSize:11,
+              fontWeight:600,
+              color:theme.text,
+              textDecoration:"none",
+              opacity:.6,
+              transition:"all .2s",
+              letterSpacing:".08em"
+            }}
+            onMouseEnter={e=>{
+              e.target.style.borderColor=theme.accent;
+              e.target.style.opacity=1;
+            }}
+            onMouseLeave={e=>{
+              e.target.style.borderColor=theme.border;
+              e.target.style.opacity=.6;
+            }}
+          >
+            <span>Live Demo</span>
+            <span style={{fontSize:14,transform:"translateX(2px)"}}>→</span>
+          </a>
+        )}
       </div>
     </div>
   );
@@ -300,46 +435,29 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       {devMode&&<DevBadge id="skills" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* PROJECTS — horizontal scroll */}
-    <section id="projects" className="forest-projects" style={{padding:"60px 20px 0",position:"relative"}}>
+    {/* PROJECTS — case study grid */}
+    <section id="projects" className="forest-projects" style={{padding:"110px 40px",position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
-        <div style={{maxWidth:1200,margin:"0 auto",textAlign:"center"}}>
-          <span className="sec-label" style={{display:"block",textAlign:"center"}}>Portfolio</span>
-          <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,5vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:28,color:theme.text,opacity:.9}}>Recent Work</h2>
-        </div>
-        <div className="projects-grid" style={{
-          display:"flex",
-          gap:16,
-          padding:"0 20px",
-          overflowX:"auto",
-          scrollbarWidth:"none",
-          msOverflowStyle:"none",
-          scrollSnapType:"x mandatory",
-          "@media (max-width: 768px)": {
-            flexDirection:"column",
-            overflowX:"visible",
-            scrollSnapType:"none",
-            padding:"0 10px"
-          }
-        }}>
-        {PROJECTS.map((project,i)=>(
-          <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
-            <div style={{
-              minWidth:280,
-              maxWidth:320,
-              flexShrink:0,
-              scrollSnapAlign:"start",
-              "@media (max-width: 768px)": {
-                minWidth:"auto",
-                maxWidth:"100%",
-                width:"100%",
-                scrollSnapAlign:"none"
-              }
-            }}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{textAlign:"left",marginBottom:40}}>
+            <span className="sec-label" style={{display:"block"}}>Selected Work</span>
+            <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:16,color:theme.text,opacity:.9}}>Selected Work</h2>
+            <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.75,maxWidth:600}}>A selection of enterprise engagements — from greenfield architecture to complex systems integration at scale.</p>
+          </div>
+          <div className="projects-grid" style={{
+            display:"grid",
+            gridTemplateColumns:"repeat(2,1fr)",
+            gap:24,
+            "@media (max-width: 768px)": {
+              gridTemplateColumns:"1fr"
+            }
+          }}>
+          {PROJECTS.map((project,i)=>(
+            <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
               <ProjectCard project={project} theme={theme} onSelect={setSel}/>
-            </div>
-          </ScrollReveal>
-        ))}
+            </ScrollReveal>
+          ))}
+          </div>
         </div>
       </ScrollReveal>
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}

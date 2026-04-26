@@ -252,9 +252,14 @@ export function Modal({ project, theme, onClose }) {
   const cr = theme.cardRadius || "14px";
   return <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.78)",zIndex:9000,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(8px)",animation:"fadeIn .2s ease"}}>
     <div onClick={e=>e.stopPropagation()} style={{background:theme.surface,border:`1px solid ${theme.borderMid}`,borderRadius:cr,width:"100%",maxWidth:510,maxHeight:"88vh",overflowY:"auto",animation:"slideUp .35s cubic-bezier(.16,1,.3,1)",position:"relative",boxShadow:theme.shadowMd}}>
-      <div style={{height:175,background:project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:66,borderRadius:`${cr} ${cr} 0 0`}}>{project.emoji}</div>
+      <div style={{height:280,background:project.image ? `url(${project.image}) center/cover no-repeat` : project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:66,borderRadius:`${cr} ${cr} 0 0`,position:"relative"}}>
+        {!project.image && project.emoji}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,background:`linear-gradient(to top,${theme.surface},transparent)`}} />
+      </div>
       <div style={{padding:28}}>
-        <h2 style={{fontSize:21,fontWeight:800,margin:"0 0 10px",fontFamily:"'Syne',sans-serif",color:theme.text}}>{project.title}</h2>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
+          {project.tags.map(tag => <span key={tag} style={{fontSize:10,fontWeight:600,letterSpacing:".1em",textTransform:"uppercase",color:theme.accent,border:`1px solid ${theme.border}`,borderRadius:4,padding:"3px 8px",opacity:.9}}>{tag}</span>)}
+        </div>
         <p style={{color:theme.textMuted,lineHeight:1.85,marginBottom:20,fontSize:13}}>{project.longDesc}</p>
         <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:22}}>{project.stack.map(s=><span key={s} style={{background:theme.bgAlt,color:theme.text,border:`1px solid ${theme.border}`,borderRadius:6,padding:"4px 10px",fontSize:12,opacity:.85}}>{s}</span>)}</div>
         <div style={{display:"flex",gap:10}}>

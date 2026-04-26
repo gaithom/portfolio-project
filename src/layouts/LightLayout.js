@@ -252,23 +252,186 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="skills" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* PROJECTS — clean card grid */}
+    {/* PROJECTS — large case study cards */}
     <section id="projects" className="projects-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
-      <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:40}}>
-          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Portfolio</span>
-          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(24px,4vw,40px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:24,color:theme.text}}>Projects</h2>
+      <div style={{maxWidth:1200,margin:"0 auto"}}>
+        <div style={{textAlign:"left",marginBottom:40}}>
+          <span style={{fontSize:12,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Selected Work</span>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:16,color:theme.text}}>Selected Work</h2>
+          <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.75,maxWidth:600}}>A selection of enterprise engagements — from greenfield architecture to complex systems integration at scale.</p>
         </div>
-        <div className="projects-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(310px,1fr))",gap:18}}>
+        <div className="projects-grid" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24,'@media (max-width: 768px)': {gridTemplateColumns:"1fr"}}}>
           {PROJECTS.map((p)=>{
             const [h,setH]=useState(false);
-            return <div key={p.id} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} onClick={()=>setSel(p)} style={{background:theme.surface,border:`1px solid ${h?theme.borderMid:theme.border}`,borderRadius:8,overflow:"hidden",cursor:"pointer",transform:h?"translateY(-4px)":"translateY(0)",transition:"all .28s",boxShadow:h?theme.shadowMd:theme.shadow}}>
-              <div style={{height:140,background:p.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42}}>{p.emoji}</div>
-              <div style={{padding:"16px 20px 22px"}}>
-                <h3 style={{fontSize:15,fontWeight:700,margin:"0 0 6px",fontFamily:"'Syne',sans-serif",color:theme.text}}>{p.title}</h3>
-                <p style={{fontSize:13,color:theme.text,margin:0,lineHeight:1.75,opacity:.8}}>{p.desc}</p>
+            return (
+              <div 
+                key={p.id} 
+                onMouseEnter={()=>setH(true)} 
+                onMouseLeave={()=>setH(false)} 
+                style={{
+                  background:theme.surface,
+                  border:`1px solid ${h?theme.borderMid:theme.border}`,
+                  borderRadius:16,
+                  overflow:"hidden",
+                  transform:h?"translateY(-4px)":"translateY(0)",
+                  transition:"all .28s",
+                  boxShadow:h?theme.shadowMd:theme.shadow
+                }}
+              >
+                {/* Card Top — Image/Background Area */}
+                <div style={{
+                  height:320,
+                  background:p.image ? `url(${p.image}) center/cover no-repeat` : p.cardBg,
+                  display:"flex",
+                  flexDirection:"column",
+                  alignItems:"center",
+                  justifyContent:"center",
+                  position:"relative",
+                  padding:"0 40px"
+                }}>
+                  {/* Dark Overlay */}
+                  {p.image && <div style={{
+                    position:"absolute",
+                    inset:0,
+                    background:"rgba(0,0,0,0.5)",
+                    zIndex:1
+                  }} />}
+                  
+                  {/* LIVE Badge */}
+                  <div style={{
+                    position:"absolute",
+                    top:20,
+                    right:20,
+                    display:"flex",
+                    alignItems:"center",
+                    gap:8,
+                    background:"rgba(0,0,0,0.4)",
+                    backdropFilter:"blur(10px)",
+                    padding:"6px 12px",
+                    borderRadius:6,
+                    border:"1px solid rgba(255,255,255,0.15)",
+                    zIndex:2
+                  }}>
+                    <div style={{width:6,height:6,borderRadius:"50%",background:"#00FF88",boxShadow:"0 0 8px #00FF88"}} />
+                    <span style={{fontSize:11,fontWeight:600,color:"#fff",letterSpacing:".1em",textTransform:"uppercase"}}>LIVE</span>
+                  </div>
+                  
+                  {/* Title & Category */}
+                  <h3 style={{
+                    fontSize:"clamp(20px,3vw,28px)",
+                    fontWeight:800,
+                    fontFamily:"'Syne',sans-serif",
+                    color:"#fff",
+                    textAlign:"center",
+                    margin:0,
+                    textShadow:"0 2px 20px rgba(0,0,0,0.3)",
+                    position:"relative",
+                    zIndex:2
+                  }}>{p.title}</h3>
+                  <span style={{
+                    fontSize:11,
+                    letterSpacing:".2em",
+                    textTransform:"uppercase",
+                    color:"rgba(255,255,255,0.7)",
+                    marginTop:8,
+                    fontWeight:600,
+                    position:"relative",
+                    zIndex:2
+                  }}>{p.category}</span>
+                </div>
+
+                {/* Card Bottom — Meta Info */}
+                <div style={{padding:"24px 28px 28px"}}>
+                  {/* Meta Row — CLIENT / YEAR / OUTCOME */}
+                  <div style={{
+                    display:"grid",
+                    gridTemplateColumns:"1fr 1fr 1fr",
+                    gap:16,
+                    marginBottom:20,
+                    paddingBottom:20,
+                    borderBottom:`1px solid ${theme.border}`
+                  }}>
+                    <div>
+                      <div style={{fontSize:9,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>CLIENT</div>
+                      <div style={{fontSize:13,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.client}</div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:9,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>YEAR</div>
+                      <div style={{fontSize:13,fontWeight:700,color:theme.text,letterSpacing:".05em"}}>{p.year}</div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:9,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>OUTCOME</div>
+                      <div style={{fontSize:13,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.outcome}</div>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p style={{fontSize:13,color:theme.textMuted,lineHeight:1.75,marginBottom:20,opacity:.9}}>{p.longDesc}</p>
+
+                  {/* Tech Stack Tags */}
+                  <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                    {p.stack.map((tech)=>{
+                      const [tH,setTH]=useState(false);
+                      return (
+                        <span 
+                          key={tech} 
+                          onMouseEnter={()=>setTH(true)} 
+                          onMouseLeave={()=>setTH(false)}
+                          style={{
+                            padding:"6px 12px",
+                            border:`1px solid ${tH?theme.accent:theme.border}`,
+                            borderRadius:6,
+                            fontSize:11,
+                            fontWeight:500,
+                            color:theme.text,
+                            opacity:.75,
+                            transition:"all .2s",
+                            cursor:"default",
+                            letterSpacing:".02em"
+                          }}
+                        >{tech}</span>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Live Demo Arrow */}
+                  {p.liveUrl && (
+                    <a 
+                      href={p.liveUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{
+                        display:"inline-flex",
+                        alignItems:"center",
+                        gap:8,
+                        marginTop:20,
+                        padding:"8px 16px",
+                        border:`1px solid ${theme.border}`,
+                        borderRadius:6,
+                        fontSize:11,
+                        fontWeight:600,
+                        color:theme.text,
+                        textDecoration:"none",
+                        opacity:.6,
+                        transition:"all .2s",
+                        letterSpacing:".08em"
+                      }}
+                      onMouseEnter={e=>{
+                        e.target.style.borderColor=theme.accent;
+                        e.target.style.opacity=1;
+                      }}
+                      onMouseLeave={e=>{
+                        e.target.style.borderColor=theme.border;
+                        e.target.style.opacity=.6;
+                      }}
+                    >
+                      <span>Live Demo</span>
+                      <span style={{fontSize:14,transform:"translateX(2px)"}}>→</span>
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>;
+            );
           })}
         </div>
       </div>
