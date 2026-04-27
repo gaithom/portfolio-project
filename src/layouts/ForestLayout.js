@@ -4,6 +4,7 @@ import { useGSAP } from "../hooks/useGSAP";
 import { ParticleCanvas, Typewriter, SkillBar, Modal, ParallaxElement, ScrollReveal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
 import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../data/content";
+import "./ForestLayout.css";
 
 // ── Project Card Component ───────────────────────────────────────────────────
 function ProjectCard({ project, theme, onSelect }) {
@@ -415,7 +416,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* SKILLS — organic layout */}
-    <section id="skills" className="forest-skills" style={{padding:"110px 40px",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section id="skills" className="forest-skills" style={{padding:"110px 40px",borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.2}>
         <div style={{maxWidth:1010,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Expertise</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Skills & Proficiency</h2></div>
@@ -494,7 +495,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </section>
 
     {/* SERVICES — single card with vertical layout */}
-    <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>What I Do</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Services</h2></div>
@@ -534,10 +535,10 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <div style={{position:"relative"}}>
           <div className="timeline-line" style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
           {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:26,marginBottom:42}}>
-            <div style={{width:43,height:43,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:theme.surface,border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
+            <div style={{width:43,height:43,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:"transparent",border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
             <div style={{paddingTop:5}}>
               <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>
-                <span style={{fontFamily:"'Space Mono',monospace",fontSize:14,color:theme.textMuted,fontWeight:700,background:theme.bgAlt,padding:"3px 9px",borderRadius:"8px 2px 8px 2px",border:`1px solid ${theme.border}`}}>{t.year}</span>
+                <span style={{fontFamily:"'Space Mono',monospace",fontSize:14,color:theme.textMuted,fontWeight:700,background:"transparent",padding:"3px 9px",borderRadius:"8px 2px 8px 2px",border:`1px solid ${theme.border}`}}>{t.year}</span>
                 <span style={{fontSize:14,color:theme.accent,fontWeight:700,opacity:.8}}>{t.place}</span>
               </div>
               <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.9}}>{t.title}</h3>
@@ -550,48 +551,79 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
-    {/* GET IN TOUCH */}
-    <section className="forest-contact" style={{padding:"110px 40px",background:theme.bg,borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`}}>
-      <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
-        <span className="sec-label" style={{display:"block",textAlign:"center"}}>Connect</span>
-        <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Work Together</h2>
-        <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:40}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
-        <div className="contact-info-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:20,marginBottom:40}}>
-          {CONTACT_INFO.map((c,i)=>(
-            <a key={i} href={c.link} onClick={(e)=>{if(c.action==="scroll"){e.preventDefault();scrollTo("contact");}}} target={c.action==="scroll"?"_self":"_blank"} rel="noopener noreferrer" style={{background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:12,padding:"24px 20px",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:12,transition:"all .3s",opacity:.9}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.opacity=1}} onMouseOut={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.opacity=.9}}>
-              <div style={{fontSize:22,opacity:.4}}>{c.icon}</div>
-              <div style={{fontSize:15,fontWeight:600,color:theme.text,fontFamily:"'Syne',sans-serif"}}>{c.title}</div>
-              <div style={{fontSize:14,color:theme.text,opacity:.9}}>{c.value}</div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* CONTACT */}
-    <section ref={contactRef} id="contact" className="forest-contact" style={{padding:"110px 40px",position:"relative"}}>
+    {/* CONTACT — combined connect and form in unique organic layout */}
+    <section ref={contactRef} id="contact" className="forest-contact" style={{borderTop:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.5}>
-        <div style={{maxWidth:680,margin:"0 auto",textAlign:"center"}}>
-        <span className="sec-label" style={{display:"block",textAlign:"center"}}>Get In Touch</span>
-        <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:40,color:theme.text,opacity:.9}}>Let's Create Together</h2>
-        <div className="contact-form" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",padding:34,backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
-          {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
-            {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
-              <label style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>{f.l}</label>
-              <input style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
-            </div>)}
-            <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
-              <textarea style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:50}}>
+            <span className="sec-label" style={{display:"block",textAlign:"center"}}>Connect</span>
+            <h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Let's Work Together</h2>
+          </div>
+          {/* Organic split layout */}
+          <div className="contact-grid" style={{display:"grid",gridTemplateColumns:"1fr 1.5fr",gap:50,alignItems:"start"}}>
+            {/* Left side - Contact info as organic cards */}
+            <div style={{display:"flex",flexDirection:"column",gap:20}}>
+              <p className="contact-desc" style={{fontSize:15,lineHeight:1.8,color:theme.text,opacity:.8,marginBottom:8}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
+              {CONTACT_INFO.map((c,i)=>(
+                <a
+                  key={i}
+                  className="contact-card"
+                  href={c.link}
+                  onClick={(e)=>{if(c.action==="scroll"){e.preventDefault();scrollTo("contact");}}}
+                  target={c.action==="scroll"?"_self":"_blank"}
+                  rel="noopener noreferrer"
+                  style={{
+                    background:"transparent",
+                    border:`1px solid ${theme.border}`,
+                    borderRadius:i===0?"50% 50% 50% 50% / 60% 40% 60% 40%":i===1?"40% 60% 40% 60% / 50% 50% 50% 50%":"50% 50% 50% 50% / 40% 60% 40% 60%",
+                    padding:"24px",
+                    textDecoration:"none",
+                    display:"flex",
+                    alignItems:"center",
+                    gap:16,
+                    transition:"all .3s",
+                    opacity:.9,
+                    position:"relative"
+                  }}
+                  onMouseOver={e=>{
+                    e.currentTarget.style.borderColor=theme.accent;
+                    e.currentTarget.style.opacity=1;
+                    e.currentTarget.style.transform="scale(1.02)";
+                  }}
+                  onMouseOut={e=>{
+                    e.currentTarget.style.borderColor=theme.border;
+                    e.currentTarget.style.opacity=.9;
+                    e.currentTarget.style.transform="scale(1)";
+                  }}
+                >
+                  <div className="contact-icon" style={{width:52,height:52,borderRadius:"50%",background:theme.accent,opacity:.2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:theme.accent,flexShrink:0}}>{c.icon}</div>
+                  <div>
+                    <div className="contact-title" style={{fontSize:16,fontWeight:700,color:theme.text,fontFamily:"'Syne',sans-serif",marginBottom:4}}>{c.title}</div>
+                    <div className="contact-value" style={{fontSize:13,color:theme.textMuted,opacity:.8}}>{c.value}</div>
+                  </div>
+                </a>
+              ))}
             </div>
-            <button className="bp" onClick={()=>{
-              const subject = encodeURIComponent(form.subject || "Portfolio Contact");
-              const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-              window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
-              setSent(true);
-            }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"14px",borderRadius:"12px 3px 12px 3px"}}>Send Message →</button>
-          </>}
-        </div>
+            {/* Right side - Contact form */}
+            <div className="contact-form" style={{background:theme.surfaceAlt,border:`1px solid ${theme.border}`,borderRadius:"18px 4px 18px 4px",backdropFilter:"blur(12px)",boxShadow:theme.shadow}}>
+              {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
+                {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
+                  <label className="form-label" style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>{f.l}</label>
+                  <input className="form-input" style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none"}} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
+                </div>)}
+                <div style={{marginBottom:20}}>
+                  <label className="form-label" style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
+                  <textarea className="form-textarea" style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
+                </div>
+                <button className="bp form-button" onClick={()=>{
+                  const subject = encodeURIComponent(form.subject || "Portfolio Contact");
+                  const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
+                  window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
+                  setSent(true);
+                }} style={{width:"100%",display:"flex",justifyContent:"center",fontSize:14,padding:"14px",borderRadius:"12px 3px 12px 3px"}}>Send Message →</button>
+              </>}
+            </div>
+          </div>
         </div>
       </ScrollReveal>
       {devMode&&<DevBadge id="contact" devMode={devMode} theme={theme}/>}
