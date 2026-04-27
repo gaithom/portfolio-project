@@ -9,34 +9,22 @@ import "./ForestLayout.css";
 // ── Project Card Component ───────────────────────────────────────────────────
 function ProjectCard({ project, theme, onSelect }) {
   const [hovered, setHovered] = useState(false);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const ref = useRef(null);
-  
-  const handleMouseMove = (e) => {
-    const rect = ref.current.getBoundingClientRect();
-    setTilt({
-      x: ((e.clientY - rect.top - rect.height / 2) / rect.height) * -4,
-      y: ((e.clientX - rect.left - rect.width / 2) / rect.width) * 4
-    });
-  };
-  
+
   return (
-    <div 
-      ref={ref} 
-      onMouseEnter={() => setHovered(true)} 
-      onMouseLeave={() => { setHovered(false); setTilt({ x: 0, y: 0 }); }} 
-      onMouseMove={handleMouseMove} 
+    <div
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         width: "100%",
-        background: hovered ? theme.surface : theme.surfaceAlt,
+        background: "transparent",
         border: `1px solid ${hovered ? theme.borderMid : theme.border}`,
         borderRadius: 16,
         overflow: "hidden",
-        transform: hovered 
-          ? `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-4px)` 
-          : "perspective(700px) rotateX(0) rotateY(0)",
-        transition: "all .3s",
-        boxShadow: hovered ? theme.shadowMd : theme.shadow
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        transition: "all .3s ease",
+        boxShadow: theme.shadow
       }}
     >
       {/* Card Top — Background Area */}
@@ -107,27 +95,17 @@ function ProjectCard({ project, theme, onSelect }) {
 
       {/* Card Bottom — Meta Info */}
       <div style={{ padding: "24px 28px 28px" }}>
-        {/* Meta Row — CLIENT / YEAR / OUTCOME */}
+        {/* Ultra-minimal project type indicator */}
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 16,
-          marginBottom: 20,
-          paddingBottom: 20,
-          borderBottom: `1px solid ${theme.border}`
+          fontSize: 11,
+          fontWeight: 600,
+          color: theme.textMuted,
+          letterSpacing: ".1em",
+          textTransform: "uppercase",
+          marginBottom: 16,
+          opacity: 0.7
         }}>
-          <div>
-            <div style={{fontSize: 10, letterSpacing: ".15em", textTransform: "uppercase", color: theme.textMuted, marginBottom: 4, fontWeight: 700}}>CLIENT</div>
-            <div style={{fontSize: 14, fontWeight: 700, color: theme.accent, letterSpacing: ".05em"}}>{project.client}</div>
-          </div>
-          <div>
-            <div style={{fontSize: 10, letterSpacing: ".15em", textTransform: "uppercase", color: theme.textMuted, marginBottom: 4, fontWeight: 700}}>YEAR</div>
-            <div style={{fontSize: 14, fontWeight: 700, color: theme.text, letterSpacing: ".05em"}}>{project.year}</div>
-          </div>
-          <div>
-            <div style={{fontSize: 10, letterSpacing: ".15em", textTransform: "uppercase", color: theme.textMuted, marginBottom: 4, fontWeight: 700}}>OUTCOME</div>
-            <div style={{fontSize: 14, fontWeight: 700, color: theme.accent, letterSpacing: ".05em"}}>{project.outcome}</div>
-          </div>
+          {project.category}
         </div>
 
         {/* Description */}
@@ -494,6 +472,30 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
     </section>
 
+    {/* TIMELINE — branch style */}
+    <section ref={timelineRef} id="experience" className="forest-timeline" style={{padding:"110px 40px",position:"relative"}}>
+      <ScrollReveal theme={theme} direction="left" delay={0.4}>
+        <div style={{maxWidth:660,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
+        <div style={{position:"relative"}}>
+          <div className="timeline-line" style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
+          {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:26,marginBottom:42}}>
+            <div style={{width:43,height:43,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:"transparent",border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
+            <div style={{paddingTop:5}}>
+              <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>
+                <span style={{fontFamily:"'Space Mono',monospace",fontSize:14,color:theme.textMuted,fontWeight:700,background:"transparent",padding:"3px 9px",borderRadius:"8px 2px 8px 2px",border:`1px solid ${theme.border}`}}>{t.year}</span>
+                <span style={{fontSize:14,color:theme.accent,fontWeight:700,opacity:.8}}>{t.place}</span>
+              </div>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.9}}>{t.title}</h3>
+              <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,opacity:.8}}>{t.desc}</p>
+            </div>
+          </div>)}
+        </div>
+        </div>
+      </ScrollReveal>
+      {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
+    </section>
+
     {/* SERVICES — single card with vertical layout */}
     <section ref={servicesRef} id="services" className="forest-services" style={{padding:"110px 40px",borderTop:`1px solid ${theme.border}`,borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.3}>
@@ -525,30 +527,6 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         </div>
       </ScrollReveal>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
-    </section>
-
-    {/* TIMELINE — branch style */}
-    <section ref={timelineRef} id="experience" className="forest-timeline" style={{padding:"110px 40px",position:"relative"}}>
-      <ScrollReveal theme={theme} direction="left" delay={0.4}>
-        <div style={{maxWidth:660,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:58}}><span className="sec-label" style={{display:"block",textAlign:"center"}}>Journey</span><h2 className={clsx('gsap-h-f', 'section-title')} style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text,opacity:.9}}>Experience & Education</h2></div>
-        <div style={{position:"relative"}}>
-          <div className="timeline-line" style={{position:"absolute",left:21,top:0,bottom:0,width:2,background:`linear-gradient(to bottom,${theme.borderMid},transparent)`,opacity:.4,borderRadius:99}}/>
-          {TIMELINE.map((t,i)=><div key={i} className="tl-item" style={{display:"flex",gap:26,marginBottom:42}}>
-            <div style={{width:43,height:43,borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:"transparent",border:`1px solid ${theme.borderMid}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0,boxShadow:theme.shadow,opacity:.6}}>{t.type==="edu"?"◦":"■"}</div>
-            <div style={{paddingTop:5}}>
-              <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>
-                <span style={{fontFamily:"'Space Mono',monospace",fontSize:14,color:theme.textMuted,fontWeight:700,background:"transparent",padding:"3px 9px",borderRadius:"8px 2px 8px 2px",border:`1px solid ${theme.border}`}}>{t.year}</span>
-                <span style={{fontSize:14,color:theme.accent,fontWeight:700,opacity:.8}}>{t.place}</span>
-              </div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:700,marginBottom:8,color:theme.text,opacity:.9}}>{t.title}</h3>
-              <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,opacity:.8}}>{t.desc}</p>
-            </div>
-          </div>)}
-        </div>
-        </div>
-      </ScrollReveal>
-      {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
     {/* CONTACT — combined connect and form in unique organic layout */}

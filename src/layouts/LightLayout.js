@@ -361,27 +361,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
                 {/* Card Bottom — Meta Info */}
                 <div style={{padding:"24px 28px 28px"}}>
-                  {/* Meta Row — CLIENT / YEAR / OUTCOME */}
+                  {/* Ultra-minimal project type indicator */}
                   <div style={{
-                    display:"grid",
-                    gridTemplateColumns:"1fr 1fr 1fr",
-                    gap:16,
-                    marginBottom:20,
-                    paddingBottom:20,
-                    borderBottom:`1px solid ${theme.border}`
+                    fontSize:11,
+                    fontWeight:600,
+                    color:theme.textMuted,
+                    letterSpacing:".1em",
+                    textTransform:"uppercase",
+                    marginBottom:16,
+                    opacity:0.7
                   }}>
-                    <div>
-                      <div style={{fontSize:12,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>CLIENT</div>
-                      <div style={{fontSize:14,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.client}</div>
-                    </div>
-                    <div>
-                      <div style={{fontSize:12,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>YEAR</div>
-                      <div style={{fontSize:14,fontWeight:700,color:theme.text,letterSpacing:".05em"}}>{p.year}</div>
-                    </div>
-                    <div>
-                      <div style={{fontSize:12,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:4,fontWeight:700}}>OUTCOME</div>
-                      <div style={{fontSize:14,fontWeight:700,color:theme.accent,letterSpacing:".05em"}}>{p.outcome}</div>
-                    </div>
+                    {p.category}
                   </div>
 
                   {/* Description */}
@@ -457,6 +447,33 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
     </section>
 
+    {/* TIMELINE — creative horizontal with large year badges */}
+    <section ref={timelineRef} id="experience" className="timeline-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+      <div style={{maxWidth:1100,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
+        {/* Creative horizontal layout */}
+        <div style={{display:"flex",flexDirection:"column",gap:40}}>
+          {TIMELINE.map((t,i)=><div key={i} style={{display:"flex",gap:32,alignItems:"center",position:"relative"}}>
+            <div style={{width:120,flexShrink:0,textAlign:"right"}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:800,color:theme.accent,opacity:.3,lineHeight:1}}>{t.year.slice(-2)}</div>
+              <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:700,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.7}}>{t.place}</div>
+            </div>
+            <div style={{width:16,height:16,borderRadius:"50%",background:theme.accent,flexShrink:0}}/>
+            <div style={{flex:1,background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:24,transition:"all .3s"}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.transform="translateX(8px)";}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.transform="translateX(0)";}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                <span style={{fontSize:20,opacity:.5}}>{t.type==="edu"?"◦":"■"}</span>
+                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:theme.text,opacity:.9}}>{t.title}</h3>
+              </div>
+              <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
+            </div>
+          </div>)}
+        </div>
+      </div>
+      {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
+    </section>
+
     {/* SERVICES — single card with vertical layout */}
     <section ref={servicesRef} id="services" className="services-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
@@ -486,33 +503,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         })()}
       </div>
       {devMode&&<DevBadge id="services" devMode={devMode} theme={theme}/>}
-    </section>
-
-    {/* TIMELINE — creative horizontal with large year badges */}
-    <section ref={timelineRef} id="experience" className="timeline-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
-      <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
-        {/* Creative horizontal layout */}
-        <div style={{display:"flex",flexDirection:"column",gap:40}}>
-          {TIMELINE.map((t,i)=><div key={i} style={{display:"flex",gap:32,alignItems:"center",position:"relative"}}>
-            <div style={{width:120,flexShrink:0,textAlign:"right"}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:800,color:theme.accent,opacity:.3,lineHeight:1}}>{t.year.slice(-2)}</div>
-              <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:700,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.7}}>{t.place}</div>
-            </div>
-            <div style={{width:16,height:16,borderRadius:"50%",background:theme.accent,flexShrink:0}}/>
-            <div style={{flex:1,background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:24,transition:"all .3s"}}
-              onMouseEnter={e=>{e.currentTarget.style.borderColor=theme.accent;e.currentTarget.style.transform="translateX(8px)";}}
-              onMouseLeave={e=>{e.currentTarget.style.borderColor=theme.border;e.currentTarget.style.transform="translateX(0)";}}>
-              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-                <span style={{fontSize:20,opacity:.5}}>{t.type==="edu"?"◦":"■"}</span>
-                <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:theme.text,opacity:.9}}>{t.title}</h3>
-              </div>
-              <p style={{fontSize:14,color:theme.textMuted,lineHeight:1.75,opacity:.75}}>{t.desc}</p>
-            </div>
-          </div>)}
-        </div>
-      </div>
-      {devMode&&<DevBadge id="experience" devMode={devMode} theme={theme}/>}
     </section>
 
     {/* GET IN TOUCH */}
