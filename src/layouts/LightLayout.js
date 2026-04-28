@@ -139,7 +139,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am & What I Do</h2>
         </div>
         {/* Split layout */}
-        <div style={{display:"flex",flexDirection:"column",gap:60}}>
+        <div className="about-split-layout">
           {/* Left side - About paragraph */}
           <div>
             <div style={{padding:"20px 0"}}>

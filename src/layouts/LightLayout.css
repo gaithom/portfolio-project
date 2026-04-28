@@ -161,10 +161,19 @@
 }
 
 .hero-image-container {
-  width: 75%;
-  max-width: 1100px;
-  height: 92vh;
+  width: 55%;
+  max-width: 800px;
+  height: 80vh;
+  margin-top: -50px;
   order: 2;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+@media (min-width: 1025px) {
+  .hero-image-container {
+    margin-left: -100px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -178,5 +187,20 @@
 @media (max-width: 768px) {
   .hero-image-container {
     height: 40vh;
+  }
+}
+
+/* About Section Layout */
+.about-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+@media (min-width: 769px) {
+  .about-split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
   }
 }
