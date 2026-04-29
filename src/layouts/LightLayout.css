@@ -204,3 +204,36 @@
     gap: 80px;
   }
 }
+
+/* Contact Section Layout */
+.contact-section {
+  padding: 100px 60px;
+}
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 60px 30px;
+  }
+}
+
+.contact-split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 50px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .contact-split-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+.contact-cards {
+  order: 1;
+}
+
+.contact-form {
+  order: 2;
+}

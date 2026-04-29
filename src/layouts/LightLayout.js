@@ -445,16 +445,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* CONTACT — combined connect and form in creative split layout */}
-    <section ref={contactRef} id="contact" className="contact-section" style={{padding:"100px 60px",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    <section ref={contactRef} id="contact" className="contact-section" style={{position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:50}}>
           <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Let's Work Together</h2>
         </div>
         {/* Creative split layout */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1.5fr",gap:50,alignItems:"start","@media (max-width: 768px)": {gridTemplateColumns:"1fr",gap:30}}}>
+        <div className="contact-split-layout">
           {/* Left side - Contact info cards */}
-          <div>
+          <div className="contact-cards">
             <p style={{fontSize:16,lineHeight:1.9,color:theme.text,opacity:.8,marginBottom:30}}>I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!</p>
             <div style={{display:"flex",flexDirection:"column",gap:16}}>
               {CONTACT_INFO.map((c,i)=>(
@@ -470,7 +470,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           </div>
 
           {/* Right side - Contact form */}
-          <div>
+          <div className="contact-form">
             <div style={{background:"transparent",border:`1px solid ${theme.border}`,borderRadius:12,padding:34,boxShadow:theme.shadow}}>
               {sent?<div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:24,marginBottom:16,opacity:.6}}>✓</div><h3 style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:theme.text}}>Message Sent!</h3><p style={{color:theme.textMuted,fontSize:14}}>Michael will reply shortly.</p></div>:<>
                 {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project Inquiry"}].map(f=><div key={f.k} style={{marginBottom:14}}>
