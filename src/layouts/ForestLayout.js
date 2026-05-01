@@ -24,7 +24,7 @@ function ProjectCard({ project, theme, onSelect }) {
         overflow: "hidden",
         transform: hovered ? "translateY(-2px)" : "translateY(0)",
         transition: "all .3s ease",
-        boxShadow: theme.shadow
+        boxShadow: theme.shadowLoading
       }}
     >
       {/* Card Top — Background Area */}
@@ -259,7 +259,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         top:"50%",
         left:"50%",
         transform:"translate(-50%, -50%)",
-        fontSize:"clamp(150px,25vw,450px)",
+        fontSize:"clamp(130px,20vw,440px)",
         fontWeight:900,
         fontFamily:"'Syne', sans-serif",
         color:theme.accent,
@@ -593,7 +593,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
                   <label className="form-label" style={{display:"block",fontSize:14,fontWeight:700,letterSpacing:".17em",textTransform:"uppercase",color:theme.text,marginBottom:5,fontFamily:"'Space Mono',monospace",opacity:.8}}>Message</label>
                   <textarea className="form-textarea" style={{width:"100%",padding:"12px 14px",background:theme.surface,border:`1px solid ${theme.border}`,borderRadius:"12px 3px 12px 3px",color:theme.text,fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",resize:"vertical"}} rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
                 </div>
-                <button className="bp form-button" onClick={()=>{
+                <button className={clsx('bp', 'form-button')} onClick={()=>{
                   const subject = encodeURIComponent(form.subject || "Portfolio Contact");
                   const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
                   window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);

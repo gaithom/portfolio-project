@@ -63,6 +63,11 @@ export default function App() {
     @keyframes scrollBounce{0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-8px)}60%{transform:translateX(-50%) translateY(-4px)}}
     @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes cosmicPulse{0%,100%{opacity:1}50%{opacity:0.8}}
+    @keyframes borderRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes floatOrb{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}
+    @keyframes slideInFloat{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes sparkle{0%,100%{opacity:0.5}50%{opacity:1}}
     @media (max-width: 768px) {
       * { -webkit-tap-highlight-color: transparent; }
       body { -webkit-transform: translateZ(0); transform: translateZ(0); }
@@ -416,6 +421,8 @@ export default function App() {
     /* Theme transition */
     *{transition:background-color .35s,border-color .35s,color .15s;}
     button,input,textarea{transition:none!important;}
+    /* Creative menu hover effects */
+    .hover-gradient:hover{transform:translateX(100%);}
   `;
 
   if(loading) return (
@@ -501,7 +508,6 @@ export default function App() {
           className={`hamburger ${mobileMenuOpen ? 'active' : ''}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
-            display: 'none',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
@@ -510,10 +516,7 @@ export default function App() {
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
-            padding: 0,
-            '@media (max-width: 768px)': {
-              display: 'flex'
-            }
+            padding: 0
           }}
         >
           <span style={{
@@ -560,106 +563,180 @@ export default function App() {
         />
       )}
 
-      {/* Mobile Menu - Regular Right Sidebar */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`} style={{
-        position: 'fixed',
-        top: 0,
-        left: 'auto',
-        right: 0,
-        width: '350px',
-        height: '100vh',
-        background: theme.surface,
-        borderLeft: `1px solid ${theme.border}`,
-        boxShadow: '-4px 0 20px rgba(0,0,0,0.15)',
-        backdropFilter: 'blur(12px)',
-        zIndex: 999,
-        transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        '@media (max-width: 768px)': {
-          width: '280px'
-        },
-        '@media (max-width: 480px)': {
-          width: '100vw'
-        }
-      }}
-      onClick={(e) => e.stopPropagation()}
+      {/* Mobile Menu Sidebar */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          width: '300px',
+          height: '100vh',
+          background: theme.surface,
+          borderLeft: `1px solid ${theme.border}`,
+          boxShadow: '-4px 0 20px rgba(0,0,0,0.15)',
+          backdropFilter: 'blur(12px)',
+          zIndex: 999,
+          transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          overflowY: 'auto'
+        }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-          {/* Sidebar Header with Close Button */}
-          <div style={{padding:"20px 20px 16px",borderBottom:`1px solid ${theme.border}`,background:theme.bgAlt,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center","@media (max-width: 480px)":{padding:"16px 16px 12px"}}}>
-            <div>
-              <div style={{fontSize:16,fontWeight:700,fontFamily:isVoid?theme.monoFont:theme.headingFont,color:theme.text,marginBottom:4}}>
-                Menu
-              </div>
-              <div style={{fontSize:12,color:theme.textMuted,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>
-                {isVoid?"VOID":isMidnight?"MIDNIGHT":isForest?"FOREST":"LIGHT"} Theme
-              </div>
+        {/* Sidebar Header */}
+        <div style={{
+          padding: '20px',
+          borderBottom: `1px solid ${theme.border}`,
+          background: theme.bgAlt,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div>
+            <div style={{
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: theme.headingFont,
+              color: theme.text,
+              marginBottom: 4
+            }}>
+              Menu
             </div>
-            <button onClick={() => setMobileMenuOpen(false)} style={{background:"transparent",border:"none",color:theme.text,cursor:"pointer",fontSize:24,display:"flex",alignItems:"center",justifyContent:"center",width:32,height:32,borderRadius:"50%",transition:"all .2s"}}>
-              ✕
-            </button>
+            <div style={{
+              fontSize: 12,
+              color: theme.textMuted,
+              fontFamily: theme.bodyFont
+            }}>
+              {isVoid?"VOID":isMidnight?"MIDNIGHT":isForest?"FOREST":"LIGHT"} Theme
+            </div>
           </div>
-          
-          {/* Navigation Section */}
-          <div style={{flex:1,overflowY:"auto",padding:"16px 20px","@media (max-width: 480px)":{padding:"12px 16px"}}}>
-            <div style={{fontSize:11,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:16,fontFamily:isVoid?theme.monoFont:theme.bodyFont,opacity:.8}}>
-              Navigation
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:4}}>
-              {navLabels[themeKey].map(l=><button 
+          <button 
+            onClick={() => setMobileMenuOpen(false)} 
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: theme.text,
+              cursor: 'pointer',
+              fontSize: 24,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              transition: 'all 0.2s'
+            }}
+          >
+            ✕
+          </button>
+        </div>
+        
+        {/* Navigation Section */}
+        <div style={{ padding: '20px' }}>
+          <div style={{
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '.15em',
+            textTransform: 'uppercase',
+            color: theme.textMuted,
+            marginBottom: 16,
+            fontFamily: theme.bodyFont,
+            opacity: 0.8
+          }}>
+            Navigation
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {navLabels[themeKey].map(l => (
+              <button 
                 key={l} 
-                className="nl" 
                 onClick={() => {
                   scrollTo(l.toLowerCase());
                   setMobileMenuOpen(false);
                 }}
                 style={{
-                  fontFamily:isVoid?theme.monoFont:theme.bodyFont,
-                  fontSize:15,
-                  fontWeight:isVoid?600:isMidnight?500:400,
-                  letterSpacing:isVoid?".1em":isMidnight?".05em":".01em",
-                  textTransform:isVoid?"uppercase":"none",
-                  padding:"14px 20px",
-                  borderRadius:isVoid?"0":isMidnight?"2px":"8px",
-                  border:isVoid?`1px solid ${theme.border}`:isMidnight?`1px solid ${theme.border}33`:"none",
-                  background:isVoid?"transparent":isMidnight?"transparent":isLight?"rgba(58,122,82,0.05)":"transparent",
-                  color:theme.text,
-                  opacity:isVoid?.7:.85,
-                  transition:"all .2s ease",
-                  cursor:"pointer",
-                  textAlign:"left",
-                  width:"100%",
-                  justifyContent:"flex-start"
+                  padding: '14px 20px',
+                  background: 'transparent',
+                  border: `1px solid ${theme.border}`,
+                  borderRadius: 8,
+                  color: theme.text,
+                  fontSize: 15,
+                  fontWeight: 500,
+                  fontFamily: theme.bodyFont,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  textAlign: 'left',
+                  width: '100%',
+                  justifyContent: 'flex-start'
                 }}
-              >{isVoid?l.toUpperCase():isMidnight?l:l}</button>)}
-            </div>
-            
-            {/* Theme Switcher Section */}
-            <div style={{marginTop:32,paddingTop:16,borderTop:`1px solid ${theme.border}`}}>
-              <div style={{fontSize:11,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.textMuted,marginBottom:16,fontFamily:isVoid?theme.monoFont:theme.bodyFont,opacity:.8}}>
-                Themes
-              </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:12}}>
-                {Object.entries(THEMES).map(([k,t])=>(
-                  <button key={k} onClick={()=>{setThemeKey(k);setSent(false);setMobileMenuOpen(false);}} title={`${t.name} — ${t.layout} layout`}
-                    style={{
-                      width:"100%",height:50,borderRadius:themeKey==="void"?"0":"8px",cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"8px 12px",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s"
-                    }}
-                    onMouseEnter={e=>e.currentTarget.style.opacity=.9}
-                    onMouseLeave={e=>e.currentTarget.style.opacity=themeKey===k?.9:.35}>
-                    <span style={{fontSize:16}}>{t.icon}</span>
-                    <span style={{fontSize:10,fontWeight:500,textAlign:"left"}}>{t.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = theme.accent;
+                  e.currentTarget.style.background = `${theme.accent}11`;
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = theme.border;
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.transform = 'translateX(0)';
+                }}
+              >
+                {isVoid ? l.toUpperCase() : isMidnight ? l : l}
+              </button>
+            ))}
           </div>
-          
-          {/* Sidebar Footer */}
-          <div style={{padding:"20px",borderTop:`1px solid ${theme.border}`,background:theme.bgAlt}}>
-            <div style={{fontSize:12,color:theme.textMuted,fontFamily:isVoid?theme.monoFont:theme.bodyFont,textAlign:"center"}}>
-              © 2025 Michael Gaitho
-            </div>
+        </div>
+        
+        {/* Theme Switcher Section */}
+        <div style={{ 
+          padding: '20px',
+          borderTop: `1px solid ${theme.border}`,
+          background: theme.bgAlt
+        }}>
+          <div style={{
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '.15em',
+            textTransform: 'uppercase',
+            color: theme.textMuted,
+            marginBottom: 16,
+            fontFamily: theme.bodyFont,
+            opacity: 0.8
+          }}>
+            Themes
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+            {Object.entries(THEMES).map(([k, t]) => (
+              <button 
+                key={k} 
+                onClick={() => {
+                  setThemeKey(k);
+                  setSent(false);
+                  setMobileMenuOpen(false);
+                }} 
+                title={`${t.name} — ${t.layout} layout`}
+                style={{
+                  width: '100%',
+                  height: 50,
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  padding: '8px 12px',
+                  border: `1px solid ${themeKey === k ? theme.borderMid : theme.border}`,
+                  background: t.surface,
+                  opacity: themeKey === k ? 0.9 : 0.35,
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = 0.9}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = themeKey === k ? 0.9 : 0.35}
+              >
+                <span style={{ fontSize: 16 }}>{t.icon}</span>
+                <span style={{ fontSize: 10, fontWeight: 500, textAlign: 'left' }}>
+                  {t.name}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
