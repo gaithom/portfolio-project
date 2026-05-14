@@ -100,12 +100,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section ref={heroRef} id="hero" className="hero-section" style={{display:"flex",alignItems:"center",justifyContent:"space-between",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
       {/* Left side - Hero content */}
       <div className="hero-content" style={{position:"relative",zIndex:1,width:"100%"}}>
-        <p className="hero-subtitle" style={{fontSize:22,color:theme.textMuted,maxWidth:440,margin:"0 0 16px 0",lineHeight:1.9}}>Software Developer & Design-Minded Engineer in Nakuru, Kenya 🇰🇪</p>
+        <p className="hero-subtitle" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",lineHeight:1.5,opacity:.9,color:theme.accent}}>Software Developer & Design-Minded Engineer in Nakuru, Kenya </p>
         <p className="hero-description" style={{fontSize:18,color:theme.textMuted,maxWidth:380,margin:"0 0 40px 0",lineHeight:1.85,opacity:.7}}>Blending code and creativity to build seamless, high-performance web experiences with elegant interactions..</p>
         <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:12,justifyContent:"flex-start",flexWrap:"wrap"}}>
-          <button className="bp" onClick={()=>scrollTo("projects")} style={{borderRadius:4,fontSize:16,padding:"14px 24px"}}>View Projects</button>
-          <button className="bg" onClick={()=>scrollTo("contact")} style={{borderRadius:4,fontSize:16,padding:"14px 24px"}}>Say Hello →</button>
-        </div>
+          </div>
       </div>
 
       {/* Right side - Software Developer image */}
