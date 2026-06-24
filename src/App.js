@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { GSAPLoader } from "./hooks/useGSAP";
 import { THEMES } from "./data/themes";
-import { ParticleCanvas, CustomCursor, ScrollBar, Modal, ScrollProgress, ParallaxElement, ScrollReveal, ScrollIndicator } from "./components/Shared";
+import { ParticleCanvas, ScrollBar, Modal, ScrollProgress, ParallaxElement, ScrollReveal, ScrollIndicator } from "./components/Shared";
 import { DevBadge, PerfMeter, AnimDebugBand, GridGuide } from "./components/DeveloperMode";
 import { ForestLayout } from "./layouts/ForestLayout";
 import { LightLayout } from "./layouts/LightLayout";
@@ -39,7 +39,8 @@ export default function App() {
   }, [mobileMenuOpen]);
 
   // NAV labels per layout
-  const navLabels={forest:["About","Skills","Projects","Services","Experience","Contact"],midnight:["About","Skills","Projects","Services","Experience","Contact"],void:["About","Skills","Projects","Services","Experience","Contact"],light:["About","Skills","Projects","Services","Experience","Contact"]};
+  const navLabels={forest:["About","Skills","Projects","Services","Experience","Contact"],midnight:["About","Skills","Projects","Services","Experience","Contact"],void:["About","Skills","Projects","Services","Experience","Contact"],light:["About","What I Do","Skills","Projects","Experience","Contact"]};
+  const navTarget=(label)=>label==="What I Do"?"what-i-do":label.toLowerCase();
 
   const layoutProps={theme,devMode,showGrid,scrollTo,tIdx,setTIdx,sel,setSel,sent,setSent,form,setForm,themeKey};
 
@@ -444,7 +445,6 @@ export default function App() {
   return (
     <div style={{background:theme.bg,color:theme.text,minHeight:"100vh",overflowX:"hidden",position:"relative"}}>
       <GSAPLoader/><style>{css}</style>
-      <CustomCursor theme={theme}/>
       <ScrollBar theme={theme}/>
       {/* ScrollIndicator component removed - mouse icon with "Scroll" text */}
       <GridGuide showGrid={showGrid} theme={theme}/>
@@ -484,7 +484,7 @@ export default function App() {
           {navLabels[themeKey].map(l=><button 
             key={l} 
             className="nl" 
-            onClick={()=>scrollTo(l.toLowerCase())}
+            onClick={()=>scrollTo(navTarget(l))}
             style={{
               fontFamily:isVoid?theme.monoFont:theme.bodyFont,
               fontSize:isVoid?9:isMidnight?11:10,
@@ -649,7 +649,7 @@ export default function App() {
               <button 
                 key={l} 
                 onClick={() => {
-                  scrollTo(l.toLowerCase());
+                  scrollTo(navTarget(l));
                   setMobileMenuOpen(false);
                 }}
                 style={{

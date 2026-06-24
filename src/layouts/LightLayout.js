@@ -2,13 +2,25 @@ import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, SkillBar, Modal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
-import { PROJECTS, SKILLS, TECH, SERVICES, TIMELINE, CONTACT_INFO } from "../data/content";
+import { PROJECTS, SKILLS, TECH, TIMELINE, CONTACT_INFO } from "../data/content";
 import "./LightLayout.css";
 
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroCtaRef=useRef(null);
-  const servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
+  const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),servicesRef=useRef(null),timelineRef=useRef(null),contactRef=useRef(null);
+  const designSectionRef=useRef(null),aboutRailRef=useRef(null),aboutTrackRef=useRef(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [activeWhatIDo, setActiveWhatIDo] = useState(0);
+  const WHAT_I_DO_STRIPS = [
+    { id: "01", title: "UI/UX Design", tone: "a", icon: "◈", tags: ["Wireframes", "Flows", "Prototypes"], desc: "Design systems, information hierarchy, and flow mapping for products that remain clear at scale." },
+    { id: "02", title: "Frontend Development", tone: "b", icon: "▣", tags: ["React", "Components", "State"], desc: "Component architecture, state strategy, and implementation detail that keeps interfaces fast and maintainable." },
+    { id: "03", title: "Motion Design", tone: "c", icon: "◎", tags: ["GSAP", "Micro UX", "Timing"], desc: "Subtle interactive motion that clarifies intent, communicates hierarchy, and makes interactions feel alive." },
+    { id: "04", title: "Responsive Design", tone: "d", icon: "▤", tags: ["Grid", "Breakpoints", "Fluid"], desc: "Layout systems that adapt across breakpoints without losing rhythm, readability, or conversion flow." },
+    { id: "05", title: "Accessibility", tone: "e", icon: "◉", tags: ["A11y", "Semantics", "WCAG"], desc: "Contrast, keyboard navigation, and semantic structure designed in from the beginning rather than patched later." },
+    { id: "06", title: "Design Systems", tone: "f", icon: "▦", tags: ["Tokens", "Patterns", "Docs"], desc: "Reusable UI patterns and token-led styling to speed delivery while protecting visual consistency." },
+    { id: "07", title: "Performance UX", tone: "g", icon: "◌", tags: ["LCP", "Perceived", "Optimize"], desc: "Perceived speed improvements through loading states, rendering strategy, and interaction-level optimization." }
+  ];
+  const whatIDoTone = ["a", "b", "c", "d", "e", "f", "g"][activeWhatIDo % 7];
 
   // Track mouse movement for interactive background
   useEffect(() => {
@@ -20,6 +32,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   }, []);
 
   useGSAP((gsap,ST)=>{
+    let whatidoCleanup;
     const tl=gsap.timeline({delay:.2});
     tl.fromTo(heroBadgeRef.current,{y:16,opacity:0},{y:0,opacity:1,duration:.65,ease:"expo.out"})
       .fromTo(heroTitleRef.current,{y:40,opacity:0},{y:0,opacity:1,duration:1,ease:"expo.out"},"-=.25")
@@ -72,9 +85,137 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     
     const sc=servicesRef.current?.querySelectorAll(".srv-card");
     if(sc)gsap.fromTo(sc,{y:30,opacity:0},{y:0,opacity:1,stagger:.08,duration:.75,ease:"expo.out",scrollTrigger:{trigger:servicesRef.current,start:"top 84%"}});
+    const projectCards=projectsRef.current?.querySelectorAll(".project-card");
+    if(projectCards)gsap.fromTo(projectCards,{y:42,opacity:0,scale:.97},{y:0,opacity:1,scale:1,stagger:.08,duration:.8,ease:"expo.out",scrollTrigger:{trigger:projectsRef.current,start:"top 84%"}});
+    const splitBlocks=aboutRef.current?.querySelectorAll(".split-block");
+    if(splitBlocks)gsap.fromTo(splitBlocks,{y:28,opacity:0},{y:0,opacity:1,stagger:.16,duration:.9,ease:"expo.out",scrollTrigger:{trigger:aboutRef.current,start:"top 80%"}});
+    if(designSectionRef.current&&aboutRailRef.current&&aboutTrackRef.current){
+      const section=designSectionRef.current;
+      const rail=aboutRailRef.current;
+      const track=aboutTrackRef.current;
+      const cards=Array.from(track.querySelectorAll(".whatido-strip-card"));
+
+      const getNavOffset=()=>(window.innerWidth<768?56:62);
+
+      const getLayoutConfig=()=>{
+        const w=window.innerWidth;
+        if(w<480)return{visible:1,gap:12,peek:0.14};
+        if(w<768)return{visible:1,gap:14,peek:0.1};
+        if(w<1025)return{visible:1.12,gap:14,peek:0};
+        return{visible:2,gap:16,peek:0};
+      };
+
+      const syncCardWidth=()=>{
+        const {visible,gap,peek}=getLayoutConfig();
+        const railW=rail.clientWidth;
+        const peekPx=peek?railW*peek:0;
+        const gaps=Math.max(0,Math.ceil(visible)-1)*gap;
+        const cardW=Math.max(240,Math.floor((railW-gaps-peekPx)/visible));
+        rail.style.setProperty("--card-width",`${cardW}px`);
+        rail.style.setProperty("--card-gap",`${gap}px`);
+        section.style.setProperty("--nav-offset",`${getNavOffset()}px`);
+      };
+
+      const getScrollDistance=()=>Math.max(0,track.scrollWidth-rail.clientWidth);
+
+      let refreshRaf;
+      const refreshLayout=()=>{
+        syncCardWidth();
+        ST.refresh();
+      };
+      const scheduleRefresh=()=>{
+        cancelAnimationFrame(refreshRaf);
+        refreshRaf=requestAnimationFrame(refreshLayout);
+      };
+
+      syncCardWidth();
+
+      const ro=new ResizeObserver(scheduleRefresh);
+      ro.observe(rail);
+      ro.observe(section);
+
+      const mm=gsap.matchMedia();
+
+      mm.add("(min-width: 768px)",()=>{
+        gsap.set(track,{force3D:true,x:0});
+
+        const tween=gsap.to(track,{
+          x:()=>-getScrollDistance(),
+          ease:"none",
+          scrollTrigger:{
+            id:"whatido-horizontal-lock",
+            trigger:section,
+            start:()=>`top top+=${getNavOffset()}`,
+            end:()=>`+=${Math.max(getScrollDistance(),window.innerHeight*0.9)}`,
+            scrub:1.85,
+            pin:true,
+            pinSpacing:true,
+            anticipatePin:1,
+            invalidateOnRefresh:true,
+            fastScrollEnd:true,
+            snap:cards.length>1?{
+              snapTo:(value)=>{
+                const step=1/(cards.length-1);
+                return gsap.utils.snap(step,value);
+              },
+              duration:{min:0.2,max:0.55},
+              delay:0.02,
+              ease:"power3.out"
+            }:false,
+            onUpdate:(self)=>{
+              const idx=Math.min(cards.length-1,Math.max(0,Math.round(self.progress*(cards.length-1))));
+              setActiveWhatIDo(idx);
+            }
+          }
+        });
+
+        window.addEventListener("resize",scheduleRefresh);
+        window.addEventListener("orientationchange",scheduleRefresh);
+        window.addEventListener("load",scheduleRefresh);
+        requestAnimationFrame(scheduleRefresh);
+        setTimeout(scheduleRefresh,320);
+
+        return ()=>{
+          window.removeEventListener("resize",scheduleRefresh);
+          window.removeEventListener("orientationchange",scheduleRefresh);
+          window.removeEventListener("load",scheduleRefresh);
+          tween.scrollTrigger?.kill();
+          tween.kill();
+        };
+      });
+
+      mm.add("(max-width: 767px)",()=>{
+        gsap.set(track,{clearProps:"transform"});
+        ST.getById("whatido-horizontal-lock")?.kill();
+
+        const onRailScroll=()=>{
+          const max=rail.scrollWidth-rail.clientWidth;
+          if(max<=0)return;
+          const progress=rail.scrollLeft/max;
+          const idx=Math.min(cards.length-1,Math.max(0,Math.round(progress*(cards.length-1))));
+          setActiveWhatIDo(idx);
+        };
+
+        rail.addEventListener("scroll",onRailScroll,{passive:true});
+        scheduleRefresh();
+        onRailScroll();
+
+        return ()=>rail.removeEventListener("scroll",onRailScroll);
+      });
+
+      whatidoCleanup=()=>{
+        ro.disconnect();
+        cancelAnimationFrame(refreshRaf);
+        mm.revert();
+      };
+    }
+    const skillRows=skillsRef.current?.querySelectorAll(".skill-item");
+    if(skillRows)gsap.fromTo(skillRows,{x:-20,opacity:0},{x:0,opacity:1,stagger:.05,duration:.6,ease:"power3.out",scrollTrigger:{trigger:skillsRef.current,start:"top 80%"}});
     const ti=timelineRef.current?.querySelectorAll(".tl-step");
     if(ti)gsap.fromTo(ti,{y:20,opacity:0},{y:0,opacity:1,stagger:.14,duration:.7,ease:"expo.out",scrollTrigger:{trigger:timelineRef.current,start:"top 84%"}});
     gsap.fromTo(contactRef.current,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:"expo.out",scrollTrigger:{trigger:contactRef.current,start:"top 86%"}});
+
+    return whatidoCleanup;
   },[]);
 
   return <>
@@ -97,7 +238,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* Main content with higher z-index */}
     <div style={{position:"relative",zIndex:1}}>
     {/* HERO — clean left-aligned with image on right */}
-    <section ref={heroRef} id="hero" className="hero-section" style={{display:"flex",alignItems:"center",justifyContent:"space-between",position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    <section ref={heroRef} id="hero" className="hero-section section-hero" style={{display:"flex",alignItems:"center",justifyContent:"space-between",position:"relative"}}>
       {/* Left side - Hero content */}
       <div className="hero-content" style={{position:"relative",zIndex:1,width:"100%"}}>
         <p className="hero-subtitle" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",lineHeight:1.5,opacity:.9,color:theme.accent}}>Software Developer & Design-Minded Engineer in Nakuru, Kenya </p>
@@ -123,88 +264,102 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
     </section>
 
-    <div style={{overflow:"hidden",borderBottom:`1px solid ${theme.border}`,padding:"9px 0"}}>
+    <div style={{overflow:"hidden",padding:"9px 0"}}>
       <div style={{display:"flex",gap:30,whiteSpace:"nowrap",animation:"marquee 25s linear infinite"}}>
         {[...TECH,...TECH].map((t,i)=><span key={i} style={{fontSize:14,fontWeight:600,letterSpacing:".15em",textTransform:"uppercase",color:theme.text,opacity:.6}}>{t.name}<span style={{marginLeft:16,opacity:.2}}>·</span></span>)}
       </div>
     </div>
 
-    {/* ABOUT & SERVICES — combined split layout */}
-    <section id="about" className="about-section" style={{position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    {/* ABOUT */}
+    <section ref={aboutRef} id="about" className="about-section light-section-shell section-about" style={{position:"relative"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"center"}}>
           <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>About</span>
-          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am & What I Do</h2>
+          <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Who I Am</h2>
         </div>
-        {/* Split layout */}
-        <div className="about-split-layout">
-          {/* Left side - About paragraph */}
-          <div>
-            <div style={{padding:"20px 0"}}>
-              <p className="about-paragraph" style={{color:theme.text,opacity:.9}}>
-                I'm <strong style={{color:theme.accent}}>Michael Gaitho</strong>, a Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics. I build AI-powered web interfaces and dashboards, leading frontend architecture and UI/UX design decisions. I hold a Bachelor of IT, specializing in software engineering and human-computer interaction.
-              </p>
-            </div>
-            <div className="about-buttons" style={{display:"flex",gap:12,justifyContent:"flex-start"}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:4}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>See Work →</button></div>
+        <div className="split-block about-copy-panel">
+          <div style={{padding:"20px 0"}}>
+            <p className="about-paragraph" style={{color:theme.text,opacity:.9}}>
+              I'm <strong style={{color:theme.accent}}>Michael Gaitho</strong>, a Frontend Developer & UI/UX designer specializing in AI-powered interfaces and real-time analytics. I build AI-powered web interfaces and dashboards, leading frontend architecture and UI/UX design decisions. I hold a Bachelor of IT, specializing in software engineering and human-computer interaction.
+            </p>
           </div>
-
-          {/* Right side - Services card */}
-          <div>
-            {(() => {
-              const [cardHover, setCardHover] = useState(false);
-              return (
-                <div
-                  className="services-card"
-                  onMouseEnter={() => setCardHover(true)}
-                  onMouseLeave={() => setCardHover(false)}
-                  style={{background:"transparent",border:`1px solid rgba(60, 96, 87, ${cardHover ? 0.7 : 0.3})`,borderRadius:12,transition:"border-color .2s"}}
-                >
-                  <div style={{display:"flex",flexDirection:"column",gap:0}}>
-                    {SERVICES.map((s,i)=><div key={s.title} className="srv-item" style={{display:"flex",alignItems:"flex-start",background:"transparent",borderRadius:8,transition:"background .2s",cursor:"default",borderBottom:i===SERVICES.length-1?"none":`1px solid rgba(60, 96, 87, ${cardHover ? 0.7 : 0.3})`}}
-                      onMouseEnter={e=>{e.currentTarget.style.background="rgba(0,0,0,0.03)";}}
-                      onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
-                      <div className="srv-number" style={{fontWeight:900,fontFamily:"'Syne',sans-serif",color:"#3c6057",opacity:.4,lineHeight:1,flexShrink:0,marginTop:2}}>{String(i+1).padStart(2,"0")}</div>
-                      <div>
-                        <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:700,marginBottom:10,color:theme.text}}>{s.title}</h3>
-                        <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.8}}>{s.desc}</p>
-                      </div>
-                    </div>)}
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
+          <div className="about-buttons" style={{display:"flex",gap:12,justifyContent:"flex-start"}}><button className="bp" onClick={() => window.open('/resume.pdf', '_blank')} style={{borderRadius:4}}>Download Resume</button><button className="bg" onClick={()=>scrollTo("projects")} style={{borderRadius:4}}>See Work →</button></div>
         </div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
     </section>
 
+    {/* WHAT I DO — fullscreen horizontal scroll */}
+    <section ref={designSectionRef} id="what-i-do" className="whatido-section light-section-shell section-whatido">
+      <div className="whatido-inner">
+        <div className="whatido-header">
+          <div>
+            <span className="whatido-label">What I Do</span>
+            <h2 className="whatido-title">Capabilities Across Design & Code</h2>
+          </div>
+          <div className="whatido-progress">
+            <span>{String(activeWhatIDo + 1).padStart(2, "0")} / {WHAT_I_DO_STRIPS.length}</span>
+            <div className="whatido-progress-bar">
+              <div className="whatido-progress-fill" style={{width:`${((activeWhatIDo + 1) / WHAT_I_DO_STRIPS.length) * 100}%`}}/>
+            </div>
+          </div>
+        </div>
+        <div ref={aboutRailRef} className={`whatido-horizontal-rail tone-${whatIDoTone}`}>
+          <div ref={aboutTrackRef} className="whatido-horizontal-track">
+            {WHAT_I_DO_STRIPS.map((item, i) => (
+              <article key={item.id} className={`whatido-strip-card tone-${item.tone} ${i===activeWhatIDo?"is-active":""}`}>
+                <div className="whatido-card-watermark">{item.id}</div>
+                <div className="whatido-card-grid" aria-hidden="true"/>
+                <div className="whatido-card-top">
+                  <div className="whatido-card-icon">{item.icon}</div>
+                  <span className="whatido-card-id">{item.id}</span>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+                <div className="whatido-card-tags">
+                  {item.tags.map(tag=><span key={tag}>{tag}</span>)}
+                </div>
+                <div className="whatido-card-footer">
+                  <span className="whatido-hint-desktop">Scroll to explore</span>
+                  <span className="whatido-hint-mobile">Swipe to explore</span>
+                  <span className="whatido-card-arrow">→</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+      {devMode&&<DevBadge id="what-i-do" devMode={devMode} theme={theme}/>}
+    </section>
+
     {/* SKILLS — dot-grid indicators */}
-    <section id="skills" className="skills-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
+    <section ref={skillsRef} id="skills" className="skills-section light-section-shell section-skills" style={{padding:"100px 60px",position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
           <span style={{fontSize:14,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
         </div>
-        <div className="skills-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
-          <div>{SKILLS.map((s,i)=><div key={s.label} className="skill-item" style={{marginBottom:18}}>
-            <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
-              <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
-              <span style={{fontSize:14,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
-            </div>
-            {/* Dot progress */}
-            <div style={{display:"flex",gap:4}}>
-              {Array.from({length:10},(_,d)=><div key={d} style={{width:18,height:4,borderRadius:2,background:d<Math.round(s.pct/10)?theme.accent:theme.border,opacity:d<Math.round(s.pct/10)?.65:.4,transition:"background .3s"}}/>)}
-            </div>
-          </div>)}</div>
-          <div>
+        <div className="skills-grid skills-lab-layout" style={{display:"grid",gridTemplateColumns:"1.15fr .85fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
+          <div className="skills-lab-track">
+            {SKILLS.map((s,i)=><div key={s.label} className="skill-item skill-node" style={{marginBottom:18}}>
+              <div className="skill-node-head" style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+                <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
+                <span style={{fontSize:14,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
+              </div>
+              <div className="skill-node-rail" style={{display:"flex",gap:4}}>
+                {Array.from({length:10},(_,d)=><div key={d} style={{width:18,height:4,borderRadius:2,background:d<Math.round(s.pct/10)?theme.accent:theme.border,opacity:d<Math.round(s.pct/10)?.65:.4,transition:"background .3s"}}/>)}
+              </div>
+            </div>)}
+          </div>
+          <div className="skills-tech-cluster">
             <h3 style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:700,marginBottom:18,color:theme.text,letterSpacing:".08em",textTransform:"uppercase",opacity:.8}}>Tech Stack</h3>
-            <div style={{display:"flex",flexWrap:"wrap",gap:12}}>
+            <div className="tech-cluster-grid" style={{display:"flex",flexWrap:"wrap",gap:12}}>
               {TECH.map((t,i)=>{
                 const [h,setH]=useState(false);
                 return (
                   <div 
                     key={i} 
+                    className="tech-cluster-item"
                     onMouseEnter={()=>setH(true)} 
                     onMouseLeave={()=>setH(false)}
                     style={{
@@ -240,7 +395,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* PROJECTS — large case study cards */}
-    <section id="projects" className="projects-section" style={{padding:"100px 60px",borderBottom:`1px solid ${theme.border}`,position:"relative"}}>
+    <section ref={projectsRef} id="projects" className="projects-section light-section-shell section-projects" style={{padding:"100px 60px",position:"relative"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"left",marginBottom:40}}>
           
@@ -253,6 +408,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             return (
               <div 
                 key={p.id} 
+                className="project-card"
                 onMouseEnter={()=>setH(true)} 
                 onMouseLeave={()=>setH(false)} 
                 style={{
@@ -416,12 +572,12 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* TIMELINE — creative horizontal with large year badges */}
-    <section ref={timelineRef} id="experience" className="timeline-section" style={{padding:"100px 60px",position:"relative"}}>
+    <section ref={timelineRef} id="experience" className="timeline-section light-section-shell section-timeline" style={{padding:"100px 60px",position:"relative"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:60}}><span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Journey</span><h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Experience & Education</h2></div>
         {/* Creative horizontal layout */}
         <div style={{display:"flex",flexDirection:"column",gap:40}}>
-          {TIMELINE.map((t,i)=><div key={i} style={{display:"flex",gap:32,alignItems:"center",position:"relative"}}>
+          {TIMELINE.map((t,i)=><div key={i} className="tl-step brutal-tl-step" style={{display:"flex",gap:32,alignItems:"center",position:"relative"}}>
             <div style={{width:120,flexShrink:0,textAlign:"right"}}>
               <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:800,color:theme.accent,opacity:.3,lineHeight:1}}>{t.year.slice(-2)}</div>
               <div style={{fontFamily:"'Space Mono',monospace",fontSize:12,fontWeight:700,color:theme.textMuted,letterSpacing:".08em",textTransform:"uppercase",opacity:.7}}>{t.place}</div>
@@ -443,7 +599,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* CONTACT — combined connect and form in creative split layout */}
-    <section ref={contactRef} id="contact" className="contact-section" style={{position:"relative",borderBottom:`1px solid ${theme.border}`}}>
+    <section ref={contactRef} id="contact" className="contact-section light-section-shell section-contact" style={{position:"relative"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:50}}>
           <span style={{fontSize:13,letterSpacing:".25em",textTransform:"uppercase",color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.6,display:"block",marginBottom:12}}>Connect</span>

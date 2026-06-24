@@ -19,6 +19,8 @@ export function GSAPLoader() {
 export function useGSAP(cb, deps = []) {
   useEffect(() => {
     if (typeof window === "undefined") return;
+    let ctx;
+    let userCleanup;
     const poll = async () => {
       let t = 0;
       while ((!window.gsap || !window.ScrollTrigger) && t < 60) {
@@ -26,10 +28,16 @@ export function useGSAP(cb, deps = []) {
       }
       if (window.gsap && window.ScrollTrigger) {
         window.gsap.registerPlugin(window.ScrollTrigger);
-        cb(window.gsap, window.ScrollTrigger);
+        ctx = window.gsap.context(() => {
+          userCleanup = cb(window.gsap, window.ScrollTrigger);
+        });
       }
     };
     poll();
+    return () => {
+      userCleanup?.();
+      ctx?.revert();
+    };
   // eslint-disable-next-line
   }, deps);
 }
