@@ -39,8 +39,18 @@ export default function App() {
   }, [mobileMenuOpen]);
 
   // NAV labels per layout
-  const navLabels={forest:["About","Skills","Projects","Services","Experience","Contact"],midnight:["About","Skills","Projects","Services","Experience","Contact"],void:["About","Skills","Projects","Services","Experience","Contact"],light:["About","What I Do","Skills","Projects","Experience","Contact"]};
-  const navTarget=(label)=>label==="What I Do"?"what-i-do":label.toLowerCase();
+  const forestNavMap = { Clearings: "projects", Grove: "about", Canopy: "skills", Trail: "experience", Connect: "contact" };
+  const navLabels = {
+    forest: ["Clearings", "Grove", "Canopy", "Trail", "Connect"],
+    midnight: ["About", "Skills", "Projects", "Services", "Experience", "Contact"],
+    void: ["About", "Skills", "Projects", "Services", "Experience", "Contact"],
+    light: ["About", "What I Do", "Skills", "Projects", "Experience", "Contact"]
+  };
+  const navTarget = (label) => {
+    if (label === "What I Do") return "what-i-do";
+    if (themeKey === "forest" && forestNavMap[label]) return forestNavMap[label];
+    return label.toLowerCase();
+  };
 
   const layoutProps={theme,devMode,showGrid,scrollTo,tIdx,setTIdx,sel,setSel,sent,setSent,form,setForm,themeKey};
 

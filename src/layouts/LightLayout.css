@@ -287,14 +287,6 @@
   backdrop-filter: blur(4px);
 }
 
-.skills-section .skill-item:nth-child(odd) {
-  transform: translateX(-4px);
-}
-
-.skills-section .skill-item:nth-child(even) {
-  transform: translateX(4px);
-}
-
 .projects-section .projects-grid {
   grid-auto-rows: 1fr;
 }
@@ -330,15 +322,32 @@
   }
 }
 
-/* Brutalism retained on About + What I Do + Expertise */
-.section-about,
-.section-whatido,
-.section-skills {
+/* Brutalism retained on What I Do + Expertise */
+.section-about {
+  position: relative;
+}
+
+.section-about::after {
+  position: absolute;
+  right: 20px;
+  top: 16px;
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: #3c6057;
+  opacity: 0.8;
+  content: "01 / ABOUT";
+}
+
+.section-whatido {
   border-bottom: 4px solid #2f4d45 !important;
   position: relative;
 }
 
-.section-about::after,
+.section-skills {
+  position: relative;
+}
+
 .section-whatido::after,
 .section-skills::after {
   position: absolute;
@@ -351,7 +360,6 @@
   opacity: 0.8;
 }
 
-.section-about::after { content: "01 / ABOUT"; }
 .section-whatido::after { content: "02 / WHAT I DO"; }
 .section-skills::after { content: "03 / SKILLS"; }
 
@@ -822,6 +830,68 @@
   padding-left: 36px;
 }
 
+.skills-lab-progress {
+  position: absolute;
+  left: 10px;
+  top: 6px;
+  width: 4px;
+  height: calc(100% - 12px);
+  background: #3c6057;
+  transform-origin: top center;
+  transform: scaleY(0);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.skills-section-header {
+  overflow: hidden;
+}
+
+.skills-lab-track .skill-node {
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.skills-lab-track .skill-node.is-upcoming {
+  opacity: 0.45;
+  transform: translateX(var(--node-shift, 0)) translateY(4px);
+}
+
+.skills-lab-track .skill-node.is-active {
+  opacity: 1;
+  transform: translateX(0) translateY(-3px);
+  box-shadow: 8px 8px 0 rgba(60, 96, 87, 0.45) !important;
+}
+
+.skills-lab-track .skill-node.is-passed {
+  opacity: 0.75;
+  transform: translateX(0) translateY(0);
+}
+
+.skills-lab-track .skill-node.is-active .skill-node-pct {
+  color: #3c6057;
+  opacity: 1;
+}
+
+.skills-lab-track .skill-node.is-active::before {
+  background: #3c6057;
+}
+
+.skill-segment {
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(47, 77, 69, 0.16);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.skill-segment.is-filled {
+  background: #3c6057;
+}
+
 .skills-lab-track::before {
   content: "";
   position: absolute;
@@ -849,14 +919,6 @@
   height: 14px;
   background: #3c6057;
   border: 2px solid #2f4d45;
-}
-
-.skills-lab-track .skill-node:nth-child(odd) {
-  transform: translateX(-8px);
-}
-
-.skills-lab-track .skill-node:nth-child(even) {
-  transform: translateX(8px);
 }
 
 .skills-tech-cluster {
@@ -911,6 +973,12 @@
   transition: transform 0.28s ease, opacity 0.28s ease, filter 0.28s ease;
 }
 
+.tech-cluster-item.is-scroll-active {
+  transform: translateY(-2px) !important;
+  box-shadow: 4px 4px 0 rgba(60, 96, 87, 0.28) !important;
+  background: #ffffff !important;
+}
+
 .tech-cluster-item:hover {
   transform: translateY(-7px) scale(1.03) !important;
   box-shadow: 0 12px 0 rgba(60, 96, 87, 0.46), 0 0 0 2px #2f4d45 inset !important;
@@ -932,7 +1000,127 @@
 }
 
 .projects-section .projects-grid {
-  gap: 34px 26px !important;
+  gap: 40px 32px !important;
+}
+
+/* Featured Work — reuse What I Do strip card pattern in grid layout */
+.projects-section .project-card.whatido-strip-card {
+  flex: none;
+  width: 100%;
+  height: auto;
+  min-height: 520px;
+  padding: 36px;
+}
+
+.projects-section .project-card.whatido-strip-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+  transform: translateY(-4px) rotate(0deg) !important;
+  box-shadow: 8px 8px 0 rgba(60, 96, 87, 0.24);
+}
+
+.projects-section .project-card.whatido-strip-card h3 {
+  max-width: none;
+  font-size: clamp(28px, 3.2vw, 46px);
+  margin-bottom: 16px;
+}
+
+.projects-section .project-card.whatido-strip-card p {
+  max-width: none;
+  font-size: clamp(15px, 1.4vw, 19px);
+}
+
+.projects-section .project-card-live-link {
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.projects-section .project-card-live-link:hover {
+  transform: translateX(4px);
+}
+
+.projects-section .project-live-panel {
+  position: relative;
+  margin: 18px 0 4px;
+  border: 2px solid #2f4d45;
+  background: rgba(255, 255, 255, 0.55);
+  z-index: 1;
+}
+
+.projects-section .project-live-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border: 2px solid #2f4d45;
+  background: #f7faf8;
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2f4d45;
+  z-index: 2;
+}
+
+.projects-section .project-live-dot {
+  width: 7px;
+  height: 7px;
+  background: #3c6057;
+  box-shadow: 0 0 0 0 rgba(60, 96, 87, 0.55);
+  animation: project-live-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes project-live-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(60, 96, 87, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(60, 96, 87, 0);
+  }
+}
+
+.projects-section .project-live-chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 2px solid #2f4d45;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.projects-section .project-live-chrome span:nth-child(1),
+.projects-section .project-live-chrome span:nth-child(2),
+.projects-section .project-live-chrome span:nth-child(3) {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #2f4d45;
+  background: rgba(60, 96, 87, 0.12);
+}
+
+.projects-section .project-live-url {
+  margin-left: auto;
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.projects-section .project-live-screen {
+  height: 200px;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  border-top: none;
+}
+
+.projects-section .project-card.whatido-strip-card:hover .project-live-screen {
+  background-position: center 12%;
+  transition: background-position 0.45s ease;
 }
 
 @media (max-width: 768px) {
@@ -959,8 +1147,14 @@
     padding-left: 28px;
   }
 
-  .skills-lab-track .skill-node:nth-child(odd),
-  .skills-lab-track .skill-node:nth-child(even),
+  .skills-lab-track .skill-node.is-upcoming,
+  .skills-lab-track .skill-node.is-active,
+  .skills-lab-track .skill-node.is-passed {
+    opacity: 1;
+    transform: none;
+    box-shadow: 6px 6px 0 rgba(60, 96, 87, 0.45) !important;
+  }
+
   .tech-cluster-item:nth-child(3n + 1),
   .tech-cluster-item:nth-child(3n + 2),
   .tech-cluster-item:nth-child(3n + 3) {

@@ -89,6 +89,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     if(projectCards)gsap.fromTo(projectCards,{y:42,opacity:0,scale:.97},{y:0,opacity:1,scale:1,stagger:.08,duration:.8,ease:"expo.out",scrollTrigger:{trigger:projectsRef.current,start:"top 84%"}});
     const splitBlocks=aboutRef.current?.querySelectorAll(".split-block");
     if(splitBlocks)gsap.fromTo(splitBlocks,{y:28,opacity:0},{y:0,opacity:1,stagger:.16,duration:.9,ease:"expo.out",scrollTrigger:{trigger:aboutRef.current,start:"top 80%"}});
+
     if(designSectionRef.current&&aboutRailRef.current&&aboutTrackRef.current){
       const section=designSectionRef.current;
       const rail=aboutRailRef.current;
@@ -209,13 +210,132 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         mm.revert();
       };
     }
-    const skillRows=skillsRef.current?.querySelectorAll(".skill-item");
-    if(skillRows)gsap.fromTo(skillRows,{x:-20,opacity:0},{x:0,opacity:1,stagger:.05,duration:.6,ease:"power3.out",scrollTrigger:{trigger:skillsRef.current,start:"top 80%"}});
+    let skillsCleanup;
+    if(skillsRef.current){
+      const section=skillsRef.current;
+      const header=section.querySelector(".skills-section-header");
+      const skillNodes=Array.from(section.querySelectorAll(".skill-node"));
+      const techCluster=section.querySelector(".skills-tech-cluster");
+      const techItems=section.querySelectorAll(".tech-cluster-item");
+      const trackProgress=section.querySelector(".skills-lab-progress");
+
+      const setSkillState=(activeIdx)=>{
+        skillNodes.forEach((node,i)=>{
+          node.classList.toggle("is-active",i===activeIdx);
+          node.classList.toggle("is-passed",i<activeIdx);
+          node.classList.toggle("is-upcoming",i>activeIdx);
+        });
+        if(trackProgress&&skillNodes.length>1){
+          const pct=activeIdx/(skillNodes.length-1);
+          gsap.to(trackProgress,{scaleY:pct,duration:.35,ease:"power2.out",overwrite:true});
+        }
+        if(techItems.length){
+          const techActive=Math.floor((activeIdx/Math.max(skillNodes.length-1,1))*(techItems.length-1));
+          techItems.forEach((item,i)=>item.classList.toggle("is-scroll-active",i<=techActive));
+        }
+      };
+
+      if(header){
+        gsap.fromTo(header.children,
+          {y:24,opacity:0},
+          {y:0,opacity:1,stagger:.1,duration:.75,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 82%"}}
+        );
+      }
+
+      if(techCluster){
+        gsap.fromTo(techCluster,
+          {x:32,opacity:0},
+          {x:0,opacity:1,duration:.85,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 78%"}}
+        );
+      }
+
+      if(techItems.length){
+        gsap.fromTo(techItems,
+          {opacity:0,y:16},
+          {opacity:1,y:0,stagger:.03,duration:.5,ease:"power2.out",scrollTrigger:{trigger:techCluster||section,start:"top 72%"}}
+        );
+      }
+
+      gsap.set(skillNodes,{opacity:0});
+      skillNodes.forEach((node,i)=>{
+        node.classList.add("is-upcoming");
+        node.style.setProperty("--node-shift",`${i%2?10:-10}px`);
+        node.querySelectorAll(".skill-segment.is-filled").forEach(seg=>gsap.set(seg,{scaleX:0,transformOrigin:"left center"}));
+      });
+      if(trackProgress)gsap.set(trackProgress,{scaleY:0,transformOrigin:"top center"});
+
+      gsap.fromTo(skillNodes,
+        {opacity:0,y:20},
+        {opacity:1,y:0,stagger:.06,duration:.65,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 88%"}}
+      );
+
+      const skillsMm=gsap.matchMedia();
+
+      skillsMm.add("(min-width: 768px)",()=>{
+        const skillsPinTl=gsap.timeline({
+          scrollTrigger:{
+            trigger:section,
+            start:"top 14%",
+            end:()=>`+=${Math.max(window.innerHeight*.9,skillNodes.length*130)}`,
+            scrub:1.2,
+            pin:true,
+            anticipatePin:1,
+            invalidateOnRefresh:true,
+            onUpdate:(self)=>{
+              const idx=Math.min(skillNodes.length-1,Math.round(self.progress*(skillNodes.length-1)));
+              setSkillState(idx);
+            }
+          }
+        });
+
+        skillNodes.forEach((node,i)=>{
+          const at=i/Math.max(skillNodes.length-1,1);
+          const filledSegs=node.querySelectorAll(".skill-segment.is-filled");
+          if(filledSegs.length){
+            skillsPinTl.to(filledSegs,{
+              scaleX:1,stagger:.04,duration:.4,ease:"power2.out"
+            },at+.05);
+          }
+        });
+
+        return()=>skillsPinTl.scrollTrigger?.kill();
+      });
+
+      skillsMm.add("(max-width: 767px)",()=>{
+        gsap.fromTo(skillNodes,
+          {x:-16,opacity:0,y:12},
+          {x:0,opacity:1,y:0,stagger:.07,duration:.65,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 82%"},
+            onComplete:()=>skillNodes.forEach(n=>{n.classList.add("is-passed");n.classList.remove("is-upcoming");})}
+        );
+        skillNodes.forEach((node)=>{
+          const filledSegs=node.querySelectorAll(".skill-segment.is-filled");
+          if(filledSegs.length){
+            gsap.fromTo(filledSegs,
+              {scaleX:0},
+              {scaleX:1,stagger:.03,duration:.4,ease:"power2.out",scrollTrigger:{trigger:node,start:"top 88%"}}
+            );
+          }
+        });
+        techItems.forEach((item)=>{
+          gsap.fromTo(item,
+            {opacity:0,y:10},
+            {opacity:1,y:0,duration:.4,ease:"power2.out",scrollTrigger:{trigger:item,start:"top 92%"},
+              onEnter:()=>item.classList.add("is-scroll-active")}
+          );
+        });
+      });
+
+      skillsCleanup=()=>skillsMm.revert();
+    }
+
     const ti=timelineRef.current?.querySelectorAll(".tl-step");
     if(ti)gsap.fromTo(ti,{y:20,opacity:0},{y:0,opacity:1,stagger:.14,duration:.7,ease:"expo.out",scrollTrigger:{trigger:timelineRef.current,start:"top 84%"}});
     gsap.fromTo(contactRef.current,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:"expo.out",scrollTrigger:{trigger:contactRef.current,start:"top 86%"}});
 
-    return whatidoCleanup;
+    return ()=>{
+      whatidoCleanup?.();
+      skillsCleanup?.();
+    };
   },[]);
 
   return <>
@@ -335,19 +455,20 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* SKILLS — dot-grid indicators */}
     <section ref={skillsRef} id="skills" className="skills-section light-section-shell section-skills" style={{padding:"100px 60px",position:"relative",'@media (max-width: 768px)': {padding:"60px 30px"}, '@media (max-width: 480px)': {padding:"40px 20px"}}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:56}}>
+        <div className="skills-section-header" style={{textAlign:"center",marginBottom:56}}>
           <span style={{fontSize:14,letterSpacing:".25em",textTransform:"uppercase",color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8,display:"block",marginBottom:12}}>Expertise</span>
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:800,letterSpacing:"-.02em",color:theme.text}}>Skills</h2>
         </div>
         <div className="skills-grid skills-lab-layout" style={{display:"grid",gridTemplateColumns:"1.15fr .85fr",gap:50,'@media (max-width: 768px)': {gridTemplateColumns:"1fr",gap:30}}}>
           <div className="skills-lab-track">
-            {SKILLS.map((s,i)=><div key={s.label} className="skill-item skill-node" style={{marginBottom:18}}>
+            <div className="skills-lab-progress" aria-hidden="true"/>
+            {SKILLS.map((s,i)=><div key={s.label} className="skill-item skill-node" data-skill-index={i} style={{marginBottom:18,padding:"14px 16px"}}>
               <div className="skill-node-head" style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
-                <span style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
-                <span style={{fontSize:14,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
+                <span className="skill-node-label" style={{fontSize:14,fontWeight:500,color:theme.text,opacity:.82}}>{s.label}</span>
+                <span className="skill-node-pct" style={{fontSize:14,color:theme.text,fontFamily:"'Space Mono',monospace",opacity:.8}}>{s.pct}%</span>
               </div>
               <div className="skill-node-rail" style={{display:"flex",gap:4}}>
-                {Array.from({length:10},(_,d)=><div key={d} style={{width:18,height:4,borderRadius:2,background:d<Math.round(s.pct/10)?theme.accent:theme.border,opacity:d<Math.round(s.pct/10)?.65:.4,transition:"background .3s"}}/>)}
+                {Array.from({length:10},(_,d)=><div key={d} className={`skill-segment${d<Math.round(s.pct/10)?" is-filled":""}`} style={{"--seg-i":d}}/>)}
               </div>
             </div>)}
           </div>
@@ -396,176 +517,67 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* PROJECTS — large case study cards */}
     <section ref={projectsRef} id="projects" className="projects-section light-section-shell section-projects" style={{padding:"100px 60px",position:"relative"}}>
-      <div style={{maxWidth:1200,margin:"0 auto"}}>
+      <div style={{maxWidth:1320,margin:"0 auto"}}>
         <div style={{textAlign:"left",marginBottom:40}}>
           
           <h2 className="section-title" style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(30px,4vw,44px)",fontWeight:800,letterSpacing:"-.02em",marginBottom:16,color:theme.text}}>Featured Work</h2>
           <p style={{fontSize:16,color:theme.textMuted,lineHeight:1.75,maxWidth:600}}>A selection of enterprise engagements — from greenfield architecture to complex systems integration at scale.</p>
         </div>
         <div className="projects-grid" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:24,'@media (max-width: 768px)': {gridTemplateColumns:"1fr"}}}>
-          {PROJECTS.map((p)=>{
-            const [h,setH]=useState(false);
-            return (
-              <div 
-                key={p.id} 
-                className="project-card"
-                onMouseEnter={()=>setH(true)} 
-                onMouseLeave={()=>setH(false)} 
-                style={{
-                  background:"transparent",
-                  border:`1px solid ${h?theme.borderMid:theme.border}`,
-                  borderRadius:16,
-                  overflow:"hidden",
-                  transform:h?"translateY(-4px)":"translateY(0)",
-                  transition:"all .28s",
-                  boxShadow:h?theme.shadowMd:theme.shadow
-                }}
+          {PROJECTS.map((p,i)=>(
+              <article
+                key={p.id}
+                className={`project-card whatido-strip-card tone-${["a","b","c","d","e","f","g"][i % 7]}`}
               >
-                {/* Card Top — Image/Background Area */}
-                <div style={{
-                  height:320,
-                  background:p.image ? `url(${p.image}) center/cover no-repeat` : p.cardBg,
-                  display:"flex",
-                  flexDirection:"column",
-                  alignItems:"center",
-                  justifyContent:"center",
-                  position:"relative",
-                  padding:"0 40px"
-                }}>
-                  {/* Dark Overlay */}
-                  {p.image && <div style={{
-                    position:"absolute",
-                    inset:0,
-                    background:"rgba(0,0,0,0.5)",
-                    zIndex:1
-                  }} />}
-                  
-                  {/* LIVE Badge */}
-                  <div style={{
-                    position:"absolute",
-                    top:20,
-                    right:20,
-                    display:"flex",
-                    alignItems:"center",
-                    gap:8,
-                    background:"rgba(0,0,0,0.4)",
-                    backdropFilter:"blur(10px)",
-                    padding:"6px 12px",
-                    borderRadius:6,
-                    border:"1px solid rgba(255,255,255,0.15)",
-                    zIndex:2
-                  }}>
-                    <div style={{width:6,height:6,borderRadius:"50%",background:"#00FF88",boxShadow:"0 0 8px #00FF88"}} />
-                    <span style={{fontSize:14,fontWeight:600,color:"#fff",letterSpacing:".1em",textTransform:"uppercase"}}>LIVE</span>
-                  </div>
-                  
-                  {/* Title & Category */}
-                  <h3 style={{
-                    fontSize:"clamp(20px,3vw,28px)",
-                    fontWeight:800,
-                    fontFamily:"'Syne',sans-serif",
-                    color:"#fff",
-                    textAlign:"center",
-                    margin:0,
-                    textShadow:"0 2px 20px rgba(0,0,0,0.3)",
-                    position:"relative",
-                    zIndex:2
-                  }}>{p.title}</h3>
-                  <span style={{
-                    fontSize:14,
-                    letterSpacing:".2em",
-                    textTransform:"uppercase",
-                    color:"rgba(255,255,255,0.7)",
-                    marginTop:8,
-                    fontWeight:600,
-                    position:"relative",
-                    zIndex:2
-                  }}>{p.category}</span>
+                <div className="whatido-card-watermark">{String(p.id).padStart(2, "0")}</div>
+                <div className="whatido-card-grid" aria-hidden="true"/>
+                <div className="whatido-card-top">
+                  <div className="whatido-card-icon">{p.emoji}</div>
+                  <span className="whatido-card-id">{String(p.id).padStart(2, "0")}</span>
                 </div>
-
-                {/* Card Bottom — Meta Info */}
-                <div style={{padding:"24px 28px 28px"}}>
-                  {/* Ultra-minimal project type indicator */}
-                  <div style={{
-                    fontSize:11,
-                    fontWeight:600,
-                    color:theme.textMuted,
-                    letterSpacing:".1em",
-                    textTransform:"uppercase",
-                    marginBottom:16,
-                    opacity:0.7
-                  }}>
-                    {p.category}
+                <h3>{p.title}</h3>
+                <p>{p.longDesc}</p>
+                {p.liveUrl && (
+                  <div className="project-live-panel">
+                    <div className="project-live-badge" aria-label="Project is live">
+                      <span className="project-live-dot" />
+                      <span>LIVE</span>
+                    </div>
+                    <div className="project-live-chrome">
+                      <span /><span /><span />
+                      <span className="project-live-url">deployed</span>
+                    </div>
+                    <div
+                      className="project-live-screen"
+                      style={{backgroundImage:p.image ? `url(${p.image})` : p.cardBg}}
+                      role="img"
+                      aria-label={`${p.title} live preview`}
+                    />
                   </div>
-
-                  {/* Description */}
-                  <p style={{fontSize:15,color:theme.textMuted,lineHeight:1.75,marginBottom:20,opacity:.9}}>{p.longDesc}</p>
-
-                  {/* Tech Stack Tags */}
-                  <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-                    {p.stack.map((tech)=>{
-                      const [tH,setTH]=useState(false);
-                      return (
-                        <span 
-                          key={tech} 
-                          onMouseEnter={()=>setTH(true)} 
-                          onMouseLeave={()=>setTH(false)}
-                          style={{
-                            padding:"6px 12px",
-                            border:`1px solid ${tH?theme.accent:theme.border}`,
-                            borderRadius:6,
-                            fontSize:14,
-                            fontWeight:500,
-                            color:theme.text,
-                            opacity:.75,
-                            transition:"all .2s",
-                            cursor:"default",
-                            letterSpacing:".02em"
-                          }}
-                        >{tech}</span>
-                      );
-                    })}
-                  </div>
-                  
-                  {/* Live Demo Arrow */}
-                  {p.liveUrl && (
-                    <a 
-                      href={p.liveUrl} 
-                      target="_blank" 
+                )}
+                <div className="whatido-card-tags">
+                  {p.stack.map((tech)=>(
+                    <span key={tech}>{tech}</span>
+                  ))}
+                </div>
+                <div className="whatido-card-footer">
+                  <span>{p.liveUrl ? "Live · " : ""}{p.year} · {p.outcome}</span>
+                  {p.liveUrl ? (
+                    <a
+                      href={p.liveUrl}
+                      target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        display:"inline-flex",
-                        alignItems:"center",
-                        gap:8,
-                        marginTop:20,
-                        padding:"8px 16px",
-                        border:`1px solid ${theme.border}`,
-                        borderRadius:6,
-                        fontSize:14,
-                        fontWeight:600,
-                        color:theme.text,
-                        textDecoration:"none",
-                        opacity:.6,
-                        transition:"all .2s",
-                        letterSpacing:".08em"
-                      }}
-                      onMouseEnter={e=>{
-                        e.target.style.borderColor=theme.accent;
-                        e.target.style.opacity=1;
-                      }}
-                      onMouseLeave={e=>{
-                        e.target.style.borderColor=theme.border;
-                        e.target.style.opacity=.6;
-                      }}
+                      className="whatido-card-arrow project-card-live-link"
+                      aria-label={`Open ${p.title} live demo`}
                     >
-                      <span>Live Demo</span>
-                      <span style={{fontSize:14,transform:"translateX(2px)"}}>→</span>
+                      →
                     </a>
+                  ) : (
+                    <span className="whatido-card-arrow">→</span>
                   )}
                 </div>
-              </div>
-            );
-          })}
+              </article>
+          ))}
         </div>
       </div>
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
