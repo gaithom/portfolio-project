@@ -44,10 +44,11 @@ export default function App() {
     forest: ["Clearings", "Grove", "Canopy", "Trail", "Connect"],
     midnight: ["About", "Skills", "Projects", "Services", "Experience", "Contact"],
     void: ["About", "Skills", "Projects", "Services", "Experience", "Contact"],
-    light: ["About", "What I Do", "Skills", "Projects", "Experience", "Contact"]
+    light: ["About", "What I Do", "Skills", "Projects", "Type", "Contact"]
   };
   const navTarget = (label) => {
     if (label === "What I Do") return "what-i-do";
+    if (label === "Type") return "type-canvas";
     if (themeKey === "forest" && forestNavMap[label]) return forestNavMap[label];
     return label.toLowerCase();
   };
@@ -58,7 +59,7 @@ export default function App() {
   const css=`
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+    html{scroll-behavior:smooth;scroll-padding-top:${isLight?0:80}px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
     body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;}
     ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:${theme.bg}}::-webkit-scrollbar-thumb{background:${theme.textMuted};border-radius:99px;opacity:.45}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -459,7 +460,9 @@ export default function App() {
       {/* ScrollIndicator component removed - mouse icon with "Scroll" text */}
       <GridGuide showGrid={showGrid} theme={theme}/>
 
-      {/* NAV */}
+      {/* NAV — hidden on light theme for fullscreen sections */}
+      {!isLight && (
+      <>
       <nav ref={navRef} className="main-nav" style={{
         position:"fixed",top:0,left:0,right:0,zIndex:1000,
         padding:`0 ${isVoid?"20px":isMidnight?"24px":"20px"}`,
@@ -750,6 +753,8 @@ export default function App() {
           </div>
         </div>
       </div>
+      </>
+      )}
 
       {/* Theme Switcher */}
       <div className="theme-switcher" style={{
@@ -824,7 +829,7 @@ export default function App() {
         <PerfMeter devMode={devMode} theme={theme}/>
         <AnimDebugBand devMode={devMode} theme={theme}/>
         {/* Dev mode banner */}
-        <div style={{position:"fixed",top:62,left:0,right:0,zIndex:999,background:theme.devBg,borderBottom:`1px solid ${theme.devBorder}`,padding:"6px 20px",display:"flex",alignItems:"center",gap:12,fontFamily:"'Space Mono',monospace"}}>
+        <div style={{position:"fixed",top:isLight?0:62,left:0,right:0,zIndex:999,background:theme.devBg,borderBottom:`1px solid ${theme.devBorder}`,padding:"6px 20px",display:"flex",alignItems:"center",gap:12,fontFamily:"'Space Mono',monospace"}}>
           <span style={{fontSize:9,color:theme.devAccent,fontWeight:700,letterSpacing:".1em"}}>◉ DEV MODE ACTIVE</span>
           <span style={{fontSize:9,color:theme.textMuted,opacity:.6}}>Hover sections to inspect components · See code snippets · Check performance metrics</span>
           <span style={{marginLeft:"auto",fontSize:9,color:theme.textMuted,opacity:.5}}>Layout: <span style={{color:theme.devAccent}}>{theme.layout.toUpperCase()}</span></span>
