@@ -588,18 +588,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           ))}
         </div>
       </div>
-      <div className="whatido-dock" aria-live="polite">
-        <div className="whatido-dock-copy">
-          <span className="whatido-label">What I Do</span>
-          <span className="whatido-dock-title">Capabilities Across Design & Code</span>
-        </div>
-        <div className="whatido-dock-progress">
-          <span className="whatido-dock-count">{String(activeWhatIDo + 1).padStart(2, "0")} / {String(WHAT_I_DO_STRIPS.length).padStart(2, "0")}</span>
-          <div className="whatido-progress-bar">
-            <div className="whatido-progress-fill" style={{width:`${((activeWhatIDo + 1) / WHAT_I_DO_STRIPS.length) * 100}%`}}/>
-          </div>
-        </div>
-      </div>
       {devMode&&<DevBadge id="what-i-do" devMode={devMode} theme={theme}/>}
     </section>
 
