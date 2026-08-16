@@ -1,6 +1,7 @@
 export const PROJECTS = [
-  {id:1,title:"Park Spot Manager",desc:"Smart parking management system with real-time availability tracking.",longDesc:"Comprehensive parking management solution with real-time space monitoring, automated payments, and analytics dashboard.",tags:["Web App","Full Stack"],emoji:"■",cardBg:"linear-gradient(140deg,#0c2820,#112e1e)",stack:["React","Node.js","MongoDB","TailwindCSS","Vercel"],liveUrl:"https://park-spot-manager.vercel.app/",client:"SaaS Platform",year:"2024",outcome:"Production Ready",category:"FULL STACK APP",image:"/pack.png"},
-  {id:2,title:"Neuro Task",desc:"AI-powered task management with intelligent prioritization.",longDesc:"Smart task management app that uses AI to prioritize tasks, track productivity, and provide insights for better workflow optimization.",tags:["Web App","AI/ML"],emoji:"▴",cardBg:"linear-gradient(140deg,#12002a,#1e0040)",stack:["React","Python","TensorFlow","FastAPI","Vercel"],liveUrl:"https://neuro-task-phi.vercel.app/",client:"AI Startup",year:"2024",outcome:"AI-Powered",category:"AI/ML WEB APP",image:"/miko.png"}
+  {id:1,title:"Park Spot Manager",desc:"Smart parking management system with real-time availability tracking.",longDesc:"Comprehensive parking management solution with real-time space monitoring, automated payments, and analytics dashboard.",tags:["Web App","Full Stack"],emoji:"■",cardBg:"#0c2820",stack:["React","Node.js","MongoDB","TailwindCSS","Vercel"],liveUrl:"https://park-spot-manager.vercel.app/",client:"SaaS Platform",year:"2024",outcome:"Production Ready",category:"FULL STACK APP",image:"/pack.png"},
+  {id:2,title:"Neuro Task",desc:"AI-powered task management with intelligent prioritization.",longDesc:"Smart task management app that uses AI to prioritize tasks, track productivity, and provide insights for better workflow optimization.",tags:["Web App","AI/ML"],emoji:"▴",cardBg:"#12002a",stack:["React","Python","TensorFlow","FastAPI","Vercel"],liveUrl:"https://neuro-task-phi.vercel.app/",client:"AI Startup",year:"2024",outcome:"AI-Powered",category:"AI/ML WEB APP",image:"/miko.png"},
+  {id:3,title:"ROMARA Tours & Travel",desc:"Front end for a tours and travel operator.",longDesc:"Front end for a tours and travel operator, presenting trip packages and destination detail with a clear route from browsing through to enquiry.",tags:["Web App","Frontend"],emoji:"◈",cardBg:"#14202E",stack:["React","Vercel"],liveUrl:"https://romara-frontend-theta.vercel.app/",client:"Tours & Travel Operator",year:"2025",outcome:"Live",category:"TRAVEL & TOURISM",image:"/romara.png"}
 ];
 
 export const SKILLS = [
@@ -31,14 +32,14 @@ export const TECH = [
 ];
 
 export const SERVICES = [
-  {icon:"·",title:"UI/UX Design",desc:"Pixel-perfect interfaces with deep user empathy — wireframes to high-fidelity prototypes."},
+  {icon:"◇",title:"UI/UX Design",desc:"Pixel-perfect interfaces with deep user empathy, from wireframes to high-fidelity prototypes."},
   {icon:"‹",title:"Frontend Development",desc:"Performant, accessible React apps that scale with clean, maintainable code."},
   {icon:"/",title:"Motion & Animation",desc:"GSAP and Framer Motion experiences that make interfaces feel alive and considered."},
   {icon:"□",title:"Responsive Design",desc:"Mobile-first, cross-browser experiences that look flawless on every device."}
 ];
 
 export const TIMELINE = [
-  {year:"2023",type:"edu",title:"Diploma — Information Technology",place:"Kabarak University",desc:"Two-year diploma covering web development, databases, networking, and software engineering."},
+  {year:"2023",type:"edu",title:"Diploma in Information Technology",place:"Kabarak University",desc:"Two-year diploma covering web development, databases, networking, and software engineering."},
   {year:"2024",type:"work",title:"Frontend Developer",place:"Freelance, Nakuru",desc:"Building modern web interfaces and dashboards for clients. Leading UI/UX and frontend architecture."},
   {year:"2025",type:"edu",title:"Bachelor of IT (Ongoing)",place:"Kabarak University",desc:"Degree specializing in software engineering and human-computer interaction."}
 ];

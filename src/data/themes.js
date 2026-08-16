@@ -10,8 +10,8 @@ export const THEMES = {
     particleRgb:"155,205,170",
     devAccent:"#00FF88", devBg:"rgba(2,12,6,0.97)", devBorder:"rgba(0,255,136,0.22)",
     // Fonts
-    fontFamily:"'Syne', sans-serif",
-    headingFont:"'Syne', sans-serif",
+    fontFamily:"'Roboto', sans-serif",
+    headingFont:"'Roboto', sans-serif",
     bodyFont:"'DM Sans', sans-serif",
     monoFont:"'Space Mono', monospace",
     // Layout personality: organic, asymmetric, nature-coded
@@ -32,8 +32,8 @@ export const THEMES = {
     particleRgb:"60,96,87",
     devAccent:"#3c6057", devBg:"rgba(248,252,249,0.98)", devBorder:"rgba(60,96,87,0.22)",
     // Fonts
-    fontFamily:"'Poppins', sans-serif",
-    headingFont:"'Poppins', sans-serif",
+    fontFamily:"'Roboto', sans-serif",
+    headingFont:"'Roboto', sans-serif",
     bodyFont:"'Inter', sans-serif",
     monoFont:"'SF Mono', monospace",
     // Layout personality: airy, minimal, Swiss grid

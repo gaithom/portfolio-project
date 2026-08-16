@@ -37,7 +37,7 @@ export function CustomCursor({ theme }) {
 export function ScrollBar({ theme }) {
   const [p,setP]=useState(0);
   useEffect(()=>{const fn=()=>{const e=document.documentElement;setP(e.scrollTop/(e.scrollHeight-e.clientHeight)*100);};window.addEventListener("scroll",fn);return()=>window.removeEventListener("scroll",fn);},[]);
-  return <div style={{position:"fixed",top:0,left:0,height:2,width:`${p}%`,background:`linear-gradient(90deg,${theme.textMuted},${theme.accent})`,zIndex:9997,transition:"width .08s",opacity:.55}}/>;
+  return <div style={{position:"fixed",top:0,left:0,height:2,width:`${p}%`,background:theme.accent,zIndex:9997,transition:"width .08s",opacity:.55}}/>;
 }
 
 // ── Enhanced Scroll Components ───────────────────────────────────────────────────
@@ -254,7 +254,7 @@ export function Modal({ project, theme, onClose }) {
     <div onClick={e=>e.stopPropagation()} style={{background:theme.surface,border:`1px solid ${theme.borderMid}`,borderRadius:cr,width:"100%",maxWidth:510,maxHeight:"88vh",overflowY:"auto",animation:"slideUp .35s cubic-bezier(.16,1,.3,1)",position:"relative",boxShadow:theme.shadowMd}}>
       <div style={{height:280,background:project.image ? `url(${project.image}) center/cover no-repeat` : project.cardBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:66,borderRadius:`${cr} ${cr} 0 0`,position:"relative"}}>
         {!project.image && project.emoji}
-        <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,background:`linear-gradient(to top,${theme.surface},transparent)`}} />
+        <div style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:theme.border}} />
       </div>
       <div style={{padding:28}}>
         <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
@@ -281,7 +281,7 @@ export function SkillBar({ label, pct, theme, delay=0 }) {
       <span style={{fontSize:11,color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.7}}>{pct}%</span>
     </div>
     <div style={{height:2,background:theme.animFg,borderRadius:99,overflow:"hidden"}}>
-      <div style={{height:"100%",width:f?`${pct}%`:"0%",background:`linear-gradient(90deg,${theme.textMuted},${theme.accent})`,borderRadius:99,transition:"width 1.5s cubic-bezier(.4,0,.2,1)",opacity:.75}}/>
+      <div style={{height:"100%",width:f?`${pct}%`:"0%",background:theme.accent,borderRadius:99,transition:"width 1.5s cubic-bezier(.4,0,.2,1)",opacity:.75}}/>
     </div>
   </div>;
 }

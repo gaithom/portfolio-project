@@ -57,7 +57,7 @@ export default function App() {
 
   // Global CSS
   const css=`
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;scroll-padding-top:${isLight?0:80}px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
     body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;}
@@ -430,11 +430,40 @@ export default function App() {
       }
     }
     
-    /* Theme transition */
-    *{transition:background-color .35s,border-color .35s,color .15s;}
-    button,input,textarea{transition:none!important;}
+    /* Theme transition — one shared curve so colour changes glide together */
+    *{transition:background-color .45s var(--ease-soft,cubic-bezier(.22,.61,.36,1)),border-color .45s var(--ease-soft,cubic-bezier(.22,.61,.36,1)),color .3s var(--ease-soft,cubic-bezier(.22,.61,.36,1));}
+    /* Interactive elements opt out of the blanket rule and carry their own
+       transitions instead. The previous rule here was transition:none with an
+       !important, which is what made every button and field snap. */
+    button,input,textarea,select,a{transition:background-color .3s var(--ease-soft,cubic-bezier(.22,.61,.36,1)),border-color .3s var(--ease-soft,cubic-bezier(.22,.61,.36,1)),color .3s var(--ease-soft,cubic-bezier(.22,.61,.36,1)),box-shadow .4s var(--ease-soft,cubic-bezier(.22,.61,.36,1)),transform .4s var(--ease-glide,cubic-bezier(.16,1,.3,1)),opacity .3s var(--ease-soft,cubic-bezier(.22,.61,.36,1));}
     /* Creative menu hover effects */
     .hover-gradient:hover{transform:translateX(100%);}
+
+    /* ── Marquee: fade at both edges so the strip flows in and out of the
+       page instead of being sliced off at the viewport wall ── */
+    .tech-marquee{overflow:hidden;padding:14px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);}
+    .tech-marquee-track{display:flex;gap:30px;white-space:nowrap;animation:marquee 46s linear infinite;will-change:transform;}
+    .tech-marquee:hover .tech-marquee-track{animation-play-state:paused;}
+    .tech-marquee-item{font-size:14px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:${theme.text};opacity:.45;transition:opacity .35s var(--ease-soft,cubic-bezier(.22,.61,.36,1));}
+    .tech-marquee:hover .tech-marquee-item{opacity:.72;}
+
+    /* ── Buttons: flat surfaces, motion instead of a gradient sheen. A solid
+       block wipes across on hover rather than a light gradient. ── */
+    .bp,.bg{position:relative;overflow:hidden;}
+    .bp::after{content:"";position:absolute;top:0;bottom:0;left:0;width:100%;background:rgba(255,255,255,.16);transform:translateX(-101%);pointer-events:none;transition:transform .55s cubic-bezier(.16,1,.3,1);}
+    .bp:hover::after{transform:translateX(0);}
+    .bp:active,.bg:active{transform:translateY(0) translateZ(0);}
+
+    /* ── Focus visibility: the layout removes default outlines in places, so
+       give every interactive element one consistent soft ring back ── */
+    a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid ${theme.accent}88;outline-offset:3px;border-radius:6px;}
+
+    @media (prefers-reduced-motion: reduce){
+      .tech-marquee-track{animation:none;}
+      .bp::after{transition:none;}
+      *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
+      html{scroll-behavior:auto;}
+    }
   `;
 
   if(loading) return (
@@ -444,7 +473,7 @@ export default function App() {
         <div style={{position:"absolute",inset:0,borderRadius:"50%",border:`1px solid ${theme.border}`,animation:"spinSlow 8s linear infinite"}}/>
         <div style={{position:"absolute",inset:8,borderRadius:"50%",border:`1px solid ${theme.borderMid}`,borderTopColor:"transparent",animation:"spinSlow 3s linear infinite",opacity:.6}}/>
         <div style={{position:"absolute",inset:18,borderRadius:"50%",border:`1px solid ${theme.textMuted}`,borderTopColor:"transparent",animation:"spinSlow 1.5s linear infinite",opacity:.4}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:12,color:theme.textMuted,opacity:.7}}>MG</div>
+        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Roboto',sans-serif",fontWeight:800,fontSize:12,color:theme.textMuted,opacity:.7}}>MG</div>
       </div>
       <div style={{fontSize:9,letterSpacing:".28em",textTransform:"uppercase",color:theme.textMuted,marginBottom:18,fontFamily:"'Space Mono',monospace",opacity:.5}}>Loading</div>
       <div style={{width:130,height:1,background:theme.border,borderRadius:99,overflow:"hidden"}}><div style={{height:"100%",width:`${loadPct}%`,background:theme.textMuted,transition:"width .1s",opacity:.5}}/></div>
@@ -467,7 +496,7 @@ export default function App() {
         position:"fixed",top:0,left:0,right:0,zIndex:1000,
         padding:`0 ${isVoid?"20px":isMidnight?"24px":"20px"}`,
         height:isVoid?72:isMidnight?68:62,display:"flex",alignItems:"center",justifyContent:"space-between",
-        background:isVoid?theme.bg:isMidnight?`linear-gradient(180deg, ${theme.bg} 0%, ${theme.bgAlt} 100%)`:isLight?`transparent`:`${theme.bg}CC`,
+        background:isVoid?theme.bg:isMidnight?theme.bgAlt:isLight?`transparent`:`${theme.bg}CC`,
         backdropFilter:isVoid?"none":isLight?"none":"blur(14px)",
         borderBottom:isVoid?"none":isMidnight?`2px solid ${theme.accent}22`:isLight?"none":`${isForest?"2px":"1px"} solid ${theme.border}`,
         boxShadow:isLight?"none":isVoid?"none":isMidnight?"0 4px 30px rgba(90,139,200,0.15)":"0 2px 20px rgba(0,0,0,0.3)",
@@ -724,7 +753,7 @@ export default function App() {
                   setSent(false);
                   setMobileMenuOpen(false);
                 }} 
-                title={`${t.name} — ${t.layout} layout`}
+                title={`${t.name} (${t.layout} layout)`}
                 style={{
                   width: '100%',
                   height: 50,
@@ -771,7 +800,7 @@ export default function App() {
         }
       }}>
         {Object.entries(THEMES).map(([k,t])=>(
-          <button key={k} onClick={()=>{setThemeKey(k);setSent(false);}} title={`${t.name} — ${t.layout} layout`}
+          <button key={k} onClick={()=>{setThemeKey(k);setSent(false);}} title={`${t.name} (${t.layout} layout)`}
             style={{
               width:35,height:35,borderRadius:themeKey==="void"?"0":"50%",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s",
               "@media (max-width: 768px)": {
@@ -831,7 +860,7 @@ export default function App() {
         {/* Dev mode banner */}
         <div style={{position:"fixed",top:isLight?0:62,left:0,right:0,zIndex:999,background:theme.devBg,borderBottom:`1px solid ${theme.devBorder}`,padding:"6px 20px",display:"flex",alignItems:"center",gap:12,fontFamily:"'Space Mono',monospace"}}>
           <span style={{fontSize:9,color:theme.devAccent,fontWeight:700,letterSpacing:".1em"}}>◉ DEV MODE ACTIVE</span>
-          <span style={{fontSize:9,color:theme.textMuted,opacity:.6}}>Hover sections to inspect components · See code snippets · Check performance metrics</span>
+          <span style={{fontSize:9,color:theme.textMuted,opacity:.6}}>Hover sections to inspect components, see code snippets, check performance metrics</span>
           <span style={{marginLeft:"auto",fontSize:9,color:theme.textMuted,opacity:.5}}>Layout: <span style={{color:theme.devAccent}}>{theme.layout.toUpperCase()}</span></span>
         </div>
       </>}
@@ -855,7 +884,7 @@ export default function App() {
           <div className="social-links" style={{display:"flex",gap:18}}>
             {["GitHub","LinkedIn","Twitter"].map(s=><a key={s} href={s==="GitHub"?"https://github.com/gaithom":s==="LinkedIn"?"https://www.linkedin.com/in/michael-gaitho-99b02a355/":"https://twitter.com/michaelgaitho"} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:theme.text,textDecoration:"none",fontWeight:isVoid?700:500,opacity:.7,transition:"opacity .2s,color .2s",letterSpacing:isVoid?".08em":"0",textTransform:isVoid?"uppercase":"none",fontFamily:theme.bodyFont}} onMouseEnter={e=>{e.target.style.opacity=1;e.target.style.color=theme.accent;}} onMouseLeave={e=>{e.target.style.opacity=.7;e.target.style.color=theme.text;}}>{s}</a>)}
           </div>
-          <div className="copyright" style={{fontSize:11,color:theme.text,opacity:.8,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>© 2025 Michael Gaitho · Nakuru, KE</div>
+          <div className="copyright" style={{fontSize:11,color:theme.text,opacity:.8,fontFamily:isVoid?theme.monoFont:theme.bodyFont}}>© 2025 Michael Gaitho, Nakuru, KE</div>
         </div>
       </footer>
     </div>
