@@ -112,6 +112,63 @@ const EXPRESSION_PALETTE_AREAS = {
   Signal: "12 / 1 / 15 / 6"
 };
 
+// ── Broken grid ──────────────────────────────────────────────────────────────
+// A lattice that reads as complete but is visibly fractured: each rule is built
+// from segments with gaps, and the gaps on crossing axes never line up. Built
+// from real elements rather than dashed borders so each segment can be offset
+// on its own. Values are fixed, so it renders identically every load.
+const BROKEN_V = [
+  { x: 18, segs: [[0, 26], [34, 30], [72, 24]] },
+  { x: 38, segs: [[6, 40], [54, 18], [80, 20]] },
+  { x: 62, segs: [[0, 18], [26, 44], [78, 22]] },
+  { x: 82, segs: [[12, 28], [48, 34], [88, 12]] }
+];
+const BROKEN_H = [
+  { y: 22, segs: [[0, 30], [40, 22], [70, 26]] },
+  { y: 48, segs: [[8, 24], [38, 40], [86, 14]] },
+  { y: 74, segs: [[0, 20], [28, 32], [66, 30]] }
+];
+
+function BrokenGrid({ className = "" }) {
+  return (
+    <div className={`bgrid ${className}`} aria-hidden="true">
+      {BROKEN_V.map((line) =>
+        line.segs.map(([top, height]) => (
+          <span
+            key={`v${line.x}-${top}`}
+            className="bgrid-v"
+            style={{ left: `${line.x}%`, top: `${top}%`, height: `${height}%` }}
+          />
+        ))
+      )}
+      {BROKEN_H.map((line) =>
+        line.segs.map(([left, width]) => (
+          <span
+            key={`h${line.y}-${left}`}
+            className="bgrid-h"
+            style={{ top: `${line.y}%`, left: `${left}%`, width: `${width}%` }}
+          />
+        ))
+      )}
+    </div>
+  );
+}
+
+// ── Solid grid ───────────────────────────────────────────────────────────────
+// The counterpart to BrokenGrid, used only on the projects section. Every line
+// runs the full span with no gaps and sits on a denser rhythm (six columns
+// rather than four), so the work reads as being laid out on a firm grid while
+// the rest of the page uses the fractured one.
+function SolidGrid({ className = "" }) {
+  return (
+    <div className={`sgrid ${className}`} aria-hidden="true">
+      {[16.66, 33.33, 50, 66.66, 83.33].map((x) => (
+        <span key={`sv${x}`} className="sgrid-v" style={{ left: `${x}%` }} />
+      ))}
+    </div>
+  );
+}
+
 // ── Capability artwork ───────────────────────────────────────────────────────
 // One contained artefact per capability. Each sits inside the card's visual
 // column rather than bleeding across the whole card, so the rail reads as a
@@ -156,7 +213,6 @@ function CapabilityVisual({ variant }) {
           <svg className="cap-curve" viewBox="0 0 120 120" fill="none">
             <path d="M4 116 C 40 116, 52 12, 116 4" />
           </svg>
-          <span className="cap-caption">cubic-bezier(.16, 1, .3, 1)</span>
         </div>
       );
     case "responsive":
@@ -187,7 +243,6 @@ function CapabilityVisual({ variant }) {
               <em>Surface only</em>
             </span>
           </div>
-          <span className="cap-focus">Tab ↹</span>
         </div>
       );
     case "tokens":
@@ -231,7 +286,7 @@ function CapabilityVisual({ variant }) {
 
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroDescRef=useRef(null),heroCtaRef=useRef(null),developerRef=useRef(null);
-  const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),servicesRef=useRef(null),typeCanvasRef=useRef(null),contactRef=useRef(null);
+  const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),typeCanvasRef=useRef(null),contactRef=useRef(null);
   const designSectionRef=useRef(null),aboutRailRef=useRef(null),aboutTrackRef=useRef(null);
   const railTriggerRef=useRef(null);
   const railFillRef=useRef(null);
@@ -313,10 +368,25 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     let whatidoCleanup;
 
     const heroSoftware=heroTitleRef.current?.querySelector(".hero-line-software");
-    const heroBits=[heroSoftware,developerRef.current,heroBadgeRef.current,heroDescRef.current,heroCtaRef.current].filter(Boolean);
+    const heroName=heroTitleRef.current?.querySelector(".hero-title-name");
+    const heroArrow=heroTitleRef.current?.querySelector(".hero-title-arrow");
+    const heroBits=[heroName,heroArrow,heroSoftware,developerRef.current,heroBadgeRef.current,heroDescRef.current,heroCtaRef.current].filter(Boolean);
     gsap.set(heroBits,{opacity:0});
 
     const heroIntro=gsap.timeline({delay:0.45,defaults:{ease:"expo.out"}});
+    if(heroName){
+      heroIntro.fromTo(heroName,
+        {yPercent:110,opacity:0},
+        {yPercent:0,opacity:1,duration:0.95,ease:"power4.out"}
+      );
+    }
+    if(heroArrow){
+      heroIntro.fromTo(heroArrow,
+        {x:-26,opacity:0},
+        {x:0,opacity:1,duration:0.7,ease:"power3.out"},
+        "-=0.55"
+      );
+    }
     if(heroSoftware){
       heroIntro.fromTo(heroSoftware,
         {yPercent:115,opacity:0,rotateX:18,transformOrigin:"0% 100%"},
@@ -352,59 +422,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       );
     }
     
-    // 3D scrolling animations for background name elements
-    gsap.to(".name-bg",{
-      yPercent:20,
-      scale:1.08,
-      rotationX:3,
-      rotationY:2,
-      ease:"none",
-      scrollTrigger:{
-        trigger:heroRef.current,
-        start:"top top",
-        end:"bottom top",
-        scrub:1.8
-      }
-    });
-    
-    gsap.to(".name-float-1",{
-      xPercent:25,
-      yPercent:15,
-      rotation:18,
-      scale:0.92,
-      opacity:0.015,
-      ease:"none",
-      scrollTrigger:{
-        trigger:heroRef.current,
-        start:"top top",
-        end:"bottom top",
-        scrub:1.4
-      }
-    });
-    
-    gsap.to(".name-float-2",{
-      xPercent:-20,
-      yPercent:-18,
-      rotation:-15,
-      scale:1.1,
-      opacity:0.012,
-      ease:"none",
-      scrollTrigger:{
-        trigger:heroRef.current,
-        start:"top top",
-        end:"bottom top",
-        scrub:1.6
-      }
-    });
-    
-    const sc=servicesRef.current?.querySelectorAll(".srv-card");
-    if(sc)gsap.fromTo(sc,{y:30,opacity:0},{y:0,opacity:1,stagger:.08,duration:.75,ease:"expo.out",scrollTrigger:{trigger:servicesRef.current,start:"top 84%"}});
-    // Selector was `.project-card`, which stopped matching when the markup was
-    // renamed — this reveal had been silently dead.
-    const workRows=projectsRef.current?.querySelectorAll(".work-band");
-    if(workRows?.length)gsap.fromTo(workRows,{y:34,opacity:0},{y:0,opacity:1,stagger:.1,duration:.9,ease:"power3.out",scrollTrigger:{trigger:projectsRef.current,start:"top 82%"}});
-    const splitBlocks=aboutRef.current?.querySelectorAll(".split-block");
-    if(splitBlocks)gsap.fromTo(splitBlocks,{y:28,opacity:0},{y:0,opacity:1,stagger:.16,duration:.9,ease:"expo.out",scrollTrigger:{trigger:aboutRef.current,start:"top 80%"}});
+    // The .name-bg / .name-float parallax that used to sit here targeted
+    // elements this layout no longer renders, and the .srv-card reveal below
+    // it matched nothing either. Both removed rather than left running.
+
 
     if(designSectionRef.current&&aboutRailRef.current&&aboutTrackRef.current){
       const section=designSectionRef.current;
@@ -599,93 +620,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       skillsCleanup=()=>{};
     }
 
-    if(typeCanvasRef.current){
-      const section=typeCanvasRef.current;
-      const words=section.querySelectorAll(".expr-word");
-      const palettes=section.querySelectorAll(".expr-palette");
-      const rules=section.querySelectorAll(".expr-rule");
-
-      if(rules.length){
-        gsap.fromTo(rules,
-          {opacity:0},
-          {opacity:1,stagger:.05,duration:.9,ease:"power2.out",
-            scrollTrigger:{trigger:section,start:"top 80%"}}
-        );
-      }
-      // Specimens settle in reading order rather than all at once, so the
-      // scatter resolves into a composition as you arrive.
-      if(words.length){
-        gsap.fromTo(words,
-          {y:26,opacity:0,scale:.94},
-          {y:0,opacity:1,scale:1,stagger:.07,duration:.9,ease:"power3.out",
-            scrollTrigger:{trigger:section,start:"top 76%"}}
-        );
-      }
-      if(palettes.length){
-        gsap.fromTo(palettes,
-          {y:22,opacity:0},
-          {y:0,opacity:1,stagger:.1,duration:.85,ease:"power3.out",
-            scrollTrigger:{trigger:section,start:"top 72%"}}
-        );
-      }
-    }
-
-    // ── Section headers: soft blur-and-rise rather than a hard fade ──
-    const headerReveal=(root)=>{
-      if(!root)return;
-      const bits=root.querySelectorAll(".sec-eyebrow, .section-title, .sec-lead");
-      if(!bits.length)return;
-      gsap.fromTo(bits,
-        {y:26,opacity:0,filter:"blur(6px)"},
-        {y:0,opacity:1,filter:"blur(0px)",stagger:.12,duration:1,ease:"power3.out",
-          scrollTrigger:{trigger:root,start:"top 84%"}}
-      );
-    };
-    headerReveal(aboutRef.current);
-    headerReveal(projectsRef.current);
-    headerReveal(contactRef.current);
-
-    // ── Contact: reveal the panel, then let the cards and fields settle in
-    //    sequence instead of the whole section arriving as one block ──
-    if(contactRef.current){
-      const section=contactRef.current;
-      const cards=section.querySelectorAll(".contact-info-card");
-      const fields=section.querySelectorAll(".contact-field");
-      const panel=section.querySelector(".contact-form-panel");
-
-      if(cards.length){
-        gsap.fromTo(cards,
-          {x:-22,opacity:0},
-          {x:0,opacity:1,stagger:.1,duration:.9,ease:"power3.out",
-            scrollTrigger:{trigger:section,start:"top 76%"}}
-        );
-      }
-      if(panel){
-        gsap.fromTo(panel,
-          {y:32,opacity:0},
-          {y:0,opacity:1,duration:1,ease:"power3.out",
-            scrollTrigger:{trigger:section,start:"top 76%"}}
-        );
-      }
-      if(fields.length){
-        gsap.fromTo(fields,
-          {y:16,opacity:0},
-          {y:0,opacity:1,stagger:.07,duration:.7,ease:"power3.out",
-            scrollTrigger:{trigger:section,start:"top 70%"}}
-        );
-      }
-    }
-
-    // ── Marquee strip drifts a little against the scroll so the band between
-    //    hero and about feels like it is moving through the page ──
-    const marqueeTrack=document.querySelector(".tech-marquee-track");
-    if(marqueeTrack?.parentElement){
-      gsap.fromTo(marqueeTrack.parentElement,
-        {opacity:0},
-        {opacity:1,duration:1.1,ease:"power2.out",
-          scrollTrigger:{trigger:marqueeTrack.parentElement,start:"top 95%"}}
-      );
-    }
+    // Scroll reveals are deliberately limited to the hero intro (above) and
+    // the expertise/stack section. Every other section now renders in place:
+    // the page had reached the point where almost everything animated in, and
+    // the effect had stopped reading as intentional.
 
     // The pinned rail inserts a pin-spacer and changes the document height
     // *after* the triggers below it are created, leaving their start/end
@@ -712,61 +650,76 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* Main content with higher z-index */}
     <div style={{position:"relative",zIndex:1}}>
-    {/* HERO — editorial masthead framing the headline */}
+    {/* HERO — headline left, a design artefact filling the right */}
     <section ref={heroRef} id="hero" className="hero-section section-hero">
-      <div className="hero-masthead">
-        <span className="hero-mast"><i>Portfolio</i><b>Michael Gaitho</b></span>
-        <span className="hero-mast"><i>Discipline</i><b>UI/UX &amp; Frontend</b></span>
-        <span className="hero-mast"><i>Based in</i><b>Nakuru, Kenya</b></span>
-      </div>
+      <div className="hero-grid">
+        <div className="hero-rules" aria-hidden="true">
+          <span /><span /><span /><span />
+        </div>
 
-      <div className="hero-content">
+        {/* Name → role, laid out as one line reading across the grid: the
+            left phrase, an arrow, then the right phrase breaking to two
+            lines. Arrangement and spacing only — the face and colours stay
+            as they were. */}
         <h1 ref={heroTitleRef} className="hero-title">
-          <span className="hero-line-software">Software</span><br />
-          <span ref={developerRef} className="hero-developer">
-            <span className="hero-outline hero-outline-ghost" aria-hidden="true">developer</span>
-            <span className="hero-outline hero-outline-fill" style={{ width: `${developerFill * 100}%` }}>
-              <span>developer</span>
+          <span className="hero-title-lead">
+            <span className="hero-title-name">Michael Gaitho</span>
+            <span className="hero-title-arrow" aria-hidden="true">&#8594;</span>
+          </span>
+          <span className="hero-title-role">
+            <span className="hero-line-software">Software</span>
+            <span ref={developerRef} className="hero-developer">
+              <span className="hero-outline hero-outline-ghost" aria-hidden="true">developer</span>
+              <span className="hero-outline hero-outline-fill" style={{ width: `${developerFill * 100}%` }}>
+                <span>developer</span>
+              </span>
             </span>
           </span>
         </h1>
-        <p ref={heroBadgeRef} className="hero-subtitle">
-          &amp; Design-Minded Engineer in Nakuru, Kenya
-        </p>
-        <p ref={heroDescRef} className="hero-description">
-          Blending code and creativity to build seamless, high-performance web experiences with elegant interactions.
-        </p>
-        <div ref={heroCtaRef} className="hero-cta">
-          <button className="bp" onClick={()=>scrollTo("projects")}>View selected work</button>
-          <button className="bg" onClick={()=>scrollTo("contact")}>Start a project →</button>
-        </div>
-      </div>
 
-      <div className="hero-footer">
-        <dl className="hero-facts">
-          <div><dt>Focus</dt><dd>Product interfaces</dd></div>
-          <div><dt>Toolkit</dt><dd>Figma, React, GSAP</dd></div>
-          <div><dt>Practising since</dt><dd>2023</dd></div>
+        {/* Moved out of the About section and set as one horizontal rail,
+            the way the small items sit under the headline in the reference. */}
+        <dl className="hero-meta">
+          <div><dt>Discipline</dt><dd>UI/UX design &amp; frontend engineering</dd></div>
+          <div><dt>Education</dt><dd>Bachelor of Information Technology</dd></div>
+          <div><dt>Focus</dt><dd>AI interfaces, real-time dashboards</dd></div>
         </dl>
-        <button className="hero-scroll" onClick={()=>scrollTo("about")} aria-label="Scroll to about">
-          <span>Scroll</span><b aria-hidden="true">↓</b>
-        </button>
+
+        <div ref={heroCtaRef} className="hero-cta">
+          <button className="bp hero-btn" onClick={()=>scrollTo("projects")}>
+            <span className="hero-btn-grid" aria-hidden="true">
+              <i /><i /><i /><i />
+            </span>
+            <span className="hero-btn-label">View selected work</span>
+          </button>
+        </div>
+
+        {/* An artboard being worked on: selection handles, a wireframe inside,
+            and a measure across the base. Geometry only, no micro-labels. */}
+        <div ref={heroDescRef} className="hero-canvas" aria-hidden="true">
+          <div className="hero-artboard">
+            <span className="hero-ab-bar" />
+            <span className="hero-ab-side" />
+            <span className="hero-ab-block b1" />
+            <span className="hero-ab-block b2" />
+            <span className="hero-ab-block b3" />
+            <span className="hero-ab-block b4" />
+            <span className="hero-handle tl" /><span className="hero-handle tr" />
+            <span className="hero-handle bl" /><span className="hero-handle br" />
+          </div>
+          <span className="hero-ab-ghost" />
+          <span className="hero-measure"><i /><i /></span>
+          <span className="hero-cursor" />
+        </div>
       </div>
 
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
     </section>
 
-    <div className="tech-marquee">
-      <div className="tech-marquee-track">
-        {[...TECH,...TECH].map((t,i)=><span key={i} className="tech-marquee-item">{t.name}</span>)}
-      </div>
-    </div>
-
     {/* ABOUT — statement on the left, the detail and the facts on the right */}
     <section ref={aboutRef} id="about" className="about-section light-section-shell section-about">
       <div className="about-inner">
         <div className="sec-head">
-          <span className="sec-eyebrow">About</span>
           <h2 className="section-title">Who I Am</h2>
         </div>
 
@@ -776,7 +729,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               I design interfaces that stay clear at scale, then build them myself,
               so nothing is lost between the file and the browser.
             </p>
-            <span className="about-signature">Michael Gaitho</span>
           </div>
 
           <div className="split-block about-detail">
@@ -786,12 +738,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               frontend architecture and UI/UX design decisions. I hold a Bachelor of IT,
               specialising in software engineering and human-computer interaction.
             </p>
-            <dl className="about-facts">
-              <div><dt>Discipline</dt><dd>UI/UX design &amp; frontend engineering</dd></div>
-              <div><dt>Education</dt><dd>Bachelor of Information Technology</dd></div>
-              <div><dt>Focus</dt><dd>AI interfaces, real-time dashboards</dd></div>
-              <div><dt>Based in</dt><dd>Nakuru, Kenya</dd></div>
-            </dl>
             <div className="about-buttons">
               <button className="bp" onClick={() => window.open('/resume.pdf', '_blank')}>Download Resume</button>
               <button className="bg" onClick={()=>scrollTo("projects")}>See Work →</button>
@@ -816,17 +762,12 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                   <div className="cap-meta">
                     <span className="cap-index">{item.id}</span>
                     <span className="cap-meta-rule" />
-                    <span className="cap-kicker">{item.kicker}</span>
                   </div>
                   <h3 className="cap-title">{item.title}</h3>
                   <p className="cap-desc">{item.desc}</p>
                   <ul className="cap-tags">
                     {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
                   </ul>
-                  <div className="cap-deliverable">
-                    <span className="cap-deliverable-label">Deliverable</span>
-                    <span className="cap-deliverable-value">{item.deliverable}</span>
-                  </div>
                 </div>
                 <div className="cap-visual">
                   <CapabilityVisual variant={item.variant} />
@@ -840,7 +781,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       {/* Fixed chapter index — stays put while the rail travels underneath */}
       <div className="cap-dock">
         <div className="cap-dock-left">
-          <span className="cap-dock-label">What I do</span>
           <span className="cap-dock-title">{activeCapability.title}</span>
         </div>
         <nav className="cap-dock-nav" aria-label="Capabilities">
@@ -858,9 +798,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           ))}
         </nav>
         <div className="cap-dock-right">
-          <span className="cap-dock-count">
-            {activeCapability.id} <i>/</i> {String(CAPABILITIES.length).padStart(2, "0")}
-          </span>
           <span className="cap-dock-track">
             <i ref={railFillRef} />
           </span>
@@ -874,13 +811,11 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section ref={skillsRef} id="skills" className="skills-section light-section-shell section-skills expertise-section">
       <div className="expertise-inner">
         <div className="expertise-header">
-          <span className="expertise-eyebrow">Expertise</span>
           <h2 className="section-title expertise-title">Skills & Stack</h2>
           <p className="expertise-lead">Design craft and engineering depth, measured in practice rather than buzzwords.</p>
         </div>
         <div className="expertise-layout">
           <aside className="expertise-skills-rail">
-            <span className="expertise-rail-label">Proficiency</span>
             <ul className="expertise-skill-list">
               {SKILLS.map((s, i) => (
                 <li key={s.label} className="expertise-skill-row">
@@ -900,10 +835,8 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             <div className="expertise-tech-orbit" aria-hidden="true" />
             <div className="expertise-tech-header">
               <div>
-                <span className="expertise-tech-eyebrow">Tech Stack</span>
                 <h3 className="expertise-tech-title">Tools I build with</h3>
               </div>
-              <span className="expertise-tech-count">{TECH.length} technologies</span>
             </div>
             <div className="expertise-stack-constellation">
               {TECH.map((t) => {
@@ -925,9 +858,9 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* SELECTED WORK — full-width bands, image and copy swapping sides down
         the page so each project gets a spread of its own. */}
     <section ref={projectsRef} id="projects" className="projects-section light-section-shell section-projects">
+      <SolidGrid className="sgrid-work" />
       <div className="work-inner">
         <div className="sec-head">
-          <span className="sec-eyebrow">Selected work</span>
           <h2 className="section-title">Featured Work</h2>
           <p className="sec-lead">A selection of enterprise engagements, from greenfield architecture to complex systems integration at scale.</p>
         </div>
@@ -937,6 +870,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             const hasShot = p.image && !missingShots[p.id];
             return (
               <article className={`work-band${i % 2 ? " is-flipped" : ""}`} key={p.id}>
+                <span className="work-band-line" aria-hidden="true" />
                 <a
                   className="work-band-shot"
                   href={p.liveUrl}
@@ -956,7 +890,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                     ) : (
                       <span className="work-shot-mark">
                         <span className="work-shot-mark-name">{p.title}</span>
-                        <span className="work-shot-mark-meta">{p.category}</span>
                       </span>
                     )}
                   </span>
@@ -966,7 +899,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                   <div className="work-band-meta">
                     <span className="work-band-index">{String(p.id).padStart(2,"0")}</span>
                     <span className="work-band-rule" />
-                    <span className="work-band-cat">{p.category}</span>
                   </div>
 
                   <h3 className="work-band-title">{p.title}</h3>
@@ -977,11 +909,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                   </ul>
 
                   <div className="work-band-foot">
-                    <dl className="work-band-facts">
-                      <div><dt>Year</dt><dd>{p.year}</dd></div>
-                      <div><dt>Role</dt><dd>Design &amp; build</dd></div>
-                      <div><dt>Outcome</dt><dd>{p.outcome}</dd></div>
-                    </dl>
                     <a
                       className="work-band-cta"
                       href={p.liveUrl}
@@ -1003,7 +930,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* EXPRESSION — type & colour, composed as a canvas rather than a table */}
     <section ref={typeCanvasRef} id="type-canvas" className="expr-section light-section-shell section-type-canvas">
       <div className="expr-head">
-        <span className="sec-eyebrow">Expression</span>
         <h2 className="section-title expr-title">Type &amp; Colour</h2>
         <p className="sec-lead expr-lead">
           The system underneath the work, laid out loose and held on a strict grid.
@@ -1049,7 +975,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           >
             <span className="expr-palette-head">
               <span className="expr-palette-name">{p.name}</span>
-              <span className="expr-palette-use">{p.use}</span>
             </span>
             <span className="expr-palette-chips">
               {p.steps.map((c) => (
@@ -1066,26 +991,19 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                 </span>
               ))}
             </span>
-            <span className="expr-palette-foot">
-              {p.steps.length} steps, {p.steps.filter((c) => c.grade).length} text-safe
-            </span>
           </div>
         ))}
       </div>
 
-      <p className="expr-footnote">
-        Contrast measured with the WCAG 2.1 relative-luminance formula against <code>#F2EFE7</code>.
-        Steps without a ratio are surface tones and carry no text.
-      </p>
 
       {devMode && <DevBadge id="type-canvas" devMode={devMode} theme={theme} />}
     </section>
 
     {/* CONTACT — a statement, the channels, the facts, then the form */}
     <section ref={contactRef} id="contact" className="contact-section light-section-shell section-contact">
+      <BrokenGrid className="bgrid-contact" />
       <div className="contact-inner">
         <div className="contact-hero">
-          <span className="sec-eyebrow">Connect</span>
           <h2 className="section-title contact-title">Let's work<br />together</h2>
           <span className="contact-status">Available for new projects</span>
         </div>
@@ -1101,7 +1019,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             <div className="contact-card-stack">
               {CONTACT_INFO.map((c,i)=>(
                 <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" className="contact-info-card">
-                  <span className="contact-info-index">{String(i+1).padStart(2,"0")}</span>
                   <span className="contact-info-icon">{c.icon}</span>
                   <span className="contact-info-copy">
                     <span className="contact-info-title">{c.title}</span>
@@ -1112,26 +1029,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               ))}
             </div>
 
-            <dl className="contact-facts">
-              <div><dt>Based in</dt><dd>Nakuru, Kenya</dd></div>
-              <div><dt>Timezone</dt><dd>EAT (UTC+3)</dd></div>
-              <div><dt>Replies within</dt><dd>24 hours</dd></div>
-            </dl>
           </div>
 
           <div className="contact-form">
             <div className="contact-form-panel">
               {sent?<div className="contact-sent"><div className="contact-sent-mark">✓</div><h3>Message Sent!</h3><p>Michael will reply shortly.</p></div>:<>
-                <div className="contact-form-head">
-                  <span>Send a message</span>
-                  <span>04 fields</span>
-                </div>
-                {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project inquiry"}].map((f,i)=><div key={f.k} className="contact-field">
-                  <label htmlFor={`contact-${f.k}`}><i>{String(i+1).padStart(2,"0")}</i>{f.l}</label>
+                {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project inquiry"}].map((f)=><div key={f.k} className="contact-field">
+                  <label htmlFor={`contact-${f.k}`}>{f.l}</label>
                   <input id={`contact-${f.k}`} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
                 </div>)}
                 <div className="contact-field">
-                  <label htmlFor="contact-message"><i>04</i>Message</label>
+                  <label htmlFor="contact-message">Message</label>
                   <textarea id="contact-message" rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
                 </div>
                 <button className="bp contact-submit" onClick={()=>{

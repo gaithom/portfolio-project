@@ -439,19 +439,9 @@ export default function App() {
     /* Creative menu hover effects */
     .hover-gradient:hover{transform:translateX(100%);}
 
-    /* ── Marquee: fade at both edges so the strip flows in and out of the
-       page instead of being sliced off at the viewport wall ── */
-    .tech-marquee{overflow:hidden;padding:14px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);}
-    .tech-marquee-track{display:flex;gap:30px;white-space:nowrap;animation:marquee 46s linear infinite;will-change:transform;}
-    .tech-marquee:hover .tech-marquee-track{animation-play-state:paused;}
-    .tech-marquee-item{font-size:14px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:${theme.text};opacity:.45;transition:opacity .35s var(--ease-soft,cubic-bezier(.22,.61,.36,1));}
-    .tech-marquee:hover .tech-marquee-item{opacity:.72;}
 
-    /* ── Buttons: flat surfaces, motion instead of a gradient sheen. A solid
-       block wipes across on hover rather than a light gradient. ── */
+    /* ── Buttons: flat surfaces, no wipe or sheen on hover ── */
     .bp,.bg{position:relative;overflow:hidden;}
-    .bp::after{content:"";position:absolute;top:0;bottom:0;left:0;width:100%;background:rgba(255,255,255,.16);transform:translateX(-101%);pointer-events:none;transition:transform .55s cubic-bezier(.16,1,.3,1);}
-    .bp:hover::after{transform:translateX(0);}
     .bp:active,.bg:active{transform:translateY(0) translateZ(0);}
 
     /* ── Focus visibility: the layout removes default outlines in places, so
@@ -459,8 +449,6 @@ export default function App() {
     a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid ${theme.accent}88;outline-offset:3px;border-radius:6px;}
 
     @media (prefers-reduced-motion: reduce){
-      .tech-marquee-track{animation:none;}
-      .bp::after{transition:none;}
       *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
       html{scroll-behavior:auto;}
     }
@@ -812,15 +800,6 @@ export default function App() {
             {t.icon}
           </button>
         ))}
-        {/* Layout label */}
-        <div className="layout-label" style={{
-          marginTop:4,fontSize:8,fontFamily:"'Space Mono',monospace",color:theme.textMuted,opacity:.45,textAlign:"center",letterSpacing:".06em",textTransform:"uppercase",lineHeight:1.4,
-          "@media (max-width: 768px)": {
-            display:"none"
-          }
-        }}>
-          {theme.layout}
-        </div>
       </div>
 
       {/* Developer Mode toggle */}
@@ -866,7 +845,9 @@ export default function App() {
       </>}
 
       {/* Layout engine */}
-      <div style={{paddingTop: devMode ? 94 : 62}}>
+      {/* The light theme hides the nav, so the 62px reserved for it just
+          pushed the hero down the page. Only pad when there is a bar. */}
+      <div style={{paddingTop: devMode ? 94 : (isLight ? 0 : 62)}}>
         {themeKey==="forest"   && <ForestLayout   {...layoutProps}/>}
         {themeKey==="midnight" && <MidnightLayout {...layoutProps}/>}
         {themeKey==="void"     && <VoidLayout     {...layoutProps}/>}

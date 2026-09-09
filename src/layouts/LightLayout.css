@@ -10,6 +10,12 @@
   --cream: #f2efe7;
   --paper: #fbfaf7;
 
+  /* Grid lines are terracotta, distinct from the moss hairlines used for
+     borders. Two strengths: the quiet one for the drawn/broken lattices, the
+     firm one for the solid grid that separates the projects. */
+  --grid-line: rgba(194, 65, 12, 0.28);
+  --grid-line-strong: rgba(194, 65, 12, 0.5);
+
   /* Hairlines — replaces the 2–3px solid slabs */
   --line: rgba(47, 77, 69, 0.12);
   --line-mid: rgba(47, 77, 69, 0.2);
@@ -187,10 +193,7 @@
   }
 }
 
-.hero-content {
-  max-width: min(1100px, 92vw);
-  width: 100%;
-}
+
 
 .hero-title {
   font-family: "Roboto", sans-serif;
@@ -267,14 +270,7 @@
   will-change: transform, opacity, clip-path;
 }
 
-.hero-description {
-  font-size: clamp(18px, 2.2vw, 24px);
-  line-height: 1.75;
-  color: #2f4d45;
-  opacity: 0.72;
-  max-width: 44ch;
-  margin: 0 0 40px;
-}
+
 
 .hero-cta {
   display: flex;
@@ -414,40 +410,12 @@
   position: relative;
 }
 
-.section-about::after {
-  content: "01 / ABOUT";
-}
-
 .section-whatido {
   position: relative;
 }
 
 .section-skills {
   position: relative;
-}
-
-/* Section index markers — quieter, and they fade in with the section */
-.section-about::after,
-.section-whatido::after,
-.section-skills::after,
-.section-type-canvas::after {
-  position: absolute;
-  right: clamp(16px, 3vw, 32px);
-  top: clamp(14px, 2.5vh, 26px);
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--moss);
-  opacity: 0.4;
-  pointer-events: none;
-  transition: opacity var(--dur-slow) var(--ease-soft);
-}
-
-.section-about:hover::after,
-.section-whatido:hover::after,
-.section-skills:hover::after,
-.section-type-canvas:hover::after {
-  opacity: 0.68;
 }
 
 /* Soft seam where the coloured What-I-Do panel meets the cream page.
@@ -457,21 +425,17 @@
 /* The seam fade is gone with the gradients — the flat cards sit against the
    cream page cleanly on their own. */
 
-.section-whatido::after { content: "02 / WHAT I DO"; }
-.section-skills::after { content: "03 / EXPERTISE"; }
 /* superseded by the chapter-numbering block at the end of this file */
 
 /* Hero goes back to clean layout */
-.section-hero .hero-content {
-  max-width: min(1100px, 92vw) !important;
-}
 
+
+/* Only the colour is kept here. The size, leading and tracking were also set
+   with !important, which silently overrode the .hero-title rule further down
+   and left that rule as dead code — the headline was rendering at 128px, not
+   the value declared for it. Sizing now lives in one place. */
 .section-hero .hero-title {
-  font-size: clamp(52px, 11vw, 128px) !important;
-  line-height: 0.95 !important;
-  letter-spacing: -0.04em !important;
-  color: #2f4d45 !important;
-  margin-bottom: clamp(20px, 3vh, 32px) !important;
+  color: #2f4d45;
 }
 
 .section-hero .hero-outline-ghost {
@@ -482,22 +446,7 @@
   color: #2f4d45 !important;
 }
 
-.section-hero .hero-subtitle {
-  text-transform: none;
-  font-size: clamp(28px, 4.8vw, 52px) !important;
-  line-height: 1.2 !important;
-  letter-spacing: -0.03em !important;
-  color: #3c6057 !important;
-  max-width: 18ch;
-  margin-bottom: clamp(24px, 3vh, 36px) !important;
-}
 
-.section-hero .hero-description {
-  max-width: 44ch !important;
-  font-size: clamp(18px, 2.2vw, 24px) !important;
-  color: #2f4d45 !important;
-  opacity: 0.72 !important;
-}
 
 .about-split-layout {
   grid-template-columns: 1.15fr 1fr !important;
@@ -872,14 +821,6 @@
 
 
 @media (max-width: 768px) {
-  .section-about::after,
-  .section-whatido::after,
-  .section-skills::after {
-    right: 12px;
-    top: 10px;
-    font-size: 10px;
-  }
-
   .about-copy-panel,
   .skills-section .skill-item,
   .tech-cluster-item {
@@ -911,15 +852,7 @@
   max-width: 560px;
 }
 
-.expertise-eyebrow {
-  display: block;
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  opacity: 0.65;
-  margin-bottom: 12px;
-}
+
 
 .expertise-title {
   font-family: "Roboto", sans-serif;
@@ -959,15 +892,7 @@
   top: clamp(16px, 3vh, 32px);
 }
 
-.expertise-rail-label {
-  display: block;
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.55;
-  margin-bottom: 14px;
-}
+
 
 .expertise-skill-list {
   list-style: none;
@@ -1072,15 +997,7 @@
   border-bottom: 1px solid rgba(47, 77, 69, 0.2);
 }
 
-.expertise-tech-eyebrow {
-  display: block;
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.55;
-  margin-bottom: 6px;
-}
+
 
 .expertise-tech-title {
   font-family: "Roboto", sans-serif;
@@ -1091,14 +1008,7 @@
   color: #2f4d45;
 }
 
-.expertise-tech-count {
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.5;
-  white-space: nowrap;
-}
+
 
 .expertise-stack-constellation {
   position: relative;
@@ -1359,20 +1269,7 @@
   margin-bottom: clamp(32px, 5vh, 52px);
 }
 
-.sec-head-center {
-  text-align: center;
-}
 
-.sec-eyebrow {
-  display: block;
-  font-family: "Space Mono", monospace;
-  font-size: 12px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.55;
-  margin-bottom: 14px;
-}
 
 .sec-head .section-title {
   font-family: "Roboto", sans-serif;
@@ -1391,30 +1288,6 @@
   opacity: 0.7;
   max-width: 62ch;
   margin: 0;
-}
-
-.sec-head-center .sec-lead {
-  margin-inline: auto;
-}
-
-/* A hairline that draws itself in under centred section titles */
-.sec-head-center .section-title::after {
-  content: "";
-  display: block;
-  width: 68px;
-  height: 2px;
-  margin: 20px auto 0;
-  border-radius: var(--r-pill);
-  background: var(--moss);
-  opacity: 0.45;
-  transform: scaleX(0.4);
-  transform-origin: center;
-  transition: transform var(--dur-slow) var(--ease-glide), opacity var(--dur-slow) var(--ease-soft);
-}
-
-.sec-head-center:hover .section-title::after {
-  transform: scaleX(1);
-  opacity: 0.7;
 }
 
 /* ── Buttons: pill shape, soft elevation ── */
@@ -1685,13 +1558,8 @@
     font-size: clamp(38px, 11vw, 128px) !important;
   }
 
-  .section-hero .hero-subtitle {
-    font-size: clamp(24px, 6.4vw, 52px) !important;
-  }
 
-  .section-hero .hero-description {
-    font-size: clamp(15px, 4vw, 24px) !important;
-  }
+  
 }
 
 @media (max-width: 400px) {
@@ -1828,14 +1696,7 @@
   opacity: 0.28;
 }
 
-.cap-kicker {
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--cap-ink);
-  opacity: 0.55;
-}
+
 
 .cap-title {
   font-family: "Roboto", sans-serif;
@@ -1868,7 +1729,7 @@
 
 .cap-tags li {
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cap-ink);
@@ -1884,30 +1745,11 @@
 .cap-card.is-active .cap-tags li:nth-child(2) { transition-delay: 0.05s; }
 .cap-card.is-active .cap-tags li:nth-child(3) { transition-delay: 0.1s; }
 
-.cap-deliverable {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding-top: clamp(16px, 2.4vh, 24px);
-  border-top: 1px solid var(--cap-tint);
-  max-width: 42ch;
-}
 
-.cap-deliverable-label {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--cap-ink);
-  opacity: 0.45;
-}
 
-.cap-deliverable-value {
-  font-size: clamp(13px, 1.15vw, 16px);
-  font-weight: 500;
-  color: var(--cap-ink);
-  opacity: 0.85;
-}
+
+
+
 
 /* ── Visual column ── */
 .cap-visual {
@@ -1954,7 +1796,7 @@
   position: absolute;
   left: 4%; right: 12%; bottom: 6%;
   display: flex; align-items: center; gap: 8px;
-  font-family: "Space Mono", monospace; font-size: 10px;
+  font-family: "Space Mono", monospace; font-size: 11px;
   letter-spacing: 0.14em; color: var(--cap-ink); opacity: 0.5;
 }
 .cap-measure i { flex: 1; height: 1px; background: currentColor; opacity: 0.5; }
@@ -2020,7 +1862,7 @@
 .cap-caption {
   position: absolute; left: 50%; bottom: 4%;
   transform: translateX(-50%);
-  font-family: "Space Mono", monospace; font-size: 10px;
+  font-family: "Space Mono", monospace; font-size: 11px;
   letter-spacing: 0.1em; color: var(--cap-ink); opacity: 0.55;
   white-space: nowrap;
 }
@@ -2046,7 +1888,7 @@
   opacity: 0.75;
 }
 .cap-device b {
-  font-family: "Space Mono", monospace; font-size: 9px; font-weight: 400;
+  font-family: "Space Mono", monospace; font-size: 11px; font-weight: 400;
   letter-spacing: 0.1em; color: var(--cap-ink); opacity: 0.6; padding-bottom: 8px;
 }
 .cap-device.sm { width: clamp(48px, 9%, 66px); height: 42%; border-radius: 10px; }
@@ -2068,7 +1910,7 @@
 .cap-contrast-row b { font-family: "Space Mono", monospace; font-size: 14px; color: var(--cap-ink); }
 .cap-contrast-row em {
   margin-left: auto; font-style: normal;
-  font-family: "Space Mono", monospace; font-size: 9px;
+  font-family: "Space Mono", monospace; font-size: 11px;
   letter-spacing: 0.14em; text-transform: uppercase;
   padding: 4px 10px; border-radius: var(--r-pill);
   background: rgba(15, 118, 110, 0.14); color: #0f766e;
@@ -2116,7 +1958,7 @@
 .cap-gauge b { font-family: "Roboto", sans-serif; font-size: clamp(34px, 5vw, 54px); font-weight: 800; color: var(--cap-ink); line-height: 1; }
 .cap-gauge em {
   position: absolute; bottom: 22%; font-style: normal;
-  font-family: "Space Mono", monospace; font-size: 9px;
+  font-family: "Space Mono", monospace; font-size: 11px;
   letter-spacing: 0.16em; text-transform: uppercase; color: var(--cap-ink); opacity: 0.5;
 }
 .cap-vitals { display: flex; gap: 10px; }
@@ -2128,7 +1970,7 @@
 }
 .cap-vitals b { font-family: "Roboto", sans-serif; font-size: 19px; font-weight: 800; color: var(--cap-ink); }
 .cap-vitals em {
-  font-style: normal; font-family: "Space Mono", monospace; font-size: 9px;
+  font-style: normal; font-family: "Space Mono", monospace; font-size: 11px;
   letter-spacing: 0.14em; text-transform: uppercase; color: var(--cap-ink); opacity: 0.5;
 }
 
@@ -2153,10 +1995,7 @@
 }
 
 .cap-dock-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.cap-dock-label {
-  font-family: "Space Mono", monospace; font-size: 9px;
-  letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss); opacity: 0.5;
-}
+
 .cap-dock-title {
   font-family: "Roboto", sans-serif; font-size: clamp(13px, 1.3vw, 17px);
   font-weight: 700; letter-spacing: -0.01em; color: var(--ink);
@@ -2169,7 +2008,7 @@
   display: grid; place-items: center;
   border: 1px solid transparent; border-radius: var(--r-xs);
   background: transparent; cursor: pointer;
-  font-family: "Space Mono", monospace; font-size: 10px; color: var(--moss);
+  font-family: "Space Mono", monospace; font-size: 11px; color: var(--moss);
 }
 .cap-dock-dot span { opacity: 0.45; transition: opacity var(--dur-base) var(--ease-soft); }
 .cap-dock-dot:hover { background: rgba(60, 96, 87, 0.07); }
@@ -2182,7 +2021,7 @@
 
 .cap-dock-right { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; flex-shrink: 0; }
 .cap-dock-count {
-  font-family: "Space Mono", monospace; font-size: 10px;
+  font-family: "Space Mono", monospace; font-size: 11px;
   letter-spacing: 0.12em; color: var(--ink); opacity: 0.7;
 }
 .cap-dock-count i { font-style: normal; opacity: 0.4; margin: 0 2px; }
@@ -2200,7 +2039,7 @@
   .cap-card-inner { grid-template-columns: minmax(0, 1fr); align-content: center; }
   .cap-visual { height: min(34vh, 300px); order: -1; }
   .cap-title { max-width: none; }
-  .cap-deliverable { display: none; }
+  
 }
 
 @media (max-width: 767px) {
@@ -2314,7 +2153,7 @@
    Static: nothing here reacts to the pointer. */
 .expr-rules { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 
-.expr-rule { position: absolute; background: rgba(47, 77, 69, 0.13); }
+.expr-rule { position: absolute; background: var(--grid-line); }
 .expr-rule-v { top: -2%; bottom: -2%; width: 1px; }
 .expr-rule-h { left: -2%; right: -2%; height: 1px; }
 
@@ -2364,7 +2203,7 @@
   backdrop-filter: blur(8px);
   box-shadow: var(--shadow-lift);
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -2380,8 +2219,8 @@
 .expr-word:focus-visible .expr-word-spec { opacity: 1; transform: translateY(0); }
 
 .expr-word-spec strong { font-family: "Roboto", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
-.expr-word-spec em { font-style: normal; font-size: 9px; text-transform: uppercase; opacity: 0.6; }
-.expr-word-spec span { font-size: 9px; opacity: 0.5; }
+.expr-word-spec em { font-style: normal; font-size: 11px; text-transform: uppercase; opacity: 0.6; }
+.expr-word-spec span { font-size: 11px; opacity: 0.5; }
 
 /* ── Palette clusters ── */
 .expr-palette {
@@ -2415,7 +2254,7 @@
 .expr-palette:hover .expr-palette-name,
 .expr-palette:focus-within .expr-palette-name { opacity: 0.95; }
 
-.expr-palette-use { font-size: 11px; color: var(--moss); opacity: 0.55; }
+
 
 .expr-palette-chips { display: flex; gap: clamp(5px, 0.7vw, 9px); }
 
@@ -2466,7 +2305,7 @@
   backdrop-filter: blur(8px);
   box-shadow: var(--shadow-lift);
   font-family: "Space Mono", monospace;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--ink);
   white-space: nowrap;
   opacity: 0;
@@ -2481,32 +2320,11 @@
 .expr-chip-tip em { font-style: normal; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; }
 .expr-chip-tip b { font-weight: 400; opacity: 0.75; }
 
-.expr-palette-foot {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.45;
-}
 
-.expr-footnote {
-  max-width: 1400px;
-  margin: clamp(28px, 5vh, 52px) auto 0;
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--moss);
-  opacity: 0.6;
-  text-align: center;
-}
 
-.expr-footnote code {
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 5px;
-  background: rgba(60, 96, 87, 0.08);
-}
+
+
+
 
 /* Below the grid's comfortable width the composition stops being composed —
    fall back to a single ordered column rather than letting blocks collide. */
@@ -2548,8 +2366,8 @@
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(60, 96, 87, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(60, 96, 87, 0.055) 1px, transparent 1px);
+    linear-gradient(rgba(194, 65, 12, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(194, 65, 12, 0.075) 1px, transparent 1px);
   background-size: 56px 56px;
   opacity: 0.7;
 }
@@ -2558,26 +2376,7 @@
 .section-projects,
 .section-contact { position: relative; }
 
-.section-projects::after,
-.section-contact::after {
-  position: absolute;
-  right: clamp(16px, 3vw, 32px);
-  top: clamp(14px, 2.5vh, 26px);
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--moss);
-  opacity: 0.4;
-  pointer-events: none;
-  transition: opacity var(--dur-slow) var(--ease-soft);
-}
 
-.section-projects::after { content: "04 / SELECTED WORK"; }
-.section-type-canvas::after { content: "05 / EXPRESSION"; }
-.section-contact::after { content: "06 / CONTACT"; }
-
-.section-projects:hover::after,
-.section-contact:hover::after { opacity: 0.68; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    CAPABILITY ARTEFACTS — each one assembles when its card becomes active
@@ -2687,14 +2486,14 @@
 .cap-card:not(.is-active) .cap-title { transform: translateY(16px); }
 .cap-card:not(.is-active) .cap-desc { transform: translateY(12px); }
 .cap-card:not(.is-active) .cap-tags li { transform: translateY(10px); opacity: 0; }
-.cap-card:not(.is-active) .cap-deliverable { transform: translateY(10px); opacity: 0; }
+
 .cap-card.is-active .cap-title { transform: none; }
 .cap-card.is-active .cap-desc { transform: none; transition-delay: 0.08s; }
 .cap-card.is-active .cap-tags li { transform: none; opacity: 1; }
 .cap-card.is-active .cap-tags li:nth-child(1) { transition-delay: 0.16s; }
 .cap-card.is-active .cap-tags li:nth-child(2) { transition-delay: 0.24s; }
 .cap-card.is-active .cap-tags li:nth-child(3) { transition-delay: 0.32s; }
-.cap-card.is-active .cap-deliverable { transform: none; opacity: 1; transition-delay: 0.4s; }
+
 
 @media (prefers-reduced-motion: reduce) {
   .cap-card:not(.is-active) *,
@@ -2704,126 +2503,298 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   HERO — masthead above, headline in the middle, facts and scroll cue below.
-   The three bands give the page an editorial frame instead of one block of
-   type floating in space. Flat surfaces and hairlines only.
+   HERO — headline left, a design artefact filling the right
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .hero-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  /* The base rule sets align-items:center for the old single-block hero; the
-     three bands must span the full width or their rules stop short. */
-  align-items: stretch;
-  gap: clamp(28px, 5vh, 56px);
+  display: block;
+  padding: clamp(20px, 3.4vh, 40px) clamp(24px, 5vw, 72px) clamp(56px, 8vh, 88px);
 }
 
-.hero-section .hero-content { max-width: none; width: 100%; }
-
-.hero-masthead {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(18px, 4vw, 56px);
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--line);
+/* column-gap is 0 on purpose: with gaps, a span ending at column 6 stops
+   short of the 50% rule by half a gap, and the text no longer sits on the
+   line. Zero gap makes each column exactly 1/12, so spans land on the rules
+   exactly. Breathing room comes from per-cell padding instead. */
+.hero-grid {
+  position: relative;
+  /* Taller than the space the headline vacated, so the standfirst, the rail
+     and the button keep the vertical position they had before the headline
+     was raised. */
+  min-height: min(88vh, 820px);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  /* The standfirst row takes the slack, which drops the meta rail and the
+     button to the foot of the grid. */
+  grid-template-rows: auto 1fr auto auto;
+  column-gap: 0;
+  row-gap: clamp(18px, 3vh, 34px);
+  align-items: start;
 }
 
-.hero-mast { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hero-rules { position: absolute; inset: -14px 0; pointer-events: none; z-index: 0; }
+.hero-rules span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid-line); }
+.hero-rules span:nth-child(1) { left: 25%; }
+.hero-rules span:nth-child(2) { left: 50%; }
+.hero-rules span:nth-child(3) { left: 75%; }
+.hero-rules span:nth-child(4) { left: 100%; }
 
-.hero-mast i {
-  font-style: normal;
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.5;
-}
 
-.hero-mast b {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  opacity: 0.88;
-}
-
-.hero-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-
-.hero-cta { margin-top: 4px; }
-
-.hero-footer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-
-.hero-facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(18px, 4vw, 56px);
+/* The headline runs the full width as three parts: name, arrow, role. The
+   role begins on the 50% rule, which is also where it sits in the reference
+   layout. Both phrases share one size, so the longer of the two (the name)
+   sets the ceiling. */
+/* At reference scale the three parts no longer fit fixed columns: "Michael
+   Gaitho" alone runs to 46% of the grid. They flow instead, so the arrow and
+   the role sit wherever the name ends. */
+.hero-title {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / 13;
+  grid-row: 1;
   margin: 0;
-}
-
-.hero-facts dt {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.5;
-  margin-bottom: 5px;
-}
-
-.hero-facts dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink); opacity: 0.85; }
-
-.hero-scroll {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 18px;
-  border: 1px solid var(--line-mid);
-  border-radius: var(--r-pill);
-  background: transparent;
-  cursor: pointer;
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--moss);
+  align-items: baseline;
+  gap: clamp(16px, 3.4vw, 54px);
+  font-size: clamp(28px, 6vw, 84px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+/* The arrow trails the name rather than sitting in a fixed column: pinned to
+   a column it drifts away from the name as the type size changes, opening a
+   gap the reference does not have. */
+.hero-title-lead {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 3.4vw, 54px);
   flex-shrink: 0;
 }
 
-.hero-scroll b {
-  font-size: 13px;
+.hero-title-name {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero-title-arrow {
+  display: block;
   font-weight: 400;
-  line-height: 1;
-  animation: hero-scroll-arrow 2s var(--ease-breathe) infinite;
+  line-height: inherit;
+  flex-shrink: 0;
 }
 
-@keyframes hero-scroll-arrow {
-  0%, 100% { transform: translateY(0); opacity: 0.75; }
-  50% { transform: translateY(4px); opacity: 1; }
+/* Not clipped: at this size the role runs wide, and it is meant to pass
+   beneath the artboard rather than be cut off. Set larger than the name, so
+   the role carries the emphasis; baseline alignment keeps the first lines
+   sitting on the same line despite the size difference. */
+.hero-title-role {
+  display: block;
+  flex-shrink: 0;
+  font-size: clamp(34px, 8.4vw, 118px);
+  line-height: 0.98;
 }
 
-.hero-scroll:hover { border-color: var(--moss); }
+.hero-title-role .hero-line-software,
+.hero-title-role .hero-developer { display: block; }
 
-@media (max-width: 768px) {
-  .hero-masthead { gap: 14px 26px; }
-  .hero-footer { flex-direction: column; align-items: stretch; gap: 18px; }
-  .hero-scroll { align-self: flex-start; }
-  .hero-facts { gap: 16px 28px; }
+.hero-cta {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / 7;
+  grid-row: 4;
+  align-self: end;
+  display: flex;
+  margin: 0;
+  padding-right: clamp(16px, 2vw, 32px);
+  padding-top: clamp(20px, 3vh, 32px);
+  border-top: 1px solid var(--line-mid);
+}
+
+/* ── Primary action, with its own grid ruled inside ── */
+.hero-btn {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 34px;
+  font-size: 15px;
+  border-radius: var(--r-sm) !important;
+}
+
+.hero-btn-grid { position: absolute; inset: 0; pointer-events: none; opacity: 0.45; }
+
+.hero-btn-grid i { position: absolute; background: rgba(240, 138, 90, 0.75); }
+.hero-btn-grid i:nth-child(1) { top: 0; bottom: 0; left: 33.33%; width: 1px; }
+.hero-btn-grid i:nth-child(2) { top: 0; bottom: 0; left: 66.66%; width: 1px; }
+.hero-btn-grid i:nth-child(3) { left: 0; right: 0; top: 33.33%; height: 1px; }
+.hero-btn-grid i:nth-child(4) { left: 0; right: 0; top: 66.66%; height: 1px; }
+
+/* The internal grid shifts by one cell on hover */
+.hero-btn-grid i:nth-child(1),
+.hero-btn-grid i:nth-child(2) { transition: transform 0.6s var(--ease-glide); }
+.hero-btn-grid i:nth-child(3),
+.hero-btn-grid i:nth-child(4) { transition: transform 0.6s var(--ease-glide) 0.06s; }
+.hero-btn:hover .hero-btn-grid i:nth-child(1),
+.hero-btn:hover .hero-btn-grid i:nth-child(2) { transform: translateX(16px); }
+.hero-btn:hover .hero-btn-grid i:nth-child(3),
+.hero-btn:hover .hero-btn-grid i:nth-child(4) { transform: translateY(-7px); }
+
+.hero-btn-label { position: relative; z-index: 1; }
+
+/* ── The design artefact filling the right of the grid ── */
+/* ── Horizontal meta rail under the standfirst ── */
+.hero-meta {
+  position: relative;
+  z-index: 1;
+  /* Stops on the 50% line: the artboard's left edge sits at 52%, and it is
+     stacked above, so anything wider gets its tail covered. */
+  grid-column: 1 / 7;
+  grid-row: 3;
+  align-self: end;
+  margin: 0;
+  padding: 0 0 clamp(16px, 2.4vh, 24px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2.2vw, 34px);
+}
+
+.hero-meta dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--moss);
+  opacity: 0.7;
+  margin-bottom: 7px;
+}
+
+.hero-meta dd {
+  margin: 0;
+  font-size: clamp(12px, 1.05vw, 14px);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--ink);
+  opacity: 0.9;
+}
+
+.hero-canvas {
+  position: relative;
+  z-index: 1;
+  grid-column: 7 / 13;
+  grid-row: 2 / 5;
+  align-self: stretch;
+  padding-left: clamp(20px, 2.6vw, 44px);
+  min-height: clamp(300px, 44vh, 440px);
+  /* Pulled up into the headline row and stacked above it: the tail of
+     "developer" passes underneath, so the two read as overlapping layers. */
+  margin-top: clamp(-104px, -6.5vw, -44px);
+  z-index: 3;
+}
+
+.hero-artboard {
+  position: absolute;
+  inset: 8% 8% 18% 4%;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--shadow-soft);
+}
+
+/* A second artboard behind, slightly rotated — work in progress */
+.hero-ab-ghost {
+  position: absolute;
+  inset: 16% 2% 12% 14%;
+  border: 1px dashed var(--line-mid);
+  border-radius: var(--r-sm);
+  transform: rotate(3deg);
+  z-index: -1;
+}
+
+.hero-ab-bar { position: absolute; top: 0; left: 0; right: 0; height: 30px; border-bottom: 1px solid var(--line); background: rgba(60, 96, 87, 0.05); }
+.hero-ab-side { position: absolute; top: 30px; left: 0; bottom: 0; width: 26%; border-right: 1px solid var(--line); background: rgba(60, 96, 87, 0.03); }
+.hero-ab-block { position: absolute; left: 32%; right: 8%; border-radius: 4px; background: rgba(60, 96, 87, 0.12); }
+.hero-ab-block.b1 { top: 48px; height: 16%; }
+.hero-ab-block.b2 { top: 34%; right: 30%; height: 10%; background: rgba(60, 96, 87, 0.18); }
+.hero-ab-block.b3 { top: 50%; right: 18%; height: 10%; }
+.hero-ab-block.b4 { bottom: 10%; height: 22%; background: rgba(60, 96, 87, 0.07); }
+
+/* Selection handles — square, as a design tool draws them */
+.hero-handle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: var(--paper);
+  border: 1.5px solid var(--moss);
+}
+.hero-handle.tl { top: -5px; left: -5px; }
+.hero-handle.tr { top: -5px; right: -5px; }
+.hero-handle.bl { bottom: -5px; left: -5px; }
+.hero-handle.br { bottom: -5px; right: -5px; }
+
+/* Measure across the base of the artboard */
+.hero-measure { position: absolute; left: 4%; right: 8%; bottom: 11%; height: 1px; background: var(--line-strong); }
+.hero-measure i { position: absolute; top: -4px; width: 1px; height: 9px; background: var(--line-strong); }
+.hero-measure i:first-child { left: 0; }
+.hero-measure i:last-child { right: 0; }
+
+/* A pointer sitting on the canvas */
+.hero-cursor {
+  position: absolute;
+  right: 26%;
+  bottom: 26%;
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--ink);
+  border-right: 5px solid transparent;
+  border-bottom: 13px solid transparent;
+  transform: rotate(-18deg);
+}
+
+@media (max-width: 900px) {
+  .hero-grid { min-height: 0; grid-template-rows: repeat(5, auto); row-gap: clamp(22px, 4vh, 36px); }
+  /* Rail sits directly above the button here too, so the artboard takes the
+     row before it rather than splitting the two apart. */
+  .hero-meta { grid-column: 1 / 13; grid-row: 4; grid-template-columns: 1fr; gap: 14px; align-self: start; padding-bottom: 0; }
+  .hero-title { grid-column: 1 / 13; grid-row: 1; }
+  /* Below the grid's comfortable width the three parts stack: name, arrow,
+     then role. The arrow turns to point down, since it no longer reads
+     across. */
+  .hero-title { flex-direction: column; align-items: flex-start; gap: 6px; font-size: clamp(30px, 8.4vw, 52px); }
+  .hero-title-lead { flex-direction: column; align-items: flex-start; gap: 0; }
+  .hero-title-name { white-space: normal; }
+  .hero-title-arrow { justify-self: start; transform: rotate(90deg); transform-origin: center; margin: 6px 0; }
+  .hero-canvas { grid-column: 1 / 13; grid-row: 3; padding-left: 0; margin-top: 0; min-height: clamp(230px, 34vh, 300px); }
+  .hero-cta { grid-column: 1 / 13; grid-row: 5; padding-right: 0; }
+  .hero-rules span:nth-child(1), .hero-rules span:nth-child(3) { display: none; }
 }
 
 @media (max-width: 560px) {
-  .hero-masthead .hero-mast:nth-child(2) { display: none; }
-  .hero-facts div:nth-child(3) { display: none; }
+  .hero-btn { width: 100%; justify-content: center; }
+  .hero-rules { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BROKEN GRID — a lattice that reads complete but is visibly fractured.
+   Segments are real elements so the gaps on crossing axes never align, which
+   is what sells "broken" rather than simply "dashed".
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bgrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bgrid-v { position: absolute; width: 1px; background: var(--grid-line); }
+.bgrid-h { position: absolute; height: 1px; background: var(--grid-line); }
+
+/* Each section leans the fracture a different way so it does not read as a
+   repeated texture down the page. */
+.bgrid-work .bgrid-h   { transform: translateX(10px); }
+.bgrid-contact .bgrid-v { transform: translateY(8px); }
+.bgrid-contact .bgrid-h { transform: translateX(-8px); }
+
+@media (max-width: 768px) {
+  .bgrid { display: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -2879,7 +2850,7 @@
   padding-top: 16px;
   border-top: 1px solid var(--line);
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--moss);
@@ -2908,7 +2879,7 @@
 
 .about-facts dt {
   font-family: "Space Mono", monospace;
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--moss);
@@ -2958,73 +2929,33 @@
   border: 1px solid var(--line-mid);
   border-radius: var(--r-pill);
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink);
   opacity: 0.8;
 }
 
-.contact-info-index {
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--moss);
-  opacity: 0.4;
-  flex-shrink: 0;
-}
 
-.contact-facts { margin: clamp(26px, 4vh, 36px) 0 0; border-top: 1px solid var(--line); }
 
-.contact-facts > div {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-}
 
-.contact-facts dt {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.55;
-}
 
-.contact-facts dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink); opacity: 0.85; }
 
-.contact-form-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 16px;
-  margin-bottom: clamp(18px, 2.6vh, 26px);
-  border-bottom: 1px solid var(--line);
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--moss);
-}
 
-.contact-form-head span:first-child { color: var(--ink); opacity: 0.85; }
-.contact-form-head span:last-child { opacity: 0.5; }
+
+
+
+
+
+
+
+
 
 /* Fields are numbered, so the form reads as a short sequence rather than a
    stack of identical boxes. */
 .contact-field label { display: flex; align-items: center; gap: 9px; }
 
-.contact-field label i {
-  font-style: normal;
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  color: var(--moss);
-  opacity: 0.4;
-}
+
 
 @media (max-width: 768px) {
   .contact-hero { align-items: flex-start; }
@@ -3055,13 +2986,7 @@
   color: rgba(255, 255, 255, 0.94);
 }
 
-.work-shot-mark-meta {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-}
+
 
 /* Slightly more generous interior now the cards have room */
 
@@ -3240,14 +3165,7 @@
   background: var(--line-mid);
 }
 
-.work-band-cat {
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.6;
-}
+
 
 .work-band-title {
   font-family: "Roboto", sans-serif;
@@ -3279,7 +3197,7 @@
 
 .work-band-stack li {
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--moss);
@@ -3307,26 +3225,11 @@
   border-top: 1px solid var(--line);
 }
 
-.work-band-facts { display: flex; gap: clamp(20px, 3vw, 44px); margin: 0; }
 
-.work-band-facts dt {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.5;
-  margin-bottom: 5px;
-}
 
-.work-band-facts dd {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  opacity: 0.86;
-  white-space: nowrap;
-}
+
+
+
 
 .work-band-cta {
   display: inline-flex;
@@ -3369,6 +3272,71 @@
   .work-band:hover .work-band-frame { transform: none; }
 }
 
-@media (max-width: 520px) {
-  .work-band-facts { gap: 18px; flex-wrap: wrap; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SOLID GRID — projects only
+   Deliberately the opposite of the broken lattice used elsewhere: unbroken
+   lines, a denser six-column rhythm, and the firmer of the two grid tones.
+   Each project is closed by a full-width rule, so the work reads as ruled off
+   into rows rather than floating in space.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sgrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sgrid-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--grid-line-strong);
+  opacity: 0.55;
+}
+
+/* The rule that closes each band, on the strong grid tone */
+.work-band {
+  position: relative;
+  padding-bottom: clamp(40px, 7vh, 84px);
+}
+
+.work-band-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--grid-line-strong);
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Ticks at the ends, so the rule reads as a grid division rather than a
+   generic divider. */
+.work-band-line::before,
+.work-band-line::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  width: 1px;
+  height: 11px;
+  background: var(--grid-line-strong);
+}
+
+.work-band-line::before { left: 0; }
+.work-band-line::after { right: 0; }
+
+.work-band:last-child { padding-bottom: 0; }
+.work-band:last-child .work-band-line { display: none; }
+
+.work-bands { gap: clamp(40px, 7vh, 84px); }
+
+@media (max-width: 768px) {
+  .sgrid { display: none; }
+  .work-band { padding-bottom: clamp(30px, 5vh, 48px); }
 }
