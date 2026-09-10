@@ -565,8 +565,9 @@
 .cap-card {
   position: sticky;
   /* Every card rests at the same offset, so they land exactly where the first
-     one sat rather than drifting lower down the stack. */
-  top: calc((100vh - var(--card-h)) / 2);
+     one sat rather than drifting lower down the stack. Sits above centre, so
+     the deck reads higher in the viewport. */
+  top: calc((100vh - var(--card-h)) / 2 - clamp(26px, 6vh, 70px));
   height: var(--card-h);
   /* Scroll distance each card gets before the next one covers it. Short
      enough that the section moves at reading pace rather than crawling. */
@@ -649,7 +650,6 @@
 .cap-meta {
   display: flex;
   align-items: center;
-  gap: 14px;
   margin-bottom: clamp(10px, 1.8vh, 18px);
 }
 
@@ -660,14 +660,6 @@
   letter-spacing: 0.16em;
   color: var(--cap-ink);
   opacity: 0.75;
-}
-
-.cap-meta-rule {
-  width: clamp(28px, 5vw, 60px);
-  height: 1px;
-  background: currentColor;
-  color: var(--cap-ink);
-  opacity: 0.28;
 }
 
 
@@ -768,14 +760,6 @@
 .cap-board-block.b1 { top: 54px; height: 20%; }
 .cap-board-block.b2 { top: 40%; right: 26%; height: 14%; }
 .cap-board-block.b3 { bottom: 12%; height: 26%; background: rgba(60, 96, 87, 0.07); }
-.cap-measure {
-  position: absolute;
-  left: 4%; right: 12%; bottom: 6%;
-  display: flex; align-items: center; gap: 8px;
-  font-family: "Space Mono", monospace; font-size: 11px;
-  letter-spacing: 0.14em; color: var(--cap-ink); opacity: 0.5;
-}
-.cap-measure i { flex: 1; height: 1px; background: currentColor; opacity: 0.5; }
 
 /* Terminal — rounded code window */
 .cap-art-terminal .cap-window {
@@ -1463,7 +1447,8 @@
   align-items: start;
 }
 
-.hero-rules { position: absolute; inset: -14px 0; pointer-events: none; z-index: 0; }
+/* Drawn above the statement card, so the column rules carry across it. */
+.hero-rules { position: absolute; inset: -14px 0; pointer-events: none; z-index: 3; }
 .hero-rules span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid-line); }
 .hero-rules span:nth-child(1) { left: 25%; }
 .hero-rules span:nth-child(2) { left: 50%; }
@@ -1535,17 +1520,13 @@
 .hero-title-role .hero-line-software,
 .hero-title-role .hero-developer { display: block; }
 
-/* ── The design artefact filling the right of the grid ── */
-/* ── Horizontal meta rail under the standfirst ── */
+/* ── The three informative items ──
+   Restored: an earlier cleanup removed this rule along with the artboard
+   block that followed it, which left the rail collapsed to a 108px column.
+   One item per quarter of the grid, starting at the second division. */
 .hero-meta {
   position: relative;
-  z-index: 1;
-  /* Stops on the 50% line: the artboard's left edge sits at 52%, and it is
-     stacked above, so anything wider gets its tail covered. */
-/* One item per quarter of the grid, starting at the second division, so each
-   sits between the drawn rules rather than floating across them. Zero gap is
-   required: any gap would pull the items off the rules they align to, so the
-   breathing room is padding inside each cell instead. */
+  z-index: 3;
   grid-column: 4 / 13;
   grid-row: 2;
   align-self: end;
@@ -1556,8 +1537,6 @@
   gap: 0;
 }
 
-/* Centred within its quarter and inset from both rules, so each block sits in
-   the middle of its division rather than butting against a line. */
 .hero-meta > div {
   justify-self: center;
   text-align: center;
@@ -1566,95 +1545,83 @@
 }
 
 .hero-meta dt {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-family: "Space Mono", monospace;
+  font-size: clamp(10px, 0.85vw, 12px);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.7;
+  color: #A24908;
+  opacity: 0.85;
   margin-bottom: 7px;
 }
 
 .hero-meta dd {
   margin: 0;
-  font-size: clamp(12px, 1.05vw, 14px);
+  font-size: clamp(12px, 1.15vw, 15px);
   font-weight: 700;
   line-height: 1.5;
-  color: var(--ink);
-  opacity: 0.9;
+  color: #A24908;
 }
 
-.hero-canvas {
+/* ── The statement card filling the right of the grid ──
+   Runs to the foot of the hero so its bottom edge lands on the green band
+   below. The bottom corners stay square for that reason: a radius there would
+   leave a sliver of page colour between the card and the green. */
+/* Reads as a branch growing up out of the Who I Am band: same green, right
+   edge carried out to the screen edge so the two share a line, and only the
+   top corners rounded so the join below is seamless.
+   z-index 2 puts it over the meta rail — one of the three items sits behind
+   it. No single orange clears AA on both the cream page and this green, so
+   covering the item is preferable to leaving it at ~1.5:1. */
+/* Starts on the 50% line so the two meta items it passes over sit wholly on
+   the green rather than straddling both grounds — a straddled item cannot be
+   coloured legibly for either.
+   The bottom is pulled a radius past the About band so the lower corners
+   round inside the green and read as invisible, letting the card be soft all
+   round without notching cream through at the join. */
+.hero-quote {
   position: relative;
-  z-index: 1;
-  grid-column: 8 / 13;
+  z-index: 2;
+  grid-column: 7 / 13;
   grid-row: 2;
   align-self: stretch;
-  padding-left: clamp(20px, 2.6vw, 44px);
-  min-height: clamp(300px, 44vh, 440px);
-  /* Pulled up into the headline row and stacked above it: the tail of
-     "developer" passes underneath, so the two read as overlapping layers. */
-  margin-top: clamp(-104px, -6.5vw, -44px);
-  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: calc(-1 * clamp(90px, 15vh, 170px)) calc(-1 * clamp(24px, 5vw, 72px)) calc(-1 * var(--r-lg)) clamp(20px, 2.6vw, 44px);
+  padding: clamp(30px, 3.6vw, 52px);
+  border: none;
+  border-radius: var(--r-lg);
+  background: var(--ink);
+  box-shadow: none;
+  overflow: hidden;
 }
 
-.hero-artboard {
-  position: absolute;
-  inset: 8% 8% 18% 4%;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: var(--shadow-soft);
+/* Playfair Display, taken from the Expression specimen where it is listed
+   for pull quotes. Serif at the same size reads smaller and looser than
+   Roboto, so the size is up and the tracking relaxed. */
+.hero-quote-text {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(23px, 2.8vw, 38px);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.005em;
+  color: var(--cream);
 }
 
-/* A second artboard behind, slightly rotated — work in progress */
-.hero-ab-ghost {
+/* An oversized closing mark sitting low in the card */
+.hero-quote-mark {
   position: absolute;
-  inset: 16% 2% 12% 14%;
-  border: 1px dashed var(--line-mid);
-  border-radius: var(--r-sm);
-  transform: rotate(3deg);
-  z-index: -1;
-}
-
-.hero-ab-bar { position: absolute; top: 0; left: 0; right: 0; height: 30px; border-bottom: 1px solid var(--line); background: rgba(60, 96, 87, 0.05); }
-.hero-ab-side { position: absolute; top: 30px; left: 0; bottom: 0; width: 26%; border-right: 1px solid var(--line); background: rgba(60, 96, 87, 0.03); }
-.hero-ab-block { position: absolute; left: 32%; right: 8%; border-radius: 4px; background: rgba(60, 96, 87, 0.12); }
-.hero-ab-block.b1 { top: 48px; height: 16%; }
-.hero-ab-block.b2 { top: 34%; right: 30%; height: 10%; background: rgba(60, 96, 87, 0.18); }
-.hero-ab-block.b3 { top: 50%; right: 18%; height: 10%; }
-.hero-ab-block.b4 { bottom: 10%; height: 22%; background: rgba(60, 96, 87, 0.07); }
-
-/* Selection handles — square, as a design tool draws them */
-.hero-handle {
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  background: var(--paper);
-  border: 1.5px solid var(--moss);
-}
-.hero-handle.tl { top: -5px; left: -5px; }
-.hero-handle.tr { top: -5px; right: -5px; }
-.hero-handle.bl { bottom: -5px; left: -5px; }
-.hero-handle.br { bottom: -5px; right: -5px; }
-
-/* Measure across the base of the artboard */
-.hero-measure { position: absolute; left: 4%; right: 8%; bottom: 11%; height: 1px; background: var(--line-strong); }
-.hero-measure i { position: absolute; top: -4px; width: 1px; height: 9px; background: var(--line-strong); }
-.hero-measure i:first-child { left: 0; }
-.hero-measure i:last-child { right: 0; }
-
-/* A pointer sitting on the canvas */
-.hero-cursor {
-  position: absolute;
-  right: 26%;
-  bottom: 26%;
-  width: 0;
-  height: 0;
-  border-left: 8px solid var(--ink);
-  border-right: 5px solid transparent;
-  border-bottom: 13px solid transparent;
-  transform: rotate(-18deg);
+  right: clamp(16px, 2vw, 34px);
+  bottom: clamp(-40px, -4vw, -20px);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(140px, 17vw, 260px);
+  font-weight: 700;
+  line-height: 1;
+  color: #E8834A;
+  opacity: 0.22;
+  pointer-events: none;
 }
 
 @media (max-width: 900px) {
@@ -1701,7 +1668,12 @@
   .hero-title-name { white-space: normal; }
   .hero-title-arrow { justify-self: start; transform: rotate(90deg); transform-origin: center; margin: 6px 0; }
 
-  .hero-canvas { grid-column: 1 / 13; grid-row: 3; padding-left: 0; margin-top: 0; min-height: clamp(230px, 34vh, 300px); }
+  .hero-quote {
+    grid-column: 1 / 13; grid-row: 3;
+    margin: 0;
+    border-radius: var(--r-lg);
+    justify-content: center;
+  }
   .hero-meta > div { padding-right: 0; }
   .hero-meta { grid-column: 1 / 13; grid-row: 4; grid-template-columns: 1fr; gap: 14px; align-self: start; padding-top: clamp(18px, 3vh, 28px); }
   .hero-rules span:nth-child(1), .hero-rules span:nth-child(3) { display: none; }
@@ -1744,61 +1716,16 @@
 
 .about-inner { max-width: 1200px; margin: 0 auto; }
 
+/* One column now the statement has moved to the hero: the paragraph is
+   centred in the band with the actions centred beneath it. */
 .about-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(26px, 4vw, 64px);
-  align-items: start;
+  display: block;
+  max-width: 76ch;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.about-statement {
-  position: relative;
-  padding: clamp(28px, 3.4vw, 44px);
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: var(--shadow-soft);
-}
-
-/* An oversized quote mark, set as a flat block of ink at low opacity */
-.about-statement::before {
-  content: "“";
-  position: absolute;
-  top: clamp(-6px, -0.6vw, 0px);
-  left: clamp(14px, 2vw, 26px);
-  font-family: "Roboto", sans-serif;
-  font-size: clamp(90px, 11vw, 150px);
-  font-weight: 800;
-  line-height: 1;
-  color: var(--moss);
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-.about-quote {
-  position: relative;
-  font-family: "Roboto", sans-serif;
-  font-size: clamp(21px, 2.5vw, 32px);
-  font-weight: 700;
-  line-height: 1.32;
-  letter-spacing: -0.025em;
-  color: var(--ink);
-  margin: 0 0 clamp(20px, 3vh, 30px);
-}
-
-.about-signature {
-  display: inline-block;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--moss);
-  opacity: 0.6;
-}
-
-.about-detail { padding-top: clamp(4px, 1vh, 12px); }
+.about-detail { padding-top: 0; }
 
 .about-section .about-paragraph {
   font-size: clamp(15px, 1.4vw, 17px);
@@ -2022,11 +1949,13 @@
   gap: 0;
 }
 
+/* The screenshot column takes the larger share now — the copy reads fine
+   narrower, and the work should be the thing that carries the section. */
 .work-band {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   align-items: center;
-  gap: clamp(28px, 5vw, 76px);
+  gap: clamp(24px, 4vw, 60px);
 }
 
 /* Copy is always the left column, screenshot always the right. The markup
@@ -2085,7 +2014,7 @@
   min-width: 0;
   --wb-orange: #E8834A;
   --wb-bleed: 50vw;
-  padding: clamp(44px, 7vh, 88px) clamp(28px, 3vw, 52px) clamp(44px, 7vh, 88px) 0;
+  padding: clamp(40px, 6vh, 76px) clamp(22px, 2.4vw, 40px) clamp(40px, 6vh, 76px) 0;
   align-self: stretch;
   display: flex;
   flex-direction: column;
@@ -2104,8 +2033,14 @@
   pointer-events: none;
 }
 
-.work-band-copy::before { background: var(--ink); z-index: -2; }
-.wb-decor { z-index: -1; overflow: hidden; }
+/* Only the right edge is on screen — the rest bleeds off — so that is the
+   edge that needs softening. */
+.work-band-copy::before {
+  background: var(--ink);
+  z-index: -2;
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
+}
+.wb-decor { z-index: -1; overflow: hidden; border-radius: 0 var(--r-lg) var(--r-lg) 0; }
 
 /* The ground is hidden at rest and fades in under the copy on hover, bleeding
    left off the screen. */
@@ -2136,7 +2071,6 @@
   .work-band:hover .work-band-title { color: var(--cream); }
   .work-band:hover .work-band-desc { color: var(--cream); opacity: 0.88; }
   .work-band:hover .work-band-index { color: #FFB37A; }
-  .work-band:hover .work-band-rule { background: rgba(232, 131, 74, 0.4); }
   .work-band:hover .work-band-stack li { color: var(--cream); border-color: rgba(232, 131, 74, 0.4); background: rgba(255, 255, 255, 0.05); }
   .work-band:hover .work-band-foot { border-top-color: rgba(232, 131, 74, 0.3); }
   .work-band:hover .work-band-cta { color: var(--cream); border-color: rgba(232, 131, 74, 0.55); }
@@ -2190,7 +2124,6 @@
 
 /* At rest the copy sits on the cream page, so it reads dark. */
 .work-band-copy .work-band-index { color: #A24908; opacity: 1; }
-.work-band-copy .work-band-rule { background: var(--line-mid); }
 .work-band-copy .work-band-title { color: var(--ink); }
 .work-band-copy .work-band-desc { color: var(--ink); opacity: 0.78; }
 .work-band-copy .work-band-stack li { color: var(--moss); border-color: var(--line); background: rgba(255, 255, 255, 0.5); }
@@ -2211,12 +2144,6 @@
   letter-spacing: 0.16em;
   color: var(--moss);
   opacity: 0.75;
-}
-
-.work-band-rule {
-  width: clamp(24px, 4vw, 54px);
-  height: 1px;
-  background: var(--line-mid);
 }
 
 
@@ -3045,20 +2972,14 @@
 
 .section-about .section-title { color: var(--cream); }
 
-.section-about .about-statement {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(232, 131, 74, 0.35);
-  box-shadow: none;
-}
-
-.section-about .about-statement::before { color: var(--ab-orange); opacity: 0.3; }
-.section-about .about-quote { color: var(--cream); }
 
 .section-about .about-paragraph {
   color: var(--cream);
   opacity: 0.95;
-  font-size: clamp(17px, 1.7vw, 23px);
-  line-height: 1.75;
+  font-size: clamp(17px, 1.8vw, 25px);
+  line-height: 1.8;
+  text-align: center;
+  margin: 0 auto clamp(30px, 5vh, 48px);
 }
 
 /* Buttons re-tuned for the dark ground */
@@ -3089,7 +3010,7 @@
 /* ── About buttons ──────────────────────────────────────────────────────────
    Label and icon are separate cells divided by a rule, so they read as one
    designed control rather than a generic pill. */
-.about-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+.about-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
 .ab-btn {
   display: inline-flex;
@@ -3172,4 +3093,133 @@
   .work-band-copy::before { display: none; }
   .wb-decor { left: calc(-1 * var(--wb-bleed)); right: calc(-1 * var(--wb-bleed)); }
   .work-band + .work-band .work-band-copy::after { right: calc(-1 * var(--wb-bleed)); }
+}
+
+/* The first item sits on the cream page; the second and third sit on the
+   statement card. No single orange clears AA on both grounds, so each takes
+   the one that suits what is behind it. */
+.hero-meta > div:nth-child(1) dt,
+.hero-meta > div:nth-child(1) dd { color: #A24908; }
+
+.hero-meta > div:nth-child(2) dt,
+.hero-meta > div:nth-child(2) dd,
+.hero-meta > div:nth-child(3) dt,
+.hero-meta > div:nth-child(3) dd { color: #FFB37A; }
+
+@media (max-width: 900px) {
+  /* Stacked, every item is back on the cream page. */
+  .hero-meta > div dt,
+  .hero-meta > div dd { color: #A24908 !important; }
+}
+
+/* ── Rules and geometry inside the statement card ────────────────────────────
+   The hero's own rules pass over the card but are dark terracotta, which is
+   nearly invisible on this green (#C2410C reads about 1.8:1 against it). This
+   layer redraws the same lines in a light orange and is clipped to the card,
+   so each ground gets the tone it needs.
+
+   The offsets recreate the hero grid's coordinate space inside the card:
+   the card starts half a grid plus its own left margin in from the grid's
+   left edge, so the layer is pushed back by exactly that and given the grid's
+   full width. The rules then land on the same 25/50/75/100% lines. */
+.hq-rules {
+  position: absolute;
+  top: -40px;
+  bottom: -40px;
+  left: calc(-1 * ((100vw - var(--sbw, 0px) - 2 * clamp(24px, 5vw, 72px)) / 2 + clamp(20px, 2.6vw, 44px)));
+  width: calc(100vw - var(--sbw, 0px) - 2 * clamp(24px, 5vw, 72px));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hq-rules i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 179, 122, 0.5);
+}
+
+.hq-rules i:nth-child(1) { left: 25%; }
+.hq-rules i:nth-child(2) { left: 50%; }
+.hq-rules i:nth-child(3) { left: 75%; }
+.hq-rules i:nth-child(4) { left: 100%; }
+
+/* ── Geometry, on hover only ── */
+.hq-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft);
+}
+
+.hero-quote:hover .hq-shapes { opacity: 1; }
+
+.hq-shapes i {
+  position: absolute;
+  display: block;
+  --hq-orange: #E8834A;
+  transform: translateY(10px);
+  transition: transform 0.7s var(--ease-glide);
+}
+
+.hero-quote:hover .hq-shapes i { transform: translateY(0); }
+
+/* Each lags a little behind the last, so the set assembles rather than blinks */
+.hq-shapes i:nth-child(2) { transition-delay: 0.05s; }
+.hq-shapes i:nth-child(3) { transition-delay: 0.1s; }
+.hq-shapes i:nth-child(4) { transition-delay: 0.15s; }
+.hq-shapes i:nth-child(5) { transition-delay: 0.2s; }
+.hq-shapes i:nth-child(6) { transition-delay: 0.25s; }
+
+.hq-circle {
+  width: clamp(90px, 11vw, 165px); aspect-ratio: 1;
+  top: 6%; right: 8%;
+  border: 1px solid var(--hq-orange); border-radius: 50%; opacity: 0.5;
+}
+
+.hq-square {
+  width: clamp(52px, 6.5vw, 95px); aspect-ratio: 1;
+  bottom: 24%; left: 9%;
+  border: 1px solid var(--hq-orange); opacity: 0.45;
+}
+
+.hq-bar {
+  width: clamp(70px, 9vw, 140px); height: 3px;
+  top: 20%; left: 12%;
+  background: var(--hq-orange); opacity: 0.45;
+}
+
+.hq-square-fill {
+  width: clamp(22px, 2.8vw, 40px); aspect-ratio: 1;
+  bottom: 13%; right: 30%;
+  background: rgba(232, 131, 74, 0.26);
+}
+
+.hq-tri {
+  width: 0; height: 0;
+  bottom: 32%; right: 12%;
+  border-left: clamp(22px, 2.8vw, 40px) solid transparent;
+  border-right: clamp(22px, 2.8vw, 40px) solid transparent;
+  border-bottom: clamp(38px, 4.8vw, 68px) solid rgba(232, 131, 74, 0.24);
+}
+
+.hq-arc {
+  width: clamp(80px, 10vw, 150px); aspect-ratio: 1;
+  bottom: -12%; left: 40%;
+  border: 2px solid transparent;
+  border-top-color: var(--hq-orange); border-right-color: var(--hq-orange);
+  border-radius: 50%; opacity: 0.4;
+}
+
+/* The card's text stays above both layers */
+.hero-quote-text { position: relative; z-index: 1; }
+.hero-quote-mark { z-index: 0; }
+
+@media (max-width: 900px) {
+  /* Inline on mobile, so the grid coordinate trick no longer applies. */
+  .hq-rules { display: none; }
+  .hq-tri, .hq-square-fill { display: none; }
 }

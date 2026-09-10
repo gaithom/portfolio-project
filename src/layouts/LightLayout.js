@@ -198,7 +198,6 @@ function CapabilityVisual({ variant }) {
             <span className="cap-board-block b2" />
             <span className="cap-board-block b3" />
           </div>
-          <span className="cap-measure"><i /><b>1440</b><i /></span>
         </div>
       );
     case "terminal":
@@ -370,6 +369,19 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       }
     });
     return () => { cancelled = true; };
+  }, []);
+
+  // 100vw includes the scrollbar but the layout does not, so anything sized
+  // from 100vw sits half a scrollbar out of step with the grid. Publishing the
+  // real width lets the card's rule layer line up exactly.
+  useEffect(() => {
+    const setScrollbarWidth = () => {
+      const w = window.innerWidth - document.documentElement.clientWidth;
+      document.documentElement.style.setProperty("--sbw", `${w}px`);
+    };
+    setScrollbarWidth();
+    window.addEventListener("resize", setScrollbarWidth);
+    return () => window.removeEventListener("resize", setScrollbarWidth);
   }, []);
 
   // Jump the pinned rail to a given card. The rail is driven by scroll
@@ -557,23 +569,26 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <div><dt>Focus</dt><dd>AI interfaces, real-time dashboards</dd></div>
         </dl>
 
-        {/* An artboard being worked on: selection handles, a wireframe inside,
-            and a measure across the base. Geometry only, no micro-labels. */}
-        <div ref={heroDescRef} className="hero-canvas" aria-hidden="true">
-          <div className="hero-artboard">
-            <span className="hero-ab-bar" />
-            <span className="hero-ab-side" />
-            <span className="hero-ab-block b1" />
-            <span className="hero-ab-block b2" />
-            <span className="hero-ab-block b3" />
-            <span className="hero-ab-block b4" />
-            <span className="hero-handle tl" /><span className="hero-handle tr" />
-            <span className="hero-handle bl" /><span className="hero-handle br" />
-          </div>
-          <span className="hero-ab-ghost" />
-          <span className="hero-measure"><i /><i /></span>
-          <span className="hero-cursor" />
-        </div>
+        {/* The statement moved up from Who I Am. It runs to the foot of the
+            hero so its bottom edge meets the green band below. */}
+        <figure ref={heroDescRef} className="hero-quote">
+          {/* A brighter copy of the hero's column rules, clipped to the card.
+              The rules crossing from outside are dark terracotta, which all
+              but disappears on this green. */}
+          <span className="hq-rules" aria-hidden="true"><i /><i /><i /><i /></span>
+
+          {/* The About band's geometry, revealed on hover only. */}
+          <span className="hq-shapes" aria-hidden="true">
+            <i className="hq-circle" /><i className="hq-square" /><i className="hq-bar" />
+            <i className="hq-square-fill" /><i className="hq-tri" /><i className="hq-arc" />
+          </span>
+
+          <blockquote className="hero-quote-text">
+            I design interfaces that stay clear at scale, then build them myself,
+            so nothing is lost between the file and the browser.
+          </blockquote>
+          <figcaption className="hero-quote-mark" aria-hidden="true">&#8221;</figcaption>
+        </figure>
       </div>
 
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
@@ -600,13 +615,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         </div>
 
         <div className="about-layout">
-          <div className="split-block about-statement">
-            <p className="about-quote">
-              I design interfaces that stay clear at scale, then build them myself,
-              so nothing is lost between the file and the browser.
-            </p>
-          </div>
-
           <div className="split-block about-detail">
             <p className="about-paragraph">
               I'm a Frontend Developer &amp; UI/UX designer specialising in AI-powered interfaces
@@ -647,7 +655,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               <div className="cap-copy">
                 <div className="cap-meta">
                   <span className="cap-index">{item.id}</span>
-                  <span className="cap-meta-rule" />
                 </div>
                 <h3 className="cap-title">{item.title}</h3>
                 <p className="cap-desc">{item.desc}</p>
@@ -763,7 +770,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                   </div>
                   <div className="work-band-meta">
                     <span className="work-band-index">{String(p.id).padStart(2,"0")}</span>
-                    <span className="work-band-rule" />
                   </div>
 
                   <h3 className="work-band-title">{p.title}</h3>
