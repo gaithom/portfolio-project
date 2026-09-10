@@ -4,6 +4,14 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
+  /* Display type. Satoshi sets every heading and large line; Roboto stays as
+     the fallback so the page still reads correctly in its old face if the
+     Fontshare CDN is slow or blocked. Satoshi's sidebearings are tighter than
+     Roboto's, so the display tracking below eases to -0.02em — the old
+     -0.03/-0.04em was tuned for Roboto and collides in this face. */
+  --font-display: "Satoshi", "Roboto", sans-serif;
+  --display-tracking: -0.02em;
+
   /* Ink & paper */
   --ink: #2f4d45;
   --moss: #3c6057;
@@ -232,10 +240,14 @@
   border: none;
   background: none;
   cursor: pointer;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(12px, 1.1vw, 14px);
-  /* 900 is Roboto's heaviest weight and is loaded from Google Fonts, so this
-     is a real face rather than a synthesised bold. */
+  /* 900 is Satoshi Black, a real master requested in index.html rather than a
+     synthesised bold. It has to stay loaded: the display rules only need up to
+     700, and dropping 900 from the request would silently resolve this back
+     down to 700 and lighten the nav.
+     Tracking stays positive here — this is uppercase at 14px, where the
+     display's negative tracking would close the letterforms up. */
   font-weight: 900;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -267,11 +279,11 @@
 .hero-nav-link.is-active::after { transform: scaleX(1); opacity: 1; }
 
 .hero-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(52px, 11vw, 128px);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--display-tracking);
   margin: 0 0 clamp(20px, 3vh, 32px);
   color: #2f4d45;
   perspective: 900px;
@@ -330,11 +342,11 @@
 }
 
 .hero-subtitle {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(28px, 4.8vw, 52px);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--display-tracking);
   margin: 0 0 clamp(24px, 3vh, 36px);
   color: #3c6057;
   max-width: 18ch;
@@ -441,10 +453,13 @@
 
 
 
+/* Specificity 0,2,0 — this beats the single-class display rules, so it has to
+   carry the display tracking too or it silently reverts them to the Roboto
+   value. It is what kept "Skills & Stack" at -0.03em. */
 .timeline-section .section-title,
 .projects-section .section-title,
 .skills-section .section-title {
-  letter-spacing: -0.03em;
+  letter-spacing: var(--display-tracking);
 }
 
 @media (max-width: 768px) {
@@ -667,11 +682,11 @@
 /* Sized so the copy fits the card at every width. The old 78px was set for
    full-viewport cards and overflows the deck. */
 .cap-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(26px, 3.2vw, 44px);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.08;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--display-tracking);
   color: var(--cap-ink);
   margin: 0 0 clamp(12px, 1.8vh, 18px);
   max-width: 15ch;
@@ -915,7 +930,7 @@
   fill: none; stroke: var(--cap-ink); stroke-width: 10; stroke-linecap: round;
   stroke-dasharray: 327; stroke-dashoffset: 7;
 }
-.cap-gauge b { font-family: "Roboto", sans-serif; font-size: clamp(34px, 5vw, 54px); font-weight: 800; color: var(--cap-ink); line-height: 1; }
+.cap-gauge b { font-family: var(--font-display); font-size: clamp(34px, 5vw, 54px); font-weight: 700; color: var(--cap-ink); line-height: 1; }
 .cap-gauge em {
   position: absolute; bottom: 22%; font-style: normal;
   font-family: "Space Mono", monospace; font-size: 11px;
@@ -1046,10 +1061,10 @@
 }
 
 .expr-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(30px, 4.6vw, 52px);
-  font-weight: 800;
-  letter-spacing: -0.035em;
+  font-weight: 700;
+  letter-spacing: var(--display-tracking);
   color: var(--ink);
   margin: 0 0 14px;
 }
@@ -1071,11 +1086,27 @@
 
 /* Hairline rules — the visible evidence that the scatter is on a grid.
    Static: nothing here reacts to the pointer. */
-.expr-rules { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+/* Bled out to the full width of the screen rather than the canvas. The canvas
+   is centred in the viewport, so anchoring at its 50% and pulling back half a
+   viewport width lands the layer exactly on the screen edges, whatever padding
+   the section shell carries. --sbw is the scrollbar width: 100vw includes it
+   but the layout does not, and without the correction the rules overhang to
+   the right by that amount. */
+.expr-rules {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: calc(100vw - var(--sbw, 0px));
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-.expr-rule { position: absolute; background: var(--grid-line); }
-.expr-rule-v { top: -2%; bottom: -2%; width: 1px; }
-.expr-rule-h { left: -2%; right: -2%; height: 1px; }
+/* The firm grid tone, the same one that separates the projects — these read as
+   solid rules across the page rather than the faint lattice used elsewhere. */
+.expr-rule { position: absolute; background: var(--grid-line-strong); }
+.expr-rule-h { left: 0; right: 0; height: 1px; }
 
 /* ── Specimens ── */
 .expr-word {
@@ -1483,7 +1514,9 @@
   gap: clamp(12px, 1.9vw, 26px);
   font-size: clamp(28px, 6.2vw, 88px);
   line-height: 1.02;
-  letter-spacing: -0.045em;
+  /* Overrides the -0.045em this rule carried for Roboto: Satoshi is already
+     tightly fitted, and at 88px that value ran the letterforms together. */
+  letter-spacing: var(--display-tracking);
 }
 
 /* The arrow trails the name rather than sitting in a fixed column: pinned to
@@ -1590,32 +1623,35 @@
   margin: calc(-1 * clamp(90px, 15vh, 170px)) calc(-1 * clamp(24px, 5vw, 72px)) calc(-1 * var(--r-lg)) clamp(20px, 2.6vw, 44px);
   padding: clamp(30px, 3.6vw, 52px);
   border: none;
-  border-radius: var(--r-lg);
+  /* Square down the left edge, soft on the right. The left is the edge that
+     faces into the page, so a radius there read as a detached card; squared,
+     it reads as the green branching out of the About band behind it. */
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
   background: var(--ink);
   box-shadow: none;
   overflow: hidden;
 }
 
-/* Playfair Display, taken from the Expression specimen where it is listed
-   for pull quotes. Serif at the same size reads smaller and looser than
-   Roboto, so the size is up and the tracking relaxed. */
+/* Satoshi, same as every other display line on the page. Sans at this size
+   sets wider than the serif it replaces, so the size eases back a little and
+   the tracking tightens to the display value. */
 .hero-quote-text {
   margin: 0;
-  font-family: "Playfair Display", serif;
-  font-size: clamp(23px, 2.8vw, 38px);
-  font-style: italic;
-  font-weight: 600;
-  line-height: 1.32;
-  letter-spacing: -0.005em;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.6vw, 35px);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: var(--display-tracking);
   color: var(--cream);
 }
 
-/* An oversized closing mark sitting low in the card */
+/* An oversized closing mark sitting low in the card. Follows the card text
+   into Satoshi — left in Playfair it would be the only serif on the page. */
 .hero-quote-mark {
   position: absolute;
   right: clamp(16px, 2vw, 34px);
   bottom: clamp(-40px, -4vw, -20px);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-display);
   font-size: clamp(140px, 17vw, 260px);
   font-weight: 700;
   line-height: 1;
@@ -1780,11 +1816,11 @@
 }
 
 .contact-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(38px, 7vw, 92px);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 0.98;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--display-tracking);
   color: var(--ink);
   margin: 0;
 }
@@ -1846,10 +1882,10 @@
 .work-shot-mark { display: flex; flex-direction: column; gap: 7px; }
 
 .work-shot-mark-name {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(20px, 2.2vw, 28px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: var(--display-tracking);
   line-height: 1.1;
   color: rgba(255, 255, 255, 0.94);
 }
@@ -1946,7 +1982,10 @@
 .work-bands {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  /* Projects stand apart rather than sitting flush. The green only appears
+     under the one being hovered, so there is no continuous panel left to
+     protect by keeping them touching. */
+  gap: clamp(34px, 6.5vh, 78px);
 }
 
 /* The screenshot column takes the larger share now — the copy reads fine
@@ -1955,7 +1994,10 @@
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   align-items: center;
-  gap: clamp(24px, 4vw, 60px);
+  /* Note this gap is not the clearance you see: the green ground bleeds past
+     the copy column into it (see .work-band-copy::before below). Visible
+     clearance = this gap minus that overhang. */
+  gap: clamp(28px, 4.6vw, 68px);
 }
 
 /* Copy is always the left column, screenshot always the right. The markup
@@ -1980,17 +2022,25 @@
   background: none;
   box-shadow: none;
   padding: 0;
+  height: 100%;
 }
 
-/* `aspect-ratio: auto 16 / 10` uses the image's own ratio once it has loaded,
-   and falls back to 16/10 before then — without it the box collapses to zero
-   height until the file arrives, and the section jumps when it does. */
+/* Absolutely positioned on purpose. The shot column now takes its height from
+   the row, and the row is sized by the copy beside it; leaving the image in
+   flow would let its own height feed back into that row and the two sides
+   could never agree. Out of flow, the copy alone sets the height and the image
+   fills whatever it gets. object-fit: cover crops rather than distorts, which
+   matters because the screenshots are not all the same ratio (1.69 and 2.05).
+   It also removes the old load-time jump: the box no longer depends on the
+   file's natural size, so nothing reflows when it arrives. */
 .work-band-frame img {
-  position: static;
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: auto 16 / 10;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lift);
 }
@@ -1998,6 +2048,9 @@
 
 /* No <img> here, so the placeholder carries its own box and card treatment. */
 .work-band-frame.is-placeholder {
+  /* No image to stretch, so it takes the row height the same way. The ratio
+     stays as a floor for the stacked mobile layout, where there is no row. */
+  min-height: 100%;
   aspect-ratio: 16 / 10;
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lift);
@@ -2047,7 +2100,12 @@
 .work-band-copy::before,
 .wb-decor {
   left: calc(-1 * var(--wb-bleed));
-  right: calc(-1 * clamp(24px, 4vw, 48px));
+  /* How far the ground runs past the copy column, into the grid gap. It used
+     to be 48px, which ate nearly all of a 58px gap and left the green almost
+     touching the screenshot. Pulled back so the clearance is the gap's, not
+     the leftovers — done here rather than by widening the gap, which would
+     have come out of the screenshot's width. */
+  right: calc(-1 * clamp(10px, 1.2vw, 18px));
   opacity: 0;
   transition: opacity 0.5s var(--ease-soft), transform 0.65s var(--ease-glide);
   transform: translateX(-18px);
@@ -2075,7 +2133,6 @@
   .work-band:hover .work-band-foot { border-top-color: rgba(232, 131, 74, 0.3); }
   .work-band:hover .work-band-cta { color: var(--cream); border-color: rgba(232, 131, 74, 0.55); }
   .work-band:hover .work-band-cta:hover { background: var(--wb-orange); border-color: var(--wb-orange); color: #23180F; }
-  .work-band:hover .work-band-copy::after { opacity: 0; }
 }
 
 /* Grid and shapes take the same orange as the About band */
@@ -2149,10 +2206,10 @@
 
 
 .work-band-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(28px, 3.6vw, 52px);
-  font-weight: 800;
-  letter-spacing: -0.035em;
+  font-weight: 700;
+  letter-spacing: var(--display-tracking);
   line-height: 1.04;
   color: var(--ink);
   margin: 0 0 clamp(14px, 2.2vh, 20px);
@@ -2236,8 +2293,9 @@
 .work-band-cta:hover span { transform: translate(3px, -3px); }
 
 @media (max-width: 900px) {
-  /* Still no gap — the green stays continuous when stacked. */
-  .work-bands { gap: 0; }
+  /* Stacked, the bands already carry their own vertical padding, so this only
+     needs to top it up rather than repeat the desktop gap. */
+  .work-bands { gap: clamp(20px, 3.5vh, 36px); }
   .work-band { grid-template-columns: minmax(0, 1fr); gap: clamp(18px, 3vh, 26px); }
 
   .work-band-desc { max-width: none; }
@@ -2304,10 +2362,10 @@
 }
 
 .expertise-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(28px, 5vw, 46px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: var(--display-tracking);
   margin: 0 0 12px;
   color: #2f4d45;
 }
@@ -2444,10 +2502,10 @@
 }
 
 .expertise-tech-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(22px, 3.2vw, 34px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: var(--display-tracking);
   margin: 0;
   color: #2f4d45;
 }
@@ -2621,10 +2679,10 @@
 }
 
 .sec-head .section-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(28px, 4.2vw, 46px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: var(--display-tracking);
   line-height: 1.1;
   color: var(--ink);
   margin: 0 0 16px;
@@ -2835,9 +2893,9 @@
 }
 
 .contact-sent h3 {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink);
   margin: 0 0 8px;
 }
@@ -2976,6 +3034,11 @@
 .section-about .about-paragraph {
   color: var(--cream);
   opacity: 0.95;
+  /* Satoshi, matching the headings. Set at 400 — the display tracking is left
+     off deliberately, since -0.02em tightens a multi-line paragraph in a way
+     that hurts reading at this measure. */
+  font-family: var(--font-display);
+  font-weight: 400;
   font-size: clamp(17px, 1.8vw, 25px);
   line-height: 1.8;
   text-align: center;
@@ -3065,22 +3128,13 @@
   .ab-btn { justify-content: space-between; }
 }
 
-/* Bands are flush, so a hairline inside the green separates one project from
-   the next without breaking the continuous panel. */
-.work-band + .work-band .work-band-copy::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: calc(-1 * var(--wb-bleed));
-  right: 0;
-  height: 1px;
-  background: var(--line);
-  transition: opacity 0.5s var(--ease-soft);
-}
 
 
 /* The screenshot column keeps its own breathing room now the band has none. */
-.work-band-shot { padding: clamp(44px, 7vh, 88px) 0; }
+/* The screenshot matches the green ground opposite it: the ground runs the
+   full height of the band, so the shot stretches to the same row height
+   instead of sitting inside vertical padding. */
+.work-band-shot { padding: 0; align-self: stretch; }
 
 @media (max-width: 900px) {
   /* Stacked, the screenshot sits between one band's copy and the next, so a
@@ -3089,10 +3143,20 @@
   /* No hover on touch, so the bands stay on the cream page with dark copy. */
   .work-band { position: relative; padding: clamp(30px, 5vw, 44px) 0; }
   .work-band-copy { order: 1; padding: 0; }
-  .work-band-shot { order: 2; padding: 0; }
+  /* Stacked, the shot is its own row with no height to fill, so the image
+     returns to normal flow and its natural ratio. Left absolute it would
+     collapse to nothing. */
+  .work-band-shot { order: 2; padding: 0; align-self: auto; }
+  .work-band-frame { height: auto; }
+  .work-band-frame.is-placeholder { min-height: 0; }
+  .work-band-frame img {
+    position: static;
+    height: auto;
+    aspect-ratio: auto 16 / 10;
+    object-fit: fill;
+  }
   .work-band-copy::before { display: none; }
   .wb-decor { left: calc(-1 * var(--wb-bleed)); right: calc(-1 * var(--wb-bleed)); }
-  .work-band + .work-band .work-band-copy::after { right: calc(-1 * var(--wb-bleed)); }
 }
 
 /* The first item sits on the cream page; the second and third sit on the
@@ -3145,81 +3209,11 @@
 .hq-rules i:nth-child(3) { left: 75%; }
 .hq-rules i:nth-child(4) { left: 100%; }
 
-/* ── Geometry, on hover only ── */
-.hq-shapes {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-soft);
-}
-
-.hero-quote:hover .hq-shapes { opacity: 1; }
-
-.hq-shapes i {
-  position: absolute;
-  display: block;
-  --hq-orange: #E8834A;
-  transform: translateY(10px);
-  transition: transform 0.7s var(--ease-glide);
-}
-
-.hero-quote:hover .hq-shapes i { transform: translateY(0); }
-
-/* Each lags a little behind the last, so the set assembles rather than blinks */
-.hq-shapes i:nth-child(2) { transition-delay: 0.05s; }
-.hq-shapes i:nth-child(3) { transition-delay: 0.1s; }
-.hq-shapes i:nth-child(4) { transition-delay: 0.15s; }
-.hq-shapes i:nth-child(5) { transition-delay: 0.2s; }
-.hq-shapes i:nth-child(6) { transition-delay: 0.25s; }
-
-.hq-circle {
-  width: clamp(90px, 11vw, 165px); aspect-ratio: 1;
-  top: 6%; right: 8%;
-  border: 1px solid var(--hq-orange); border-radius: 50%; opacity: 0.5;
-}
-
-.hq-square {
-  width: clamp(52px, 6.5vw, 95px); aspect-ratio: 1;
-  bottom: 24%; left: 9%;
-  border: 1px solid var(--hq-orange); opacity: 0.45;
-}
-
-.hq-bar {
-  width: clamp(70px, 9vw, 140px); height: 3px;
-  top: 20%; left: 12%;
-  background: var(--hq-orange); opacity: 0.45;
-}
-
-.hq-square-fill {
-  width: clamp(22px, 2.8vw, 40px); aspect-ratio: 1;
-  bottom: 13%; right: 30%;
-  background: rgba(232, 131, 74, 0.26);
-}
-
-.hq-tri {
-  width: 0; height: 0;
-  bottom: 32%; right: 12%;
-  border-left: clamp(22px, 2.8vw, 40px) solid transparent;
-  border-right: clamp(22px, 2.8vw, 40px) solid transparent;
-  border-bottom: clamp(38px, 4.8vw, 68px) solid rgba(232, 131, 74, 0.24);
-}
-
-.hq-arc {
-  width: clamp(80px, 10vw, 150px); aspect-ratio: 1;
-  bottom: -12%; left: 40%;
-  border: 2px solid transparent;
-  border-top-color: var(--hq-orange); border-right-color: var(--hq-orange);
-  border-radius: 50%; opacity: 0.4;
-}
-
-/* The card's text stays above both layers */
+/* The card's text stays above the rule layer */
 .hero-quote-text { position: relative; z-index: 1; }
 .hero-quote-mark { z-index: 0; }
 
 @media (max-width: 900px) {
   /* Inline on mobile, so the grid coordinate trick no longer applies. */
   .hq-rules { display: none; }
-  .hq-tri, .hq-square-fill { display: none; }
 }

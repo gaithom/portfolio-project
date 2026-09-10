@@ -27,6 +27,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+
+    <!-- Satoshi carries every heading and display line. Loaded as a <link>
+         rather than an @import so it downloads alongside the bundle instead of
+         queueing behind it.
+         Every weight here is a real Satoshi master. Note there is NO 800:
+         asking for one is dropped by the API and the browser then resolves 800
+         upward to 900 Black, which is why the display rules set 700 rather
+         than the 800 they used under Roboto. 900 is loaded for the hero nav,
+         which is set in Black on purpose. -->
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f%5B%5D=satoshi@400,500,700,900&display=swap">
     <title>Michael Gaitho - Frontend Developer &amp; UI/UX Designer</title>
 </head>
 <body>

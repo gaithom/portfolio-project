@@ -105,6 +105,15 @@ const EXPRESSION_WORDS = [
   { word: "System",    face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",           weight: 600, size: 3.8, colour: "#4A3A24", area: "13 / 7 / 15 / 12" }
 ];
 
+/* Horizontal rule positions, as a share of the canvas height.
+   They were even fifths (20/40/60/80), but two of them struck through a word:
+   20% cut across Editorial and 80% across Contrast. Those two moved down to
+   land just under the baseline of the word they were crossing, which is the
+   relationship 60% already had with Balance — the word sits on the rule rather
+   than being crossed by it. 40% and 60% were clear of every word and are
+   unchanged. */
+const EXPR_RULE_TOPS = [24.1, 40, 60, 81.5];
+
 const EXPRESSION_PALETTE_AREAS = {
   Moss: "1 / 8 / 4 / 13",
   Clay: "5 / 1 / 8 / 6",
@@ -577,12 +586,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               but disappears on this green. */}
           <span className="hq-rules" aria-hidden="true"><i /><i /><i /><i /></span>
 
-          {/* The About band's geometry, revealed on hover only. */}
-          <span className="hq-shapes" aria-hidden="true">
-            <i className="hq-circle" /><i className="hq-square" /><i className="hq-bar" />
-            <i className="hq-square-fill" /><i className="hq-tri" /><i className="hq-arc" />
-          </span>
-
           <blockquote className="hero-quote-text">
             I design interfaces that stay clear at scale, then build them myself,
             so nothing is lost between the file and the browser.
@@ -805,9 +808,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       </div>
 
       <div className="expr-canvas">
+        {/* Horizontal rules only. They run the full width of the viewport, so
+            the layer they live in is bled out to the screen edges in CSS. */}
         <div className="expr-rules" aria-hidden="true">
-          {[1, 2, 3, 4, 5].map((i) => <span key={`v${i}`} className="expr-rule expr-rule-v" style={{ left: `${(i / 6) * 100}%` }} />)}
-          {[1, 2, 3, 4].map((i) => <span key={`h${i}`} className="expr-rule expr-rule-h" style={{ top: `${(i / 5) * 100}%` }} />)}
+          {EXPR_RULE_TOPS.map((top, i) => <span key={`h${i}`} className="expr-rule expr-rule-h" style={{ top: `${top}%` }} />)}
         </div>
 
         {EXPRESSION_WORDS.map((w) => (
