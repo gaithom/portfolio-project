@@ -57,10 +57,10 @@ export default function App() {
 
   // Global CSS
   const css=`
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800;900&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;scroll-padding-top:${isLight?0:80}px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
-    body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;}
+    body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:clip;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;}
     ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:${theme.bg}}::-webkit-scrollbar-thumb{background:${theme.textMuted};border-radius:99px;opacity:.45}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -86,7 +86,9 @@ export default function App() {
       .main-nav { -webkit-backdrop-filter: none; backdrop-filter: none; }
       /* Prevent horizontal scrolling */
       * { box-sizing: border-box; }
-      html, body { overflow-x: hidden; }
+      /* clip, not hidden: hidden turns these into scroll containers and
+         breaks position:sticky in every descendant. */
+      html, body { overflow-x: clip; }
       img, video, iframe { max-width: 100%; height: auto; }
       /* Forest theme specific fixes */
       .forest-hero { width: 100% !important; }
@@ -275,7 +277,7 @@ export default function App() {
       .forest-game .game-container { transform: scale(0.7) !important; }
     }
     @media (max-width: 768px) {
-      .hero-section { padding: 100px 20px 60px !important; min-height: 85vh !important; }
+      .hero-section { padding: 100px 20px 0 !important; min-height: auto !important; }
       .hero-content { max-width: 100% !important; }
       .hero-title { font-size: clamp(28px, 8vw, 48px) !important; }
       .hero-subtitle { font-size: 14px !important; max-width: 100% !important; }
@@ -317,7 +319,7 @@ export default function App() {
     }
     
     @media (max-width: 480px) {
-      .hero-section { padding: 80px 16px 40px !important; min-height: 80vh !important; }
+      .hero-section { padding: 80px 16px 0 !important; min-height: auto !important; }
       .hero-title { font-size: clamp(24px, 8vw, 40px) !important; }
       .hero-subtitle { font-size: 13px !important; }
       .hero-description { font-size: 11px !important; }
@@ -471,7 +473,7 @@ export default function App() {
 
   
   return (
-    <div style={{background:theme.bg,color:theme.text,minHeight:"100vh",overflowX:"hidden",position:"relative"}}>
+    <div style={{background:theme.bg,color:theme.text,minHeight:"100vh",overflowX:"clip",position:"relative"}}>
       <GSAPLoader/><style>{css}</style>
       <ScrollBar theme={theme}/>
       {/* ScrollIndicator component removed - mouse icon with "Scroll" text */}

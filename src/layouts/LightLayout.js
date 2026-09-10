@@ -112,6 +112,18 @@ const EXPRESSION_PALETTE_AREAS = {
   Signal: "12 / 1 / 15 / 6"
 };
 
+// ── Hero navigation ──────────────────────────────────────────────────────────
+// Mapped to the sections this layout actually renders, not the labels from the
+// reference.
+const HERO_NAV = [
+  { label: "About", id: "about" },
+  { label: "What I Do", id: "what-i-do" },
+  { label: "Expertise", id: "skills" },
+  { label: "Work", id: "projects" },
+  { label: "Type", id: "type-canvas" },
+  { label: "Contact", id: "contact" }
+];
+
 // ── Broken grid ──────────────────────────────────────────────────────────────
 // A lattice that reads as complete but is visibly fractured: each rule is built
 // from segments with gaps, and the gaps on crossing axes never line up. Built
@@ -285,20 +297,16 @@ function CapabilityVisual({ variant }) {
 }
 
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
-  const heroRef=useRef(null),heroTitleRef=useRef(null),heroBadgeRef=useRef(null),heroDescRef=useRef(null),heroCtaRef=useRef(null),developerRef=useRef(null);
+  const heroRef=useRef(null),heroTitleRef=useRef(null),heroDescRef=useRef(null),developerRef=useRef(null);
   const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),typeCanvasRef=useRef(null),contactRef=useRef(null);
-  const designSectionRef=useRef(null),aboutRailRef=useRef(null),aboutTrackRef=useRef(null);
-  const railTriggerRef=useRef(null);
-  const railFillRef=useRef(null);
+  const designSectionRef=useRef(null);
   const [developerFill, setDeveloperFill] = useState(0);
   const [activeWhatIDo, setActiveWhatIDo] = useState(0);
   // Screenshots that failed to load. A project can name an image before the
   // file exists; the card then falls back to its title card instead of
   // rendering an empty rectangle.
   const [missingShots, setMissingShots] = useState({});
-  // Guarded: the rail's active index is driven by scroll maths, so never let a
-  // bad value reach the dock and take the whole layout down with it.
-  const activeCapability = CAPABILITIES[activeWhatIDo] || CAPABILITIES[0];
+  const [activeSection, setActiveSection] = useState(null);
 
   // Developer word — fill follows cursor left → right, unfills right → left
   useEffect(() => {
@@ -321,6 +329,27 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       el.removeEventListener("mousemove", onMove);
       el.removeEventListener("mouseleave", onLeave);
     };
+  }, []);
+
+  // Marks the card currently sitting in the middle of the viewport, which is
+  // what drives each artefact's assembly. An observer only fires on threshold
+  // crossings, so the stack itself stays pure CSS and perfectly smooth.
+  useEffect(() => {
+    const cards = Array.from(document.querySelectorAll(".cap-card"));
+    if (!cards.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const i = cards.indexOf(e.target);
+            if (i > -1) setActiveWhatIDo(i);
+          }
+        });
+      },
+      { rootMargin: "-42% 0px -42% 0px", threshold: 0 }
+    );
+    cards.forEach((c) => io.observe(c));
+    return () => io.disconnect();
   }, []);
 
   // A project can name a screenshot before the file exists. Both the CRA dev
@@ -346,31 +375,12 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   // Jump the pinned rail to a given card. The rail is driven by scroll
   // position, so navigating means scrolling the page to the matching offset
   // rather than moving the track directly.
-  const goToCapability = (index) => {
-    // Look the trigger up by id at click time rather than reading a ref: the
-    // ref is only populated once ScrollTrigger has fired an update, so on a
-    // fresh load the first dock click would find it null and do nothing.
-    const st = railTriggerRef.current
-      || window.ScrollTrigger?.getById("whatido-horizontal-lock");
-    if (!st) return;
-    const span = CAPABILITIES.length - 1;
-    const target = st.start + ((st.end - st.start) * (index / span));
-    // "instant", not "smooth": a smooth page scroll is still in flight when
-    // ScrollTrigger's snap wakes up, and the snap grabs the mid-flight
-    // progress and rounds it to the next card — landing one card past the
-    // one that was clicked. Jumping the scroll position lands exactly on the
-    // snap point, and because the section is pinned nothing visibly jumps —
-    // scrub still glides the rail across to the new card.
-    window.scrollTo({ top: target, behavior: "instant" });
-  };
-
   useGSAP((gsap,ST)=>{
-    let whatidoCleanup;
 
     const heroSoftware=heroTitleRef.current?.querySelector(".hero-line-software");
     const heroName=heroTitleRef.current?.querySelector(".hero-title-name");
     const heroArrow=heroTitleRef.current?.querySelector(".hero-title-arrow");
-    const heroBits=[heroName,heroArrow,heroSoftware,developerRef.current,heroBadgeRef.current,heroDescRef.current,heroCtaRef.current].filter(Boolean);
+    const heroBits=[heroName,heroArrow,heroSoftware,developerRef.current,heroDescRef.current].filter(Boolean);
     gsap.set(heroBits,{opacity:0});
 
     const heroIntro=gsap.timeline({delay:0.45,defaults:{ease:"expo.out"}});
@@ -400,25 +410,11 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         "-=0.7"
       );
     }
-    if(heroBadgeRef.current){
-      heroIntro.fromTo(heroBadgeRef.current,
-        {x:-48,opacity:0,clipPath:"inset(0 100% 0 0)"},
-        {x:0,opacity:1,clipPath:"inset(0 0% 0 0)",duration:0.95,ease:"power3.out"},
-        "-=0.72"
-      );
-    }
     if(heroDescRef.current){
       heroIntro.fromTo(heroDescRef.current,
         {y:28,opacity:0,filter:"blur(4px)"},
         {y:0,opacity:1,filter:"blur(0px)",duration:0.8},
         "-=0.55"
-      );
-    }
-    if(heroCtaRef.current){
-      heroIntro.fromTo(heroCtaRef.current,
-        {y:18,opacity:0},
-        {y:0,opacity:1,duration:0.65},
-        "-=0.45"
       );
     }
     
@@ -427,151 +423,10 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     // it matched nothing either. Both removed rather than left running.
 
 
-    if(designSectionRef.current&&aboutRailRef.current&&aboutTrackRef.current){
-      const section=designSectionRef.current;
-      const rail=aboutRailRef.current;
-      const track=aboutTrackRef.current;
-      const cards=Array.from(track.querySelectorAll(".cap-card"));
+    // The What-I-Do section used to be a pinned horizontal rail driven by
+    // ScrollTrigger. It is now a sticky stacking deck handled entirely in CSS,
+    // which scrolls natively and costs nothing per frame.
 
-      const getLayoutConfig=()=>({visible:1,gap:0,peek:0});
-
-      const syncCardWidth=()=>{
-        const {gap}=getLayoutConfig();
-        const cardW=window.innerWidth;
-        const cardH=window.innerHeight;
-        rail.style.setProperty("--card-width",`${cardW}px`);
-        rail.style.setProperty("--card-height",`${cardH}px`);
-        rail.style.setProperty("--card-gap",`${gap}px`);
-      };
-
-      const getScrollDistance=()=>Math.max(0,track.scrollWidth-rail.clientWidth);
-
-      let refreshRaf;
-      const refreshLayout=()=>{
-        syncCardWidth();
-        ST.refresh();
-      };
-      const scheduleRefresh=()=>{
-        cancelAnimationFrame(refreshRaf);
-        refreshRaf=requestAnimationFrame(refreshLayout);
-      };
-
-      syncCardWidth();
-
-      const ro=new ResizeObserver(scheduleRefresh);
-      ro.observe(rail);
-      ro.observe(section);
-
-      const mm=gsap.matchMedia();
-
-      mm.add("(min-width: 0px)",()=>{
-        gsap.set(track,{force3D:true,x:0});
-
-        const tween=gsap.to(track,{
-          x:()=>-getScrollDistance(),
-          ease:"none",
-          scrollTrigger:{
-            id:"whatido-horizontal-lock",
-            trigger:section,
-            start:"top top",
-            // Give each card a little over a viewport of scroll so the travel
-            // never feels like it is racing the wheel.
-            end:()=>`+=${Math.max(getScrollDistance()*1.25,(cards.length-1)*window.innerHeight*1.1)}`,
-            // Higher scrub = the track eases toward the scroll position instead
-            // of tracking it frame-for-frame. This is what makes it glide.
-            scrub:1.1,
-            pin:true,
-            pinSpacing:true,
-            anticipatePin:1,
-            invalidateOnRefresh:true,
-            // A soft settle, not a hard snap: it waits for the user to stop,
-            // then eases out rather than yanking to the nearest card.
-            // inertia:false is load-bearing — with momentum projection on,
-            // ScrollTrigger reads a programmatic jump as enormous velocity and
-            // carries the snap far past the target (a dock click would run the
-            // rail to the last card). Off, it simply settles on the nearest.
-            snap:cards.length>1?{
-              snapTo:1/(cards.length-1),
-              duration:{min:0.3,max:0.7},
-              delay:0.12,
-              ease:"power2.out",
-              inertia:false
-            }:false,
-            onRefresh:(self)=>{ railTriggerRef.current=self; },
-            onUpdate:(self)=>{
-              railTriggerRef.current=self;
-              // The progress bar is written straight to the DOM. It used to go
-              // through setState, which re-rendered the entire layout — seven
-              // rail cards, the expression canvas, the work bands, the contact
-              // form — on every single scroll frame. That was the stutter.
-              const fill=railFillRef.current;
-              if(fill)fill.style.transform=`scaleX(${self.progress})`;
-              // Clamp low last, so an empty card list can never yield -1.
-              const idx=Math.max(0,Math.min(cards.length-1,Math.round(self.progress*(cards.length-1))));
-              // Only touch state when the card actually changes.
-              setActiveWhatIDo((prev)=>prev===idx?prev:idx);
-            }
-          }
-        });
-
-        // ── Depth inside each card ──────────────────────────────────────────
-        // One scrubbed timeline per card, not five separate ScrollTriggers.
-        // The previous version created 35 triggers across the rail (5 x 7),
-        // and every one of them recalculated on each frame of the pinned
-        // scroll. Rotation was dropped too: rotating a full-viewport element
-        // is markedly more expensive to composite than translate and scale.
-        const cardTweens=[];
-        cards.forEach((card)=>{
-          const copy=card.querySelector(".cap-copy");
-          const visual=card.querySelector(".cap-visual");
-          const index=card.querySelector(".cap-index");
-
-          const tl=gsap.timeline({
-            defaults:{ease:"none"},
-            scrollTrigger:{
-              trigger:card,
-              containerAnimation:tween,
-              start:"left right",
-              end:"right left",
-              scrub:true
-            }
-          });
-
-          if(visual)tl.fromTo(visual,{xPercent:16,scale:.93},{xPercent:-16,scale:1.03,duration:1},0);
-          if(copy){
-            tl.fromTo(copy,{xPercent:-8},{xPercent:8,duration:1},0)
-              // Copy is dim at the edges of travel and lit dead centre, so
-              // attention lands on whichever card is actually in front of you.
-              .fromTo(copy,{opacity:.18},{opacity:1,duration:.5},0)
-              .to(copy,{opacity:.18,duration:.5},.5);
-          }
-          if(index)tl.fromTo(index,{yPercent:-30,opacity:0},{yPercent:0,opacity:1,duration:.35},0);
-
-          cardTweens.push(tl);
-        });
-
-        window.addEventListener("resize",scheduleRefresh);
-        window.addEventListener("orientationchange",scheduleRefresh);
-        window.addEventListener("load",scheduleRefresh);
-        requestAnimationFrame(scheduleRefresh);
-        setTimeout(scheduleRefresh,320);
-
-        return ()=>{
-          window.removeEventListener("resize",scheduleRefresh);
-          window.removeEventListener("orientationchange",scheduleRefresh);
-          window.removeEventListener("load",scheduleRefresh);
-          cardTweens.forEach((t)=>{t.scrollTrigger?.kill();t.kill();});
-          tween.scrollTrigger?.kill();
-          tween.kill();
-        };
-      });
-
-      whatidoCleanup=()=>{
-        ro.disconnect();
-        cancelAnimationFrame(refreshRaf);
-        mm.revert();
-      };
-    }
     let skillsCleanup;
     if(skillsRef.current){
       const section=skillsRef.current;
@@ -637,7 +492,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     return ()=>{
       cancelAnimationFrame(refreshRafId);
       clearTimeout(refreshTimer);
-      whatidoCleanup?.();
       skillsCleanup?.();
     };
   },[]);
@@ -655,6 +509,24 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       <div className="hero-grid">
         <div className="hero-rules" aria-hidden="true">
           <span /><span /><span /><span />
+        </div>
+
+        <div className="hero-rail">
+          <img className="hero-logo" src="/logo_transparent_shadow.png" alt="Michael Gaitho" />
+
+          <nav className="hero-nav" aria-label="Sections">
+            {HERO_NAV.map((n) => (
+              <button
+                key={n.id}
+                type="button"
+                className={`hero-nav-link${activeSection === n.id ? " is-active" : ""}`}
+                aria-current={activeSection === n.id ? "true" : undefined}
+                onClick={() => { setActiveSection(n.id); scrollTo(n.id); }}
+              >
+                {n.label}
+              </button>
+            ))}
+          </nav>
         </div>
 
         {/* Name → role, laid out as one line reading across the grid: the
@@ -685,15 +557,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <div><dt>Focus</dt><dd>AI interfaces, real-time dashboards</dd></div>
         </dl>
 
-        <div ref={heroCtaRef} className="hero-cta">
-          <button className="bp hero-btn" onClick={()=>scrollTo("projects")}>
-            <span className="hero-btn-grid" aria-hidden="true">
-              <i /><i /><i /><i />
-            </span>
-            <span className="hero-btn-label">View selected work</span>
-          </button>
-        </div>
-
         {/* An artboard being worked on: selection handles, a wireframe inside,
             and a measure across the base. Geometry only, no micro-labels. */}
         <div ref={heroDescRef} className="hero-canvas" aria-hidden="true">
@@ -718,6 +581,19 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* ABOUT — statement on the left, the detail and the facts on the right */}
     <section ref={aboutRef} id="about" className="about-section light-section-shell section-about">
+      <BrokenGrid className="bgrid-about" />
+      {/* Geometry laid over the grid: outlines and solids in orange, sized off
+          the section so they scale with it. */}
+      <div className="about-shapes" aria-hidden="true">
+        <span className="ab-shape ab-circle" />
+        <span className="ab-shape ab-circle-sm" />
+        <span className="ab-shape ab-square" />
+        <span className="ab-shape ab-square-fill" />
+        <span className="ab-shape ab-bar" />
+        <span className="ab-shape ab-bar-v" />
+        <span className="ab-shape ab-tri" />
+        <span className="ab-shape ab-arc" />
+      </div>
       <div className="about-inner">
         <div className="sec-head">
           <h2 className="section-title">Who I Am</h2>
@@ -739,8 +615,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               specialising in software engineering and human-computer interaction.
             </p>
             <div className="about-buttons">
-              <button className="bp" onClick={() => window.open('/resume.pdf', '_blank')}>Download Resume</button>
-              <button className="bg" onClick={()=>scrollTo("projects")}>See Work →</button>
+              <button className="ab-btn ab-btn-solid" onClick={() => window.open('/resume.pdf', '_blank')}>
+                <span className="ab-btn-label">Download Resume</span>
+                <span className="ab-btn-icon" aria-hidden="true">&#8595;</span>
+              </button>
+              <button className="ab-btn ab-btn-line" onClick={()=>scrollTo("projects")}>
+                <span className="ab-btn-label">See Work</span>
+                <span className="ab-btn-icon" aria-hidden="true">&#8594;</span>
+              </button>
             </div>
           </div>
         </div>
@@ -749,61 +631,37 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     </section>
 
     {/* WHAT I DO — pinned horizontal case-study rail */}
+    {/* WHAT I DO — a deck of cards that stack up as you scroll. Each card is
+        sticky at a slightly lower offset than the one before, so the ones
+        already passed stay visible as a stepped edge behind the current one.
+        No pinning and no scroll-driven JS: the browser does all of it. */}
     <section ref={designSectionRef} id="what-i-do" className="whatido-section light-section-shell section-whatido">
-      <div ref={aboutRailRef} className="whatido-horizontal-rail">
-        <div ref={aboutTrackRef} className="whatido-horizontal-track">
-          {CAPABILITIES.map((item, i) => (
-            <article
-              key={item.id}
-              className={`cap-card tone-${item.tone} cap-variant-${item.variant} ${i === activeWhatIDo ? "is-active" : ""}`}
-            >
-              <div className="cap-card-inner">
-                <div className="cap-copy">
-                  <div className="cap-meta">
-                    <span className="cap-index">{item.id}</span>
-                    <span className="cap-meta-rule" />
-                  </div>
-                  <h3 className="cap-title">{item.title}</h3>
-                  <p className="cap-desc">{item.desc}</p>
-                  <ul className="cap-tags">
-                    {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                  </ul>
+      <div className="cap-stack">
+        {CAPABILITIES.map((item, i) => (
+          <article
+            key={item.id}
+            style={{ "--i": i, "--depth": CAPABILITIES.length - 1 - i }}
+            className={`cap-card tone-${item.tone} cap-variant-${item.variant} ${i === activeWhatIDo ? "is-active" : ""}`}
+          >
+            <div className="cap-card-inner">
+              <div className="cap-copy">
+                <div className="cap-meta">
+                  <span className="cap-index">{item.id}</span>
+                  <span className="cap-meta-rule" />
                 </div>
-                <div className="cap-visual">
-                  <CapabilityVisual variant={item.variant} />
-                </div>
+                <h3 className="cap-title">{item.title}</h3>
+                <p className="cap-desc">{item.desc}</p>
+                <ul className="cap-tags">
+                  {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                </ul>
               </div>
-            </article>
-          ))}
-        </div>
+              <div className="cap-visual">
+                <CapabilityVisual variant={item.variant} />
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
-
-      {/* Fixed chapter index — stays put while the rail travels underneath */}
-      <div className="cap-dock">
-        <div className="cap-dock-left">
-          <span className="cap-dock-title">{activeCapability.title}</span>
-        </div>
-        <nav className="cap-dock-nav" aria-label="Capabilities">
-          {CAPABILITIES.map((item, i) => (
-            <button
-              key={item.id}
-              type="button"
-              className={`cap-dock-dot${i === activeWhatIDo ? " is-active" : ""}`}
-              aria-label={item.title}
-              aria-current={i === activeWhatIDo ? "true" : undefined}
-              onClick={() => goToCapability(i)}
-            >
-              <span>{item.id}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="cap-dock-right">
-          <span className="cap-dock-track">
-            <i ref={railFillRef} />
-          </span>
-        </div>
-      </div>
-
       {devMode&&<DevBadge id="what-i-do" devMode={devMode} theme={theme}/>}
     </section>
 
@@ -812,7 +670,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       <div className="expertise-inner">
         <div className="expertise-header">
           <h2 className="section-title expertise-title">Skills & Stack</h2>
-          <p className="expertise-lead">Design craft and engineering depth, measured in practice rather than buzzwords.</p>
         </div>
         <div className="expertise-layout">
           <aside className="expertise-skills-rail">
@@ -862,15 +719,13 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       <div className="work-inner">
         <div className="sec-head">
           <h2 className="section-title">Featured Work</h2>
-          <p className="sec-lead">A selection of enterprise engagements, from greenfield architecture to complex systems integration at scale.</p>
         </div>
 
         <div className="work-bands">
-          {PROJECTS.map((p,i)=>{
+          {PROJECTS.map((p)=>{
             const hasShot = p.image && !missingShots[p.id];
             return (
-              <article className={`work-band${i % 2 ? " is-flipped" : ""}`} key={p.id}>
-                <span className="work-band-line" aria-hidden="true" />
+              <article className="work-band" key={p.id}>
                 <a
                   className="work-band-shot"
                   href={p.liveUrl}
@@ -896,6 +751,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                 </a>
 
                 <div className="work-band-copy">
+                  {/* Decoration lives in its own bleed layer so the grid and
+                      shapes run out to the screen edge with the background,
+                      rather than stopping at the text column. */}
+                  <div className="wb-decor" aria-hidden="true">
+                    <BrokenGrid className="bgrid-work-copy" />
+                    <span className="wb-shape wb-circle" />
+                    <span className="wb-shape wb-square" />
+                    <span className="wb-shape wb-bar" />
+                    <span className="wb-shape wb-square-fill" />
+                  </div>
                   <div className="work-band-meta">
                     <span className="work-band-index">{String(p.id).padStart(2,"0")}</span>
                     <span className="work-band-rule" />
@@ -931,10 +796,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <section ref={typeCanvasRef} id="type-canvas" className="expr-section light-section-shell section-type-canvas">
       <div className="expr-head">
         <h2 className="section-title expr-title">Type &amp; Colour</h2>
-        <p className="sec-lead expr-lead">
-          The system underneath the work, laid out loose and held on a strict grid.
-          Hover anything to read its spec.
-        </p>
       </div>
 
       <div className="expr-canvas">
@@ -1010,12 +871,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
         <div className="contact-split-layout">
           <div className="contact-cards">
-            <p className="contact-intro">
-              I'm always interested in hearing about new projects and opportunities,
-              whether that's a full product, a single interface, or a second pair of eyes
-              on something you've already started.
-            </p>
-
             <div className="contact-card-stack">
               {CONTACT_INFO.map((c,i)=>(
                 <a key={i} href={c.link} target="_blank" rel="noopener noreferrer" className="contact-info-card">
