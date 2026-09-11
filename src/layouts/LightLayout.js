@@ -873,6 +873,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* CONTACT — a statement, the channels, the facts, then the form */}
     <section ref={contactRef} id="contact" className="contact-section light-section-shell section-contact">
       <BrokenGrid className="bgrid-contact" />
+      {/* Same geometry vocabulary as Who I Am — the two green bands are meant
+          to read as a pair. Positions are re-pitched in CSS so this one is not
+          a straight copy of that one. */}
+      <div className="contact-shapes" aria-hidden="true">
+        <span className="ab-shape ab-circle" />
+        <span className="ab-shape ab-circle-sm" />
+        <span className="ab-shape ab-square" />
+        <span className="ab-shape ab-square-fill" />
+        <span className="ab-shape ab-bar" />
+        <span className="ab-shape ab-arc" />
+      </div>
       <div className="contact-inner">
         <div className="contact-hero">
           <h2 className="section-title contact-title">Let's work<br />together</h2>

@@ -2777,7 +2777,7 @@
 }
 
 .contact-info-title {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -3083,7 +3083,7 @@
   border-radius: var(--r-sm);
   background: transparent;
   cursor: pointer;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-display);
   overflow: hidden;
   transition: transform var(--dur-base) var(--ease-glide),
     box-shadow var(--dur-base) var(--ease-soft);
@@ -3217,3 +3217,178 @@
   /* Inline on mobile, so the grid coordinate trick no longer applies. */
   .hq-rules { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONTACT — the second deep green band, a pair with Who I Am
+   Scoped on .section-contact throughout (0,2,0) so it outranks the cream-ground
+   .contact-* rules earlier in the file without depending on source order.
+
+   Colour is measured against this green (#2F4D45), not guessed:
+     #F2EFE7 cream        8.06:1  AAA  — titles, values, input text
+     #FFB37A light orange 5.28:1  AA   — small labels, anything under ~18px
+     #E8834A orange       3.43:1       — large text, borders, icons, geometry
+   The page terracotta (#C2410C) only reaches 1.79:1 here and is never used.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.section-contact {
+  /* The broken lattice reads these, so it turns orange without its own rules */
+  --grid-line: rgba(232, 131, 74, 0.38);
+  --grid-line-strong: rgba(240, 154, 95, 0.55);
+  --ab-orange: #E8834A;
+  --ab-orange-soft: rgba(232, 131, 74, 0.22);
+  --ct-label: #FFB37A;
+  --ct-well: #26403A;
+  position: relative;
+  background: var(--ink);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.section-contact .contact-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Re-pitched so this band is not a mirror of Who I Am: the mass moves to the
+   left here, opposite the form, and the arc rises from the bottom edge. */
+.section-contact .ab-circle { top: -6%; right: 6%; opacity: 0.38; }
+.section-contact .ab-circle-sm { top: 16%; left: 7%; bottom: auto; right: auto; opacity: 0.4; }
+.section-contact .ab-square { top: auto; bottom: 12%; left: 3%; opacity: 0.32; }
+.section-contact .ab-square-fill { bottom: 34%; left: 15%; }
+.section-contact .ab-bar { top: 5%; left: 18%; opacity: 0.4; }
+.section-contact .ab-arc { bottom: -14%; left: auto; right: 14%; opacity: 0.32; }
+
+.section-contact .contact-inner { position: relative; z-index: 1; }
+
+/* ── Head ── */
+.section-contact .contact-hero {
+  border-bottom: 1px solid rgba(232, 131, 74, 0.3);
+}
+
+.section-contact .contact-title { color: var(--cream); }
+
+.section-contact .contact-status {
+  border-color: rgba(232, 131, 74, 0.5);
+  color: var(--ct-label);
+  opacity: 1;
+}
+
+/* A slow pulse on the availability dot, the only motion in the section */
+.section-contact .contact-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ab-orange);
+  animation: soft-halo 2.6s var(--ease-breathe) infinite;
+}
+
+/* ── Split ── */
+.section-contact .contact-split-layout { gap: clamp(28px, 4vw, 56px); }
+
+/* ── Contact cards ── */
+.section-contact .contact-info-card {
+  border: 1px solid rgba(232, 131, 74, 0.26);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: none;
+}
+
+.section-contact .contact-info-card::before { background: rgba(232, 131, 74, 0.12); }
+
+.section-contact .contact-info-card:hover {
+  border-color: rgba(232, 131, 74, 0.6);
+  box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.55);
+}
+
+/* The lighter orange, not --ab-orange: the icon glyph and the arrow are small
+   marks on a near-green tile, where the base orange only reaches 2.4:1 and
+   reads as a smudge. */
+/* One step lighter than --ct-label. The glyph sits on a tile that is itself
+   translucent over the card over the green, and that stack lifts the backdrop
+   to rgb(68,88,77) — enough that #FFB37A lands at 4.36:1, just under AA.
+   #FFC08D clears it at 4.80:1. The tile tint stays low for the same reason:
+   tinting it orange lightens the backdrop and works against the glyph. */
+.section-contact .contact-info-icon {
+  color: #FFC08D;
+  background: rgba(232, 131, 74, 0.07);
+}
+
+.section-contact .contact-info-card:hover .contact-info-icon {
+  background: rgba(232, 131, 74, 0.26);
+}
+
+/* Label is the small one, so it takes the lighter orange; the value is the
+   thing being read, so it takes cream. */
+.section-contact .contact-info-title { color: var(--ct-label); font-weight: 700; }
+.section-contact .contact-info-value { color: var(--cream); opacity: 0.85; }
+.section-contact .contact-info-arrow { color: var(--ct-label); }
+
+/* ── Form ── */
+.section-contact .contact-form-panel {
+  border: 1px solid rgba(232, 131, 74, 0.26);
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.section-contact .contact-field label { color: var(--ct-label); opacity: 0.9; }
+
+/* Inputs sit in a well slightly darker than the band, so the field reads as
+   recessed rather than as another translucent panel on top of one. */
+.section-contact .contact-field input,
+.section-contact .contact-field textarea {
+  border: 1px solid rgba(232, 131, 74, 0.22);
+  background: var(--ct-well);
+  color: var(--cream);
+}
+
+.section-contact .contact-field input::placeholder,
+.section-contact .contact-field textarea::placeholder {
+  color: #A8BDB5;
+  opacity: 1;
+}
+
+.section-contact .contact-field input:focus,
+.section-contact .contact-field textarea:focus {
+  border-color: var(--ab-orange);
+  background: var(--ct-well);
+  box-shadow: 0 0 0 3px rgba(232, 131, 74, 0.22);
+}
+
+/* Matches the solid About button rather than the global .bp, which paints
+   itself moss-on-cream and would disappear into this ground. */
+.section-contact .contact-submit {
+  padding: 15px 26px;
+  border: 1px solid var(--ab-orange);
+  border-radius: var(--r-sm);
+  background: var(--ab-orange);
+  color: #23180F;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  opacity: 1;
+  transition: transform var(--dur-base) var(--ease-glide),
+    box-shadow var(--dur-base) var(--ease-soft);
+}
+
+.section-contact .contact-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6);
+}
+
+.section-contact .contact-submit:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+
+/* ── Sent state ── */
+.section-contact .contact-sent-mark {
+  color: var(--ab-orange);
+  background: rgba(232, 131, 74, 0.16);
+}
+
+.section-contact .contact-sent h3 { color: var(--cream); }
+.section-contact .contact-sent p { color: var(--ct-label); opacity: 0.85; }
