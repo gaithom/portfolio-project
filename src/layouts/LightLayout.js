@@ -581,19 +581,22 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       }
 
       if(skillRows.length){
+        // The meter fill is gone; the level marks grow up from their base
+        // instead, one after the other, which suits a stepped scale better
+        // than a bar sliding out.
         skillRows.forEach((row)=>{
-          const fill=row.querySelector(".expertise-meter-fill");
-          if(fill)gsap.set(fill,{scaleX:0,transformOrigin:"left center"});
+          const marks=row.querySelectorAll(".ex-level i");
+          if(marks.length)gsap.set(marks,{scaleY:0,transformOrigin:"bottom center"});
         });
         gsap.fromTo(skillRows,
           {x:-20,opacity:0},
           {x:0,opacity:1,stagger:.06,duration:.65,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 80%"}}
         );
         skillRows.forEach((row)=>{
-          const fill=row.querySelector(".expertise-meter-fill");
-          if(fill){
-            gsap.to(fill,
-              {scaleX:1,duration:.85,ease:"power3.out",scrollTrigger:{trigger:row,start:"top 90%"}}
+          const marks=row.querySelectorAll(".ex-level i");
+          if(marks.length){
+            gsap.to(marks,
+              {scaleY:1,stagger:.07,duration:.45,ease:"back.out(2)",scrollTrigger:{trigger:row,start:"top 90%"}}
             );
           }
         });
@@ -785,22 +788,34 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         <div className="expertise-layout">
           <aside className="expertise-skills-rail">
             <ul className="expertise-skill-list">
-              {SKILLS.map((s, i) => (
-                <li key={s.label} className="expertise-skill-row">
-                  <div className="expertise-skill-head">
-                    <span className="expertise-skill-name">{s.label}</span>
-                    <span className="expertise-skill-pct">{s.pct}%</span>
-                  </div>
-                  <div className="expertise-meter" aria-hidden="true">
-                    <div className="expertise-meter-fill" style={{ width: `${s.pct}%` }} />
-                  </div>
-                </li>
-              ))}
+              {SKILLS.map((s) => {
+                /* A band rather than a number. Every one of these sits between
+                   75 and 95, so a percentage bar reads as near-full for all of
+                   them and says nothing — and a figure like "React 92%" is not
+                   a claim anyone can check. Three bands can at least be meant
+                   honestly, and the level marks read at a glance. */
+                const tier = s.pct >= 90 ? 3 : s.pct >= 80 ? 2 : 1;
+                const band = ["Working knowledge", "Fluent", "Daily driver"][tier - 1];
+                return (
+                  <li key={s.label} className="expertise-skill-row">
+                    <div className="expertise-skill-head">
+                      <span className="expertise-skill-name">{s.label}</span>
+                      {/* Marks are decorative — the band below carries the
+                          meaning for anyone not seeing them. */}
+                      <span className="ex-level" aria-hidden="true">
+                        <i className={tier >= 1 ? "is-on" : ""} />
+                        <i className={tier >= 2 ? "is-on" : ""} />
+                        <i className={tier >= 3 ? "is-on" : ""} />
+                      </span>
+                    </div>
+                    <span className={`ex-band is-t${tier}`}>{band}</span>
+                  </li>
+                );
+              })}
             </ul>
           </aside>
 
           <div className="expertise-tech-arena">
-            <div className="expertise-tech-orbit" aria-hidden="true" />
             <div className="expertise-tech-header">
               <div>
                 <h3 className="expertise-tech-title">Tools I build with</h3>
