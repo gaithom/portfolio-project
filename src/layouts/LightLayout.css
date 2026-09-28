@@ -3373,6 +3373,70 @@
   border-radius: 5px;
 }
 
+/* ── Scroll arrows ──
+   Quiet by default: a hairline ring and nothing else, so they read as a
+   control rather than a call to action. They sit on the page column with the
+   cards, not out at the screen edge where the rail now ends. */
+.wk-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: clamp(14px, 2vh, 20px);
+}
+
+/* Rectangular, on the same 6px radius as the View all work button and the
+   stack tags, so the section keeps one corner language. Wider than tall,
+   which suits a horizontal control. */
+.wk-arrow {
+  width: 62px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  /* Firmer than the hairline it used to carry: at 1px on --line-mid these
+     nearly vanished against the paper. 2px, not 1.5 — a sub-pixel width snaps
+     down to 1px on a 1x display, which is most of the weight lost. */
+  border: 2px solid var(--moss);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.16s var(--ease-soft),
+    border-color 0.16s var(--ease-soft),
+    color 0.16s var(--ease-soft),
+    opacity 0.16s var(--ease-soft);
+}
+
+.wk-arrow span {
+  display: block;
+  transition: transform 0.18s var(--ease-glide);
+}
+
+/* Fills on hover rather than tinting, so the active one is unmistakable. */
+.wk-arrow:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* The glyph leans the way it travels */
+.wk-arrow:first-child:hover:not(:disabled) span { transform: translateX(-2px); }
+.wk-arrow:last-child:hover:not(:disabled) span { transform: translateX(2px); }
+
+.wk-arrow:active:not(:disabled) { background: var(--moss); border-color: var(--moss); }
+.wk-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* At the end of the rail the arrow stays visible but plainly inert, rather
+   than disappearing and shifting the pair sideways. */
+.wk-arrow:disabled {
+  opacity: 0.32;
+  cursor: default;
+  border-color: var(--line-mid);
+  background: transparent;
+}
+
 /* ── Foot ── */
 .wk-foot {
   display: flex;

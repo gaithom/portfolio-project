@@ -317,6 +317,40 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
      one scrim cannot serve both: darkening enough for the light ones would
      bury the image. Each shot is sampled once on load and the card told
      whether to carry dark type on a light veil or the reverse. */
+  /* The work rail's scroll position, so the arrows can disable themselves at
+     each end instead of looking live when they would do nothing. */
+  const workRailRef = useRef(null);
+  const [railEdges, setRailEdges] = useState({ atStart: true, atEnd: false });
+
+  useEffect(() => {
+    const rail = workRailRef.current;
+    if (!rail) return undefined;
+    const read = () => {
+      // 1px of slack: fractional layout widths mean scrollLeft rarely lands
+      // exactly on the maximum, which would leave the arrow enabled forever.
+      const max = rail.scrollWidth - rail.clientWidth;
+      setRailEdges({ atStart: rail.scrollLeft <= 1, atEnd: rail.scrollLeft >= max - 1 });
+    };
+    read();
+    rail.addEventListener("scroll", read, { passive: true });
+    window.addEventListener("resize", read);
+    return () => {
+      rail.removeEventListener("scroll", read);
+      window.removeEventListener("resize", read);
+    };
+  }, []);
+
+  // One card plus its gap, read from the live layout rather than hard-coded,
+  // so it stays correct as the card width clamps with the viewport.
+  const scrollWorkRail = (dir) => {
+    const rail = workRailRef.current;
+    if (!rail) return;
+    const card = rail.querySelector(".wk-card");
+    const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+    const step = card ? card.getBoundingClientRect().width + gap : rail.clientWidth * 0.8;
+    rail.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
   const [shotTone, setShotTone] = useState({});
   const readShotTone = (id) => (e) => {
     const img = e.currentTarget;
@@ -799,7 +833,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
         {/* One row, cards at full size. Anything that does not fit is reached
             by scrolling sideways rather than by shrinking the cards. */}
-        <div className="wk-rail">
+        <div className="wk-rail" ref={workRailRef}>
           {PROJECTS.map((p) => {
             const hasShot = p.image && !missingShots[p.id];
             return (
@@ -850,6 +884,27 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               </article>
             );
           })}
+        </div>
+
+        <div className="wk-nav">
+          <button
+            type="button"
+            className="wk-arrow"
+            onClick={() => scrollWorkRail(-1)}
+            disabled={railEdges.atStart}
+            aria-label="Previous projects"
+          >
+            <span aria-hidden="true">&#8592;</span>
+          </button>
+          <button
+            type="button"
+            className="wk-arrow"
+            onClick={() => scrollWorkRail(1)}
+            disabled={railEdges.atEnd}
+            aria-label="Next projects"
+          >
+            <span aria-hidden="true">&#8594;</span>
+          </button>
         </div>
 
         <div className="wk-foot">
