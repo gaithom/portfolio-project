@@ -114,6 +114,18 @@ const EXPRESSION_WORDS = [
    unchanged. */
 const EXPR_RULE_TOPS = [24.1, 40, 60, 81.5];
 
+// ── Contact ──────────────────────────────────────────────────────────────────
+// The intent only sets the subject line. Nothing is collected here and nothing
+// is posted anywhere — the visitor's own mail client does the sending, which is
+// why there is no form to fill in and no server to receive it.
+const CONTACT_EMAIL = "michaelgaitho47@gmail.com";
+
+const CONTACT_INTENTS = [
+  { id: "project", label: "A new project", note: "Design, build or both", subject: "New project" },
+  { id: "role", label: "A role", note: "Full time or contract", subject: "Role enquiry" },
+  { id: "hello", label: "Something else", note: "Questions, or just hello", subject: "Hello" }
+];
+
 const EXPRESSION_PALETTE_AREAS = {
   Moss: "1 / 8 / 4 / 13",
   Clay: "5 / 1 / 8 / 6",
@@ -171,21 +183,6 @@ function BrokenGrid({ className = "" }) {
           />
         ))
       )}
-    </div>
-  );
-}
-
-// ── Solid grid ───────────────────────────────────────────────────────────────
-// The counterpart to BrokenGrid, used only on the projects section. Every line
-// runs the full span with no gaps and sits on a denser rhythm (six columns
-// rather than four), so the work reads as being laid out on a firm grid while
-// the rest of the page uses the fractured one.
-function SolidGrid({ className = "" }) {
-  return (
-    <div className={`sgrid ${className}`} aria-hidden="true">
-      {[16.66, 33.33, 50, 66.66, 83.33].map((x) => (
-        <span key={`sv${x}`} className="sgrid-v" style={{ left: `${x}%` }} />
-      ))}
     </div>
   );
 }
@@ -304,7 +301,7 @@ function CapabilityVisual({ variant }) {
   }
 }
 
-export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel, sent, setSent, form, setForm }) {
+export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroDescRef=useRef(null),developerRef=useRef(null);
   const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),typeCanvasRef=useRef(null),contactRef=useRef(null);
   const designSectionRef=useRef(null);
@@ -315,6 +312,70 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   // rendering an empty rectangle.
   const [missingShots, setMissingShots] = useState({});
   const [activeSection, setActiveSection] = useState(null);
+
+  /* Screenshots here range from near-white app UIs to a dark photograph, and
+     one scrim cannot serve both: darkening enough for the light ones would
+     bury the image. Each shot is sampled once on load and the card told
+     whether to carry dark type on a light veil or the reverse. */
+  const [shotTone, setShotTone] = useState({});
+  const readShotTone = (id) => (e) => {
+    const img = e.currentTarget;
+    try {
+      const c = document.createElement("canvas");
+      c.width = 48; c.height = 27;
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      const sH = Math.min(img.naturalHeight, (img.naturalWidth * 9) / 16);
+      ctx.drawImage(img, 0, 0, img.naturalWidth, sH, 0, 0, 48, 27);
+      // Only the middle band matters — that is where the label sits.
+      const d = ctx.getImageData(0, 8, 48, 11).data;
+      let sum = 0, n = 0;
+      for (let i = 0; i < d.length; i += 4) {
+        const lin = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+        sum += 0.2126 * lin(d[i]) + 0.7152 * lin(d[i + 1]) + 0.0722 * lin(d[i + 2]);
+        n++;
+      }
+      setShotTone((t) => ({ ...t, [id]: sum / n > 0.38 ? "light" : "dark" }));
+    } catch {
+      // A cross-origin image would taint the canvas; the dark default stands.
+    }
+  };
+
+  // Contact: which subject the visitor picked, and whether the address has
+  // just been copied.
+  const [intent, setIntent] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const activeIntent = CONTACT_INTENTS.find((t) => t.id === intent) || null;
+  const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+    activeIntent ? activeIntent.subject : "Hello"
+  )}`;
+
+  const copyEmail = async () => {
+    // Confirm first, write after. The clipboard call can stall behind a
+    // permission check, and waiting on it made the click feel unresponsive
+    // even though the copy itself had succeeded.
+    setCopied(true);
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+    } catch {
+      // clipboard is unavailable over plain http and in some embedded views,
+      // so fall back to a selection-based copy rather than failing silently.
+      const ta = document.createElement("textarea");
+      ta.value = CONTACT_EMAIL;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch { /* nothing else to try */ }
+      document.body.removeChild(ta);
+    }
+  };
+
+  // Clear the "Copied" label a couple of seconds after it appears.
+  useEffect(() => {
+    if (!copied) return undefined;
+    const t = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(t);
+  }, [copied]);
 
   // Developer word — fill follows cursor left → right, unfills right → left
   useEffect(() => {
@@ -387,6 +448,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     const setScrollbarWidth = () => {
       const w = window.innerWidth - document.documentElement.clientWidth;
       document.documentElement.style.setProperty("--sbw", `${w}px`);
+
+      /* The gap between the page column and the screen edge, published as a
+         real length. It cannot be a percentage in CSS: `padding` percentages
+         resolve against the containing block while `scroll-padding` ones
+         resolve against the scrollport, so one custom property would mean two
+         different sizes and the snap would rest in the wrong place. */
+      const inner = document.querySelector(".work-inner");
+      if (inner) {
+        const gutter = Math.max(0, Math.round(inner.getBoundingClientRect().left));
+        document.documentElement.style.setProperty("--page-gutter", `${gutter}px`);
+      }
     };
     setScrollbarWidth();
     window.addEventListener("resize", setScrollbarWidth);
@@ -581,11 +653,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         {/* The statement moved up from Who I Am. It runs to the foot of the
             hero so its bottom edge meets the green band below. */}
         <figure ref={heroDescRef} className="hero-quote">
-          {/* A brighter copy of the hero's column rules, clipped to the card.
-              The rules crossing from outside are dark terracotta, which all
-              but disappears on this green. */}
-          <span className="hq-rules" aria-hidden="true"><i /><i /><i /><i /></span>
-
           <blockquote className="hero-quote-text">
             I design interfaces that stay clear at scale, then build them myself,
             so nothing is lost between the file and the browser.
@@ -626,7 +693,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
               specialising in software engineering and human-computer interaction.
             </p>
             <div className="about-buttons">
-              <button className="ab-btn ab-btn-solid" onClick={() => window.open('/resume.pdf', '_blank')}>
+              <button className="ab-btn ab-btn-solid" onClick={() => window.open('/CV.pdf', '_blank')}>
                 <span className="ab-btn-label">Download Resume</span>
                 <span className="ab-btn-icon" aria-hidden="true">&#8595;</span>
               </button>
@@ -725,77 +792,78 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* SELECTED WORK — full-width bands, image and copy swapping sides down
         the page so each project gets a spread of its own. */}
     <section ref={projectsRef} id="projects" className="projects-section light-section-shell section-projects">
-      <SolidGrid className="sgrid-work" />
       <div className="work-inner">
-        <div className="sec-head">
-          <h2 className="section-title">Featured Work</h2>
+        <div className="wk-head">
+          <h2 className="section-title wk-title">Featured Work</h2>
         </div>
 
-        <div className="work-bands">
-          {PROJECTS.map((p)=>{
+        {/* One row, cards at full size. Anything that does not fit is reached
+            by scrolling sideways rather than by shrinking the cards. */}
+        <div className="wk-rail">
+          {PROJECTS.map((p) => {
             const hasShot = p.image && !missingShots[p.id];
             return (
-              <article className="work-band" key={p.id}>
+              <article className={`wk-card${shotTone[p.id] === "light" ? " has-light-shot" : ""}`} key={p.id}>
                 <a
-                  className="work-band-shot"
+                  className="wk-preview"
                   href={p.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Open the ${p.title} live site`}
                 >
-                  <span className={`work-band-frame${hasShot?"":" is-placeholder"}`}
-                        style={hasShot?undefined:{background:p.cardBg}}>
-                    {hasShot ? (
+                  <span className="wk-preview-media" style={hasShot ? undefined : { background: p.cardBg }}>
+                    {hasShot && (
                       <img
                         src={p.image}
                         alt={`${p.title} home page`}
                         loading="lazy"
-                        onError={()=>setMissingShots(m=>({...m,[p.id]:true}))}
+                        decoding="async"
+                        onLoad={readShotTone(p.id)}
+                        onError={() => setMissingShots((m) => ({ ...m, [p.id]: true }))}
                       />
-                    ) : (
-                      <span className="work-shot-mark">
-                        <span className="work-shot-mark-name">{p.title}</span>
-                      </span>
                     )}
                   </span>
+
+                  <span className="wk-live"><i aria-hidden="true" />Live</span>
+
+                  <span className="wk-preview-label">
+                    <span className="wk-preview-title">{p.title}</span>
+                    <span className="wk-preview-cat">{p.category}</span>
+                  </span>
+
+                  <span className="wk-preview-arrow" aria-hidden="true">&#8599;</span>
                 </a>
 
-                <div className="work-band-copy">
-                  {/* Decoration lives in its own bleed layer so the grid and
-                      shapes run out to the screen edge with the background,
-                      rather than stopping at the text column. */}
-                  <div className="wb-decor" aria-hidden="true">
-                    <BrokenGrid className="bgrid-work-copy" />
-                    <span className="wb-shape wb-circle" />
-                    <span className="wb-shape wb-square" />
-                    <span className="wb-shape wb-bar" />
-                    <span className="wb-shape wb-square-fill" />
-                  </div>
-                  <div className="work-band-meta">
-                    <span className="work-band-index">{String(p.id).padStart(2,"0")}</span>
-                  </div>
+                <div className="wk-body">
+                  <dl className="wk-meta">
+                    <div><dt>Client</dt><dd>{p.client}</dd></div>
+                    <div><dt>Year</dt><dd>{p.year}</dd></div>
+                    <div><dt>Outcome</dt><dd>{p.outcome}</dd></div>
+                  </dl>
 
-                  <h3 className="work-band-title">{p.title}</h3>
-                  <p className="work-band-desc">{p.longDesc}</p>
+                  <p className="wk-desc">{p.longDesc}</p>
 
-                  <ul className="work-band-stack">
-                    {p.stack.map((t)=><li key={t}>{t}</li>)}
+                  <ul className="wk-stack">
+                    {p.stack.map((t) => <li key={t}>{t}</li>)}
                   </ul>
-
-                  <div className="work-band-foot">
-                    <a
-                      className="work-band-cta"
-                      href={p.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Visit site <span aria-hidden="true">↗</span>
-                    </a>
-                  </div>
                 </div>
               </article>
             );
           })}
+        </div>
+
+        <div className="wk-foot">
+          <span className="wk-count">
+            Showing {PROJECTS.length} of {PROJECTS.length} projects
+          </span>
+          <a
+            className="wk-all"
+            href="https://github.com/gaithom"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View all work <span aria-hidden="true">&#8599;</span>
+          </a>
         </div>
       </div>
       {devMode&&<DevBadge id="projects" devMode={devMode} theme={theme}/>}
@@ -872,18 +940,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* CONTACT — a statement, the channels, the facts, then the form */}
     <section ref={contactRef} id="contact" className="contact-section light-section-shell section-contact">
-      <BrokenGrid className="bgrid-contact" />
-      {/* Same geometry vocabulary as Who I Am — the two green bands are meant
-          to read as a pair. Positions are re-pitched in CSS so this one is not
-          a straight copy of that one. */}
-      <div className="contact-shapes" aria-hidden="true">
-        <span className="ab-shape ab-circle" />
-        <span className="ab-shape ab-circle-sm" />
-        <span className="ab-shape ab-square" />
-        <span className="ab-shape ab-square-fill" />
-        <span className="ab-shape ab-bar" />
-        <span className="ab-shape ab-arc" />
-      </div>
       <div className="contact-inner">
         <div className="contact-hero">
           <h2 className="section-title contact-title">Let's work<br />together</h2>
@@ -907,25 +963,49 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
           </div>
 
-          <div className="contact-form">
-            <div className="contact-form-panel">
-              {sent?<div className="contact-sent"><div className="contact-sent-mark">✓</div><h3>Message Sent!</h3><p>Michael will reply shortly.</p></div>:<>
-                {[{l:"Name",k:"name",t:"text",p:"Your name"},{l:"Email",k:"email",t:"email",p:"hello@example.com"},{l:"Subject",k:"subject",t:"text",p:"Project inquiry"}].map((f)=><div key={f.k} className="contact-field">
-                  <label htmlFor={`contact-${f.k}`}>{f.l}</label>
-                  <input id={`contact-${f.k}`} type={f.t} placeholder={f.p} value={form[f.k]} onChange={e=>setForm(d=>({...d,[f.k]:e.target.value}))}/>
-                </div>)}
-                <div className="contact-field">
-                  <label htmlFor="contact-message">Message</label>
-                  <textarea id="contact-message" rows={5} placeholder="Tell me about your project..." value={form.message} onChange={e=>setForm(d=>({...d,message:e.target.value}))}/>
-                </div>
-                <button className="bp contact-submit" onClick={()=>{
-                  const subject = encodeURIComponent(form.subject || "Portfolio Contact");
-                  const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-                  window.open(`mailto:michaelgaitho47@gmail.com?subject=${subject}&body=${body}`);
-                  setSent(true);
-                }}>Send message →</button>
-              </>}
+          {/* No form. Rather than asking for four fields and then handing the
+              whole thing to a mail client anyway, this picks the subject and
+              opens the composer already filled in — or just hands over the
+              address to copy. */}
+          <div className="contact-direct">
+            <div className="cd-step">
+              <span className="cd-step-num">01</span>
+              <span className="cd-step-label">What is it about?</span>
             </div>
+            <div className="cd-intents">
+              {CONTACT_INTENTS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`cd-intent${intent === t.id ? " is-on" : ""}`}
+                  aria-pressed={intent === t.id}
+                  onClick={() => setIntent(t.id)}
+                >
+                  <span className="cd-intent-label">{t.label}</span>
+                  <span className="cd-intent-note">{t.note}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="cd-step">
+              <span className="cd-step-num">02</span>
+              <span className="cd-step-label">Send it here</span>
+            </div>
+            <button type="button" className="cd-address" onClick={copyEmail}>
+              <span className="cd-address-text">{CONTACT_EMAIL}</span>
+              <span className={`cd-address-hint${copied ? " is-copied" : ""}`}>
+                {copied ? "Copied to clipboard" : "Click to copy"}
+              </span>
+            </button>
+
+            <a className="cd-open" href={mailtoHref}>
+              <span className="cd-open-label">
+                {activeIntent ? `Open a mail about ${activeIntent.label.toLowerCase()}` : "Open your mail app"}
+              </span>
+              <span className="cd-open-icon" aria-hidden="true">&#8594;</span>
+            </a>
+
+            <p className="cd-note">Usually replies within a day.</p>
           </div>
         </div>
       </div>
