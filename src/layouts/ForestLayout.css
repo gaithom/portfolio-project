@@ -77,3 +77,398 @@
     padding: 40px 16px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FOREST — canopy
+   The light layout is editorial: paper, a hard grid, terracotta rules. This
+   one is the opposite reading of the same material — depth rather than plane,
+   warm light against deep green rather than ink on paper.
+
+   Colour is measured against the grounds this layout actually uses:
+     ground #3C6057   surface #0D2C19   deep #0A2114
+     cream  #F2EFE7   6.09 / 13.13 / 14.73
+     bone   #D8D2C2   4.63 / 10.00 / 11.22   — small accent text
+     stone  #C3B49A   3.44 /  7.41 /  8.32   — display accents only (3:1)
+   The accent this layout shipped with, #4E9E74, reaches 2.15:1 on the ground
+   and is not used for text anywhere below.
+
+   Many rules carry !important on purpose: the markup styles these elements
+   inline, and an inline style cannot be beaten any other way. Where a rule is
+   only here to restore a responsive step that React was silently dropping,
+   it says so.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Warm stone and bone: desaturated, so the palette reads as light falling
+     through a canopy rather than as a highlight colour. The gold this
+     replaced measured fine but glared against the green. */
+  --f-gold: #C3B49A;
+  --f-sand: #D8D2C2;
+  --f-cream: #F2EFE7;
+  --f-deep: #0A2114;
+  --f-surface: #0D2C19;
+  --f-line: rgba(216, 210, 194, 0.26);
+  --f-line-soft: rgba(242, 239, 231, 0.12);
+  --f-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Type: the display face matches the rest of the site ── */
+.forest-hero .hero-title,
+.forest-about h2,
+.forest-skills .section-title,
+.forest-projects .section-title,
+.forest-timeline .section-title,
+.forest-services .section-title,
+.forest-contact .section-title {
+  font-family: "Satoshi", "Roboto", sans-serif !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* The accent that failed on this ground. Gold clears 3:1 at display size. */
+.forest-hero .hero-title span,
+.forest-about h2 span {
+  color: var(--f-gold) !important;
+  opacity: 1 !important;
+}
+
+/* ── Hero ──
+   A single warm shaft of light behind the name, as though through a canopy.
+   Cheap to paint: two gradients, no extra element. */
+.forest-hero {
+  position: relative;
+}
+
+.forest-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 8%, rgba(195, 180, 154, 0.13), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(10, 33, 20, 0.85), transparent 75%);
+}
+
+.forest-hero .hero-title {
+  font-weight: 800 !important;
+  line-height: 0.98 !important;
+}
+
+/* The status pill reads as a label, not a button */
+.forest-hero .hero-subtitle { color: var(--f-sand) !important; }
+
+/* ── Section rhythm ──
+   Rules in gold rather than the near-invisible green hairline the sections
+   were separating themselves with. */
+.forest-skills,
+.forest-services,
+.forest-contact { border-color: var(--f-line) !important; }
+
+.sec-label {
+  color: var(--f-sand) !important;
+  opacity: 1 !important;
+}
+
+/* ── Cards: one shape language ──
+   The layout mixed 18px/4px alternating corners with 48%/52% blobs. Cards
+   settle on a single soft-cornered shape; the organic curves stay where they
+   belong, on the decorative rings. */
+.forest-projects .project-card,
+.forest-timeline .timeline-item,
+.forest-services .service-card,
+.forest-contact .contact-card,
+.forest-contact .contact-form {
+  border-radius: 20px !important;
+  border-color: var(--f-line-soft) !important;
+  transition: border-color 0.35s var(--f-ease), transform 0.35s var(--f-ease);
+}
+
+.forest-projects .project-card:hover,
+.forest-services .service-card:hover,
+.forest-contact .contact-card:hover {
+  border-color: var(--f-line) !important;
+}
+
+/* ── Responsive ──
+   Every rule below restores a step that was written as an inline
+   "@media (...)" key in the markup. React drops those silently, so none of
+   this layout's responsive behaviour was reaching the browser. */
+@media (max-width: 768px) {
+  .forest-hero {
+    padding: 80px 20px 60px !important;
+    min-height: 85vh !important;
+  }
+
+  .forest-hero .hero-content {
+    max-width: 100% !important;
+    gap: 30px !important;
+  }
+
+  /* font-size and max-width are already owned by App.js:158 at the same
+     specificity, and its 12px is the value that has actually been in effect.
+     Only the margin was missing. */
+  .forest-hero .hero-description { margin: 0 auto 24px !important; }
+
+  .forest-hero .hero-cta {
+    gap: 8px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .forest-about {
+    padding: 60px 20px !important;
+    max-width: 100% !important;
+  }
+
+  .forest-about .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .projects-grid { grid-template-columns: 1fr !important; }
+
+  /* The oversized background wordmarks, which were sized for a desktop
+     viewport and ran off the screen on a phone. */
+  .name-bg {
+    font-size: clamp(100px, 20vw, 320px) !important;
+    opacity: 0.07 !important;
+  }
+
+  .name-float-1 {
+    font-size: clamp(35px, 5vw, 90px) !important;
+    opacity: 0.08 !important;
+    top: 15% !important;
+    left: 6% !important;
+  }
+
+  .name-float-2 {
+    font-size: clamp(30px, 4vw, 70px) !important;
+    opacity: 0.07 !important;
+    bottom: 20% !important;
+    right: 10% !important;
+  }
+}
+
+/* ── Actions ──
+   The primary button shipped as theme.accent fill with theme.bg text: green
+   on green, 1.95:1. Gold on the deep ground reads at 8.78:1 and gives the
+   layout its one moment of real warmth. */
+.forest-hero .bp,
+.forest-about .bp,
+.forest-skills .bp,
+.forest-projects .bp,
+.forest-services .bp,
+.forest-contact .bp {
+  background: var(--f-gold) !important;
+  color: var(--f-deep) !important;
+  border: 1px solid var(--f-gold) !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+}
+
+.forest-hero .bp:hover,
+.forest-about .bp:hover,
+.forest-skills .bp:hover,
+.forest-projects .bp:hover,
+.forest-services .bp:hover,
+.forest-contact .bp:hover { background: #D3C6AE !important; border-color: #D3C6AE !important; }
+
+/* The ghost button was cream at 0.65 opacity — 3.61:1. Full strength, with
+   the gold hairline tying it to the primary. */
+.forest-hero .bg,
+.forest-about .bg,
+.forest-skills .bg,
+.forest-projects .bg,
+.forest-services .bg,
+.forest-contact .bg {
+  color: var(--f-cream) !important;
+  border: 1px solid var(--f-line) !important;
+  opacity: 1 !important;
+}
+
+.forest-hero .bg:hover,
+.forest-about .bg:hover,
+.forest-skills .bg:hover,
+.forest-projects .bg:hover,
+.forest-services .bg:hover,
+.forest-contact .bg:hover {
+  border-color: var(--f-gold) !important;
+  background: rgba(195, 180, 154, 0.12) !important;
+}
+
+/* ── Dimmed metadata ──
+   Small type across these sections was set in cream at 0.6-0.75 opacity,
+   which lands at 3.9:1 on this ground — under AA for text this size. Held at
+   full strength instead; the hierarchy comes from size and tracking. */
+.forest-skills .skill-pct,
+.forest-projects .project-category,
+.forest-projects .project-tag,
+.forest-timeline .timeline-year,
+.forest-services .service-index,
+.forest-contact .contact-title,
+.forest-contact .contact-value {
+  opacity: 1 !important;
+  color: var(--f-sand) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE SPINE — one layout move, applied to every section
+   Every section was centred, which is why they all read the same. Each now
+   hangs off a vertical rule down the left edge, with its label turned onto
+   that rule and the content pushed off it. A trunk with branches: the
+   organic counterpart to the light layout's flat orthogonal grid, and the
+   thing that makes the two themes read as different buildings rather than
+   the same page in two colourways.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.forest-hero,
+.forest-about,
+.forest-skills,
+.forest-projects,
+.forest-timeline,
+.forest-services,
+.forest-contact {
+  position: relative !important;
+  padding-left: clamp(60px, 8vw, 132px) !important;
+  padding-right: clamp(20px, 4vw, 64px) !important;
+}
+
+/* The rule itself. Faded at both ends so sections join rather than stack. */
+.forest-about::before,
+.forest-skills::before,
+.forest-projects::before,
+.forest-timeline::before,
+.forest-services::before,
+.forest-contact::before {
+  content: "";
+  position: absolute;
+  left: clamp(28px, 3.6vw, 62px);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    var(--f-line) 10%,
+    var(--f-line) 90%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* A node where each section meets the spine, so the rule reads as jointed
+   rather than as one long stroke. */
+.forest-about::after,
+.forest-skills::after,
+.forest-projects::after,
+.forest-timeline::after,
+.forest-services::after,
+.forest-contact::after {
+  content: "";
+  position: absolute;
+  left: clamp(28px, 3.6vw, 62px);
+  top: clamp(70px, 9vh, 120px);
+  width: 7px;
+  height: 7px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--f-sand);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* The section label turns onto the spine and reads bottom-to-top. */
+.forest-about .sec-label,
+.forest-skills .sec-label,
+.forest-projects .sec-label,
+.forest-timeline .sec-label,
+.forest-services .sec-label,
+.forest-contact .sec-label {
+  position: absolute !important;
+  left: clamp(28px, 3.6vw, 62px) !important;
+  top: clamp(96px, 12vh, 156px) !important;
+  transform: translateX(-50%) !important;
+  writing-mode: vertical-rl !important;
+  text-orientation: mixed !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 10px 0 !important;
+  font-family: "Space Mono", monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.34em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  background: var(--f-deep) !important;
+  text-align: left !important;
+}
+
+/* Headers stop being centred — the spine gives the page its left edge. */
+.forest-skills .section-title,
+.forest-projects .section-title,
+.forest-timeline .section-title,
+.forest-services .section-title,
+.forest-contact .section-title,
+.forest-hero .hero-title {
+  text-align: left !important;
+}
+
+.forest-skills > div > div:first-child,
+.forest-projects > div > div:first-child,
+.forest-services > div > div:first-child,
+.forest-timeline > div > div:first-child {
+  text-align: left !important;
+}
+
+/* ── Hero: off the centre line ──
+   It sat dead-centre, which fought the spine and made the tallest section the
+   only symmetrical one. */
+.forest-hero {
+  align-items: flex-start !important;
+  text-align: left !important;
+}
+
+.forest-hero .hero-content { align-items: flex-start !important; }
+.forest-hero .hero-content > div { text-align: left !important; }
+.forest-hero .hero-cta { justify-content: flex-start !important; }
+.forest-hero .hero-description { margin-left: 0 !important; }
+
+/* ── About: the portrait shape moves to the outside edge ── */
+.forest-about .about-grid {
+  grid-template-columns: 1.25fr 0.9fr !important;
+  direction: rtl;
+}
+
+.forest-about .about-grid > * { direction: ltr; }
+
+/* ── Stacked ──
+   No room for a spine on a phone: the rule and the turned label would eat the
+   measure, so both step aside and the label returns to normal flow. */
+@media (max-width: 768px) {
+  .forest-hero,
+  .forest-about,
+  .forest-skills,
+  .forest-projects,
+  .forest-timeline,
+  .forest-services,
+  .forest-contact {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .forest-about::before, .forest-skills::before, .forest-projects::before,
+  .forest-timeline::before, .forest-services::before, .forest-contact::before,
+  .forest-about::after, .forest-skills::after, .forest-projects::after,
+  .forest-timeline::after, .forest-services::after, .forest-contact::after {
+    display: none;
+  }
+
+  .forest-about .sec-label, .forest-skills .sec-label, .forest-projects .sec-label,
+  .forest-timeline .sec-label, .forest-services .sec-label, .forest-contact .sec-label {
+    position: static !important;
+    transform: none !important;
+    writing-mode: horizontal-tb !important;
+    background: none !important;
+    padding: 0 0 10px !important;
+    letter-spacing: 0.2em !important;
+  }
+
+  .forest-about .about-grid { grid-template-columns: 1fr !important; direction: ltr; }
+}

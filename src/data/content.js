@@ -26,7 +26,7 @@ export const TECH = [
   {name:"MongoDB",logo:"https://cdn.simpleicons.org/mongodb/000000",colorLogo:"https://cdn.simpleicons.org/mongodb/47a248"},
   {name:"Framer Motion",logo:"https://cdn.simpleicons.org/framer/000000",colorLogo:"https://cdn.simpleicons.org/framer/0055ff"},
   {name:"Next.js",logo:"https://cdn.simpleicons.org/nextdotjs/000000",colorLogo:"https://cdn.simpleicons.org/nextdotjs/000000"},
-  {name:"Vercel",logo:"https://cdn.simpleicons.org/vercel/000000",colorLogo:"https://cdn.simpleicons.org/vercel/000000"},
+  {name:"Vue.js",logo:"https://cdn.simpleicons.org/vuedotjs/000000",colorLogo:"https://cdn.simpleicons.org/vuedotjs/4fc08d"},
   {name:"Storybook",logo:"https://cdn.simpleicons.org/storybook/000000",colorLogo:"https://cdn.simpleicons.org/storybook/ff4785"},
   {name:"Python",logo:"https://cdn.simpleicons.org/python/000000",colorLogo:"https://cdn.simpleicons.org/python/3776ab"}
 ];

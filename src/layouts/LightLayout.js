@@ -145,48 +145,6 @@ const HERO_NAV = [
   { label: "Contact", id: "contact" }
 ];
 
-// ── Broken grid ──────────────────────────────────────────────────────────────
-// A lattice that reads as complete but is visibly fractured: each rule is built
-// from segments with gaps, and the gaps on crossing axes never line up. Built
-// from real elements rather than dashed borders so each segment can be offset
-// on its own. Values are fixed, so it renders identically every load.
-const BROKEN_V = [
-  { x: 18, segs: [[0, 26], [34, 30], [72, 24]] },
-  { x: 38, segs: [[6, 40], [54, 18], [80, 20]] },
-  { x: 62, segs: [[0, 18], [26, 44], [78, 22]] },
-  { x: 82, segs: [[12, 28], [48, 34], [88, 12]] }
-];
-const BROKEN_H = [
-  { y: 22, segs: [[0, 30], [40, 22], [70, 26]] },
-  { y: 48, segs: [[8, 24], [38, 40], [86, 14]] },
-  { y: 74, segs: [[0, 20], [28, 32], [66, 30]] }
-];
-
-function BrokenGrid({ className = "" }) {
-  return (
-    <div className={`bgrid ${className}`} aria-hidden="true">
-      {BROKEN_V.map((line) =>
-        line.segs.map(([top, height]) => (
-          <span
-            key={`v${line.x}-${top}`}
-            className="bgrid-v"
-            style={{ left: `${line.x}%`, top: `${top}%`, height: `${height}%` }}
-          />
-        ))
-      )}
-      {BROKEN_H.map((line) =>
-        line.segs.map(([left, width]) => (
-          <span
-            key={`h${line.y}-${left}`}
-            className="bgrid-h"
-            style={{ top: `${line.y}%`, left: `${left}%`, width: `${width}%` }}
-          />
-        ))
-      )}
-    </div>
-  );
-}
-
 // ── Capability artwork ───────────────────────────────────────────────────────
 // One contained artefact per capability. Each sits inside the card's visual
 // column rather than bleeding across the whole card, so the rail reads as a
@@ -313,14 +271,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   const [missingShots, setMissingShots] = useState({});
   const [activeSection, setActiveSection] = useState(null);
 
-  /* Screenshots here range from near-white app UIs to a dark photograph, and
-     one scrim cannot serve both: darkening enough for the light ones would
-     bury the image. Each shot is sampled once on load and the card told
-     whether to carry dark type on a light veil or the reverse. */
   /* The work rail's scroll position, so the arrows can disable themselves at
      each end instead of looking live when they would do nothing. */
   const workRailRef = useRef(null);
   const [railEdges, setRailEdges] = useState({ atStart: true, atEnd: false });
+  /* Which panel is the one you have scrolled to. Its copy card rises; the
+     others stay retracted, which is what makes the rail read as a deck you
+     move through rather than three equal cards. */
+  const [openWork, setOpenWork] = useState(0);
 
   useEffect(() => {
     const rail = workRailRef.current;
@@ -331,17 +289,35 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       const max = rail.scrollWidth - rail.clientWidth;
       setRailEdges({ atStart: rail.scrollLeft <= 1, atEnd: rail.scrollLeft >= max - 1 });
     };
+    // Whichever panel shows the most of itself inside the rail is the open
+    // one. Measured off the rail's own box, not the viewport, because the rail
+    // scrolls independently of the page.
+    const readOpen = () => {
+      const cards = [...rail.querySelectorAll(".wk-card")];
+      if (!cards.length) return;
+      const r = rail.getBoundingClientRect();
+      let best = 0, bestSeen = -1;
+      cards.forEach((c, i) => {
+        const b = c.getBoundingClientRect();
+        const seen = Math.max(0, Math.min(b.right, r.right) - Math.max(b.left, r.left));
+        if (seen > bestSeen) { bestSeen = seen; best = i; }
+      });
+      setOpenWork(best);
+    };
+
+    const onScroll = () => { read(); readOpen(); };
     read();
-    rail.addEventListener("scroll", read, { passive: true });
-    window.addEventListener("resize", read);
+    readOpen();
+    rail.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      rail.removeEventListener("scroll", read);
-      window.removeEventListener("resize", read);
+      rail.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
-  // One card plus its gap, read from the live layout rather than hard-coded,
-  // so it stays correct as the card width clamps with the viewport.
+  // One panel plus its gap, read from the live layout rather than hard-coded,
+  // so it stays correct as the panel width clamps with the viewport.
   const scrollWorkRail = (dir) => {
     const rail = workRailRef.current;
     if (!rail) return;
@@ -351,28 +327,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     rail.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
-  const [shotTone, setShotTone] = useState({});
-  const readShotTone = (id) => (e) => {
-    const img = e.currentTarget;
-    try {
-      const c = document.createElement("canvas");
-      c.width = 48; c.height = 27;
-      const ctx = c.getContext("2d", { willReadFrequently: true });
-      const sH = Math.min(img.naturalHeight, (img.naturalWidth * 9) / 16);
-      ctx.drawImage(img, 0, 0, img.naturalWidth, sH, 0, 0, 48, 27);
-      // Only the middle band matters — that is where the label sits.
-      const d = ctx.getImageData(0, 8, 48, 11).data;
-      let sum = 0, n = 0;
-      for (let i = 0; i < d.length; i += 4) {
-        const lin = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
-        sum += 0.2126 * lin(d[i]) + 0.7152 * lin(d[i + 1]) + 0.0722 * lin(d[i + 2]);
-        n++;
-      }
-      setShotTone((t) => ({ ...t, [id]: sum / n > 0.38 ? "light" : "dark" }));
-    } catch {
-      // A cross-origin image would taint the canvas; the dark default stands.
-    }
-  };
 
   // Contact: which subject the visitor picked, and whether the address has
   // just been copied.
@@ -574,10 +528,36 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           {x:32,opacity:0},
           {x:0,opacity:1,duration:.95,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 78%"}}
         );
-        gsap.fromTo(stackTiles,
-          {opacity:0,y:22,scale:0.94},
-          {opacity:1,y:0,scale:1,stagger:{each:.045,from:"start"},duration:.85,ease:"power3.out",scrollTrigger:{trigger:techArena,start:"top 82%"}}
-        );
+        /* Each tile sits under a panel of the page green, which drains away to
+           reveal the tool. Ordered by where the tiles actually sit rather than
+           by DOM order, so the reveal follows the arrangement down and across
+           instead of jumping around it. Nothing moves — only the veil scales —
+           so the tiles never come off their shared edges. */
+        const toolVeils=[...techArena.querySelectorAll(".tool-veil")];
+        if(toolVeils.length){
+          const inReadingOrder=toolVeils.slice().sort((a,b)=>{
+            const A=a.getBoundingClientRect(),B=b.getBoundingClientRect();
+            return (A.top-B.top)||(A.left-B.left);
+          });
+          /* --wipe drives a clip-path rather than a scale: scaling the veil
+             squashed the blueprint mark inside it. 0% is fully covered. */
+          gsap.set(inReadingOrder,{"--wipe":"0%"});
+          /* Scrubbed, not fired once: the timeline is mapped onto the scroll
+             range, so a tile keeps its green until the scroll actually
+             reaches it and clears as you carry on. The range is long and
+             finishes well before the section leaves the screen, so the whole
+             sequence is watchable rather than flashing past. ease "none"
+             because the scroll position is the easing. */
+          gsap.to(inReadingOrder,
+            {"--wipe":"100%",duration:1,ease:"none",stagger:.75,
+             scrollTrigger:{
+               trigger:techArena,
+               start:"top 92%",
+               end:"bottom 35%",
+               scrub:.8
+             }}
+          );
+        }
       }
 
       if(skillRows.length){
@@ -588,10 +568,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           const marks=row.querySelectorAll(".ex-level i");
           if(marks.length)gsap.set(marks,{scaleY:0,transformOrigin:"bottom center"});
         });
-        gsap.fromTo(skillRows,
-          {x:-20,opacity:0},
-          {x:0,opacity:1,stagger:.06,duration:.65,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 80%"}}
-        );
+        // The field is one connected object now, so it reveals as one. Sliding
+        // each tile in on its own stagger pulled them apart from their shared
+        // edges for the length of the animation.
+        const skillField = section.querySelector(".expertise-skill-list");
+        if(skillField){
+          gsap.fromTo(skillField,
+            {x:-20,opacity:0},
+            {x:0,opacity:1,duration:.7,ease:"expo.out",scrollTrigger:{trigger:section,start:"top 80%"}}
+          );
+        }
         skillRows.forEach((row)=>{
           const marks=row.querySelectorAll(".ex-level i");
           if(marks.length){
@@ -630,13 +616,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     {/* Static drafting grid. This previously tracked the cursor via React
         state, which re-rendered the entire layout on every mousemove; it is
         now a fixed, CSS-only backdrop. */}
-    <div className="soft-grid" aria-hidden="true" />
 
     {/* Main content with higher z-index */}
     <div style={{position:"relative",zIndex:1}}>
     {/* HERO — headline left, a design artefact filling the right */}
     <section ref={heroRef} id="hero" className="hero-section section-hero">
       <div className="hero-grid">
+        {/* Column rules only — the boxy lattice that used to sit behind them
+            is gone, so these read as guides on a plain ground. */}
         <div className="hero-rules" aria-hidden="true">
           <span /><span /><span /><span />
         </div>
@@ -703,43 +690,57 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* ABOUT — statement on the left, the detail and the facts on the right */}
     <section ref={aboutRef} id="about" className="about-section light-section-shell section-about">
-      <BrokenGrid className="bgrid-about" />
-      {/* Geometry laid over the grid: outlines and solids in orange, sized off
-          the section so they scale with it. */}
-      <div className="about-shapes" aria-hidden="true">
-        <span className="ab-shape ab-circle" />
-        <span className="ab-shape ab-circle-sm" />
-        <span className="ab-shape ab-square" />
-        <span className="ab-shape ab-square-fill" />
-        <span className="ab-shape ab-bar" />
-        <span className="ab-shape ab-bar-v" />
-        <span className="ab-shape ab-tri" />
-        <span className="ab-shape ab-arc" />
-      </div>
-      <div className="about-inner">
-        <div className="sec-head">
-          <h2 className="section-title">Who I Am</h2>
-        </div>
+      {/* A cut corner, a set of straight rules and one large piece of line art
+          on the right — the scattered geometry that used to be here competed
+          with the artwork for the same job. */}
+      {/* The fold face. It is inside the section's own clip, so it can only
+          paint on the bevel itself. */}
+      <span className="ab-fold" aria-hidden="true" />
 
-        <div className="about-layout">
-          <div className="split-block about-detail">
+      <div className="ab-rules" aria-hidden="true">
+        <span /><span /><span /><span />
+      </div>
+
+      <div className="about-inner">
+        <div className="ab-grid">
+          <div className="ab-copy">
+            <h2 className="section-title ab-title">Who I Am</h2>
             <p className="about-paragraph">
-              I'm a Frontend Developer &amp; UI/UX designer specialising in AI-powered interfaces
+              I&apos;m a Frontend Developer &amp; UI/UX designer specialising in AI-powered interfaces
               and real-time analytics. I build AI-powered web interfaces and dashboards, leading
               frontend architecture and UI/UX design decisions. I hold a Bachelor of IT,
               specialising in software engineering and human-computer interaction.
             </p>
-            <div className="about-buttons">
-              <button className="ab-btn ab-btn-solid" onClick={() => window.open('/CV.pdf', '_blank')}>
-                <span className="ab-btn-label">Download Resume</span>
-                <span className="ab-btn-icon" aria-hidden="true">&#8595;</span>
-              </button>
-              <button className="ab-btn ab-btn-line" onClick={()=>scrollTo("projects")}>
-                <span className="ab-btn-label">See Work</span>
-                <span className="ab-btn-icon" aria-hidden="true">&#8594;</span>
-              </button>
-            </div>
           </div>
+
+          {/* Drawn rather than an image: a stack of ellipses each turned a
+              little further than the last, so the overlap does the shading.
+              Scales to any size and costs one element. */}
+          <div className="ab-art" aria-hidden="true">
+            <svg viewBox="0 0 520 520" className="ab-ring" role="presentation" focusable="false">
+              {Array.from({ length: 48 }, (_, i) => (
+                <ellipse
+                  key={i}
+                  cx="260"
+                  cy="260"
+                  rx={150 + 14 * Math.sin((i / 48) * Math.PI * 2)}
+                  ry={208 - 10 * Math.cos((i / 48) * Math.PI * 2)}
+                  transform={`rotate(${(i * 180) / 48} 260 260)`}
+                />
+              ))}
+            </svg>
+          </div>
+        </div>
+
+        <div className="ab-links">
+          <a className="ab-link" href="/CV.pdf" target="_blank" rel="noopener noreferrer">
+            <span>Download my CV</span>
+            <span className="ab-link-arrow" aria-hidden="true">&#8250;</span>
+          </a>
+          <button className="ab-link" type="button" onClick={() => scrollTo("projects")}>
+            <span>See selected work</span>
+            <span className="ab-link-arrow" aria-hidden="true">&#8250;</span>
+          </button>
         </div>
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
@@ -826,6 +827,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
                 const isSpotlight = ["React", "TypeScript", "GSAP", "Figma"].includes(t.name);
                 return (
                   <div key={t.name} className={`expertise-stack-tile${isSpotlight ? " is-spotlight" : ""}`}>
+                    {/* Starts hidden in CSS and is raised by GSAP before the
+                        wipe. That order matters: if the animation never runs,
+                        the tile is simply visible rather than left under a
+                        block of green. */}
+                    <span className="tool-veil" aria-hidden="true">
+                      {/* The monochrome mark, flattened to a pale silhouette:
+                          the blueprint of the logo that rides on the green
+                          before the real one is uncovered. */}
+                      <img className="tool-blueprint" src={t.logo} alt="" loading="lazy" />
+                    </span>
                     <img src={t.colorLogo} alt="" width={isSpotlight ? 44 : 32} height={isSpotlight ? 44 : 32} loading="lazy" />
                     <span>{t.name}</span>
                   </div>
@@ -849,53 +860,48 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         {/* One row, cards at full size. Anything that does not fit is reached
             by scrolling sideways rather than by shrinking the cards. */}
         <div className="wk-rail" ref={workRailRef}>
-          {PROJECTS.map((p) => {
+          {PROJECTS.map((p, i) => {
             const hasShot = p.image && !missingShots[p.id];
             return (
-              <article className={`wk-card${shotTone[p.id] === "light" ? " has-light-shot" : ""}`} key={p.id}>
+              <article className={`wk-card${openWork === i ? " is-open" : ""}`} key={p.id}>
+                {/* Copy sits in its own inset card; the screenshot inset it from
+                    the panel edge rather than letting it meet the border. */}
+                <div className="wk-panel">
+                  <span className="wk-eyebrow">{p.category}</span>
+                  <h3 className="wk-name">{p.title}</h3>
+                  <p className="wk-desc">{p.longDesc}</p>
+
+                  <div className="wk-panel-foot">
+                    <a
+                      className="wk-cta"
+                      href={p.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Visit the live site
+                    </a>
+                  </div>
+                </div>
+
                 <a
-                  className="wk-preview"
+                  className="wk-shot"
                   href={p.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Open the ${p.title} live site`}
+                  style={hasShot ? undefined : { background: p.cardBg }}
                 >
-                  <span className="wk-preview-media" style={hasShot ? undefined : { background: p.cardBg }}>
-                    {hasShot && (
-                      <img
-                        src={p.image}
-                        alt={`${p.title} home page`}
-                        loading="lazy"
-                        decoding="async"
-                        onLoad={readShotTone(p.id)}
-                        onError={() => setMissingShots((m) => ({ ...m, [p.id]: true }))}
-                      />
-                    )}
-                  </span>
-
+                  {hasShot && (
+                    <img
+                      src={p.image}
+                      alt={`${p.title} home page`}
+                      loading="lazy"
+                      decoding="async"
+                      onError={() => setMissingShots((m) => ({ ...m, [p.id]: true }))}
+                    />
+                  )}
                   <span className="wk-live"><i aria-hidden="true" />Live</span>
-
-                  <span className="wk-preview-label">
-                    <span className="wk-preview-title">{p.title}</span>
-                    <span className="wk-preview-cat">{p.category}</span>
-                  </span>
-
-                  <span className="wk-preview-arrow" aria-hidden="true">&#8599;</span>
                 </a>
-
-                <div className="wk-body">
-                  <dl className="wk-meta">
-                    <div><dt>Client</dt><dd>{p.client}</dd></div>
-                    <div><dt>Year</dt><dd>{p.year}</dd></div>
-                    <div><dt>Outcome</dt><dd>{p.outcome}</dd></div>
-                  </dl>
-
-                  <p className="wk-desc">{p.longDesc}</p>
-
-                  <ul className="wk-stack">
-                    {p.stack.map((t) => <li key={t}>{t}</li>)}
-                  </ul>
-                </div>
               </article>
             );
           })}

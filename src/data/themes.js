@@ -2,7 +2,12 @@ export const THEMES = {
   forest: {
     name:"Forest", icon:"🌿", layout:"organic",
     bg:"#3c6057", bgAlt:"#0A2114", surface:"#0D2C19", surfaceAlt:"rgba(13,44,25,0.55)",
-    accent:"#4E9E74", accentSub:"#317A52",
+    /* Warm stone, not the old #4E9E74. That green measured 2.15:1 against this
+       layout's own background and is used inline as a text colour throughout,
+       so no stylesheet rule could reach it — the token is the only fix.
+       #C3B49A reads 3.44:1 on the ground and 8.32:1 on the surfaces, and is
+       desaturated enough to sit in a forest palette without glaring. */
+    accent:"#C3B49A", accentSub:"#8E8268",
     text:"#f2efe7", textMuted:"#f2efe7",
     border:"rgba(78,158,116,0.11)", borderMid:"rgba(78,158,116,0.22)",
     animFg:"rgba(160,210,180,0.09)", animDot:"rgba(160,210,180,0.13)", animOrb:"rgba(78,158,116,0.07)",
@@ -23,7 +28,10 @@ export const THEMES = {
   
   light: {
     name:"Light", icon:"☀️", layout:"minimal",
-    bg:"#f2efe7", bgAlt:"#E9EDE4", surface:"#FFFFFF", surfaceAlt:"rgba(255,255,255,0.72)",
+    /* Flat warm off-white, matched to the reference by eye. Kept separate
+       from --cream (#f2efe7), which is still the colour of type on dark
+       grounds and of the work copy card. */
+    bg:"#EFEBE4", bgAlt:"#E9EDE4", surface:"#FFFFFF", surfaceAlt:"rgba(255,255,255,0.72)",
     accent:"#3c6057", accentSub:"#3c6057",
     text:"#1A2B1E", textMuted:"#3c6057",
     border:"rgba(60,96,87,0.11)", borderMid:"rgba(60,96,87,0.22)",

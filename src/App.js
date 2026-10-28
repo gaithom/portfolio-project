@@ -224,7 +224,6 @@ export default function App() {
       #projects .project-card .project-content { padding: 16px 20px 20px !important; }
       #projects .project-card .project-title { font-size: 16px !important; margin-bottom: 6px !important; }
       #projects .project-card .project-desc { font-size: 12px !important; line-height: 1.6 !important; }
-    }
       .forest-services .section-title { font-size: clamp(20px, 5vw, 32px) !important; }
       .forest-services .services-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
       
@@ -512,7 +511,7 @@ export default function App() {
         </div>
         
         {/* Desktop Navigation */}
-        <div className="desktop-nav" style={{display:"flex",gap:isVoid?24:isMidnight?28:22,alignItems:"center","@media (max-width: 768px)":{display:"none"}}}>
+        <div className="desktop-nav" style={{display:"flex",gap:isVoid?24:isMidnight?28:22,alignItems:"center"}}>
           {navLabels[themeKey].map(l=><button 
             key={l} 
             className="nl" 
@@ -784,18 +783,12 @@ export default function App() {
         zIndex:1001,
         display:"flex",
         flexDirection:"column",
-        gap:6,
-        "@media (max-width: 768px)": {
-          display: "none"
-        }
+        gap:6
       }}>
         {Object.entries(THEMES).map(([k,t])=>(
           <button key={k} onClick={()=>{setThemeKey(k);setSent(false);}} title={`${t.name} (${t.layout} layout)`}
             style={{
-              width:35,height:35,borderRadius:themeKey==="void"?"0":"50%",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s",
-              "@media (max-width: 768px)": {
-                width:28,height:28,fontSize:11
-              }
+              width:35,height:35,borderRadius:themeKey==="void"?"0":"50%",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${themeKey===k?theme.borderMid:theme.border}`,background:t.surface,opacity:themeKey===k?.9:.35,transition:"all .2s"
             }}
             onMouseEnter={e=>e.currentTarget.style.opacity=.9}
             onMouseLeave={e=>e.currentTarget.style.opacity=themeKey===k?.9:.35}>

@@ -269,11 +269,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         pointerEvents:"none",
         zIndex:0,
         whiteSpace:"nowrap",
-        textTransform:"uppercase",
-        "@media (max-width: 768px)": {
-          fontSize:"clamp(100px,20vw,320px)",
-          opacity:0.07
-        }
+        textTransform:"uppercase"
       }}>GAITHO</div>
       
       {/* Additional floating name elements for 3D effect */}
@@ -289,13 +285,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         filter:"blur(2px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(-15deg)",
-        "@media (max-width: 768px)": {
-          fontSize:"clamp(35px,5vw,90px)",
-          opacity:0.08,
-          top:"15%",
-          left:"6%"
-        }
+        transform:"rotate(-15deg)"
       }}>MICHAEL</div>
       
       <div className="name-float-2" style={{
@@ -310,20 +300,14 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         filter:"blur(2.5px)",
         pointerEvents:"none",
         zIndex:0,
-        transform:"rotate(5deg)",
-        "@media (max-width: 768px)": {
-          fontSize:"clamp(30px,4vw,70px)",
-          opacity:0.07,
-          bottom:"20%",
-          right:"10%"
-        }
+        transform:"rotate(5deg)"
       }}>DEVELOPER</div>
     </div>
     
     {/* Main content with higher z-index */}
     <div style={{position:"relative",zIndex:1}}>
     {/* HERO — organic curved bottom with car game */}
-    <section ref={heroRef} id="hero" className="forest-hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)","@media (max-width: 768px)":{padding:"80px 20px 60px",minHeight:"85vh"}}}>
+    <section ref={heroRef} id="hero" className="forest-hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 40px 120px",position:"relative",overflow:"hidden",textAlign:"center",clipPath:"ellipse(120% 100% at 50% 0%)"}}>
       <ParallaxElement theme={theme} speed={0.3}>
         <ParticleCanvas theme={theme}/>
         <div style={{position:"absolute",inset:0,pointerEvents:"none",backgroundImage:`linear-gradient(${theme.animFg} 1px,transparent 1px),linear-gradient(90deg,${theme.animFg} 1px,transparent 1px)`,backgroundSize:"64px 64px",maskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)",WebkitMaskImage:"radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)"}}/>
@@ -333,7 +317,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
         <div style={{position:"absolute",width:480,height:480,borderRadius:"50%",background:theme.animOrb,top:"50%",left:"50%",transform:"translate(-50%,-50%)",animation:"breathe 6s ease-in-out infinite",pointerEvents:"none"}}/>
       </ParallaxElement>
       
-      <div className="hero-content" style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%","@media (max-width: 768px)":{maxWidth:"100%",gap:"30px"}}}>
+      <div className="hero-content" style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"40px",maxWidth:1200,width:"100%"}}>
         {/* Hero content */}
         <div style={{textAlign:"center"}}>
           <div ref={heroBadgeRef} style={{display:"inline-flex",alignItems:"center",gap:7,border:`1px solid ${theme.border}`,borderRadius:99,padding:"6px 16px",marginBottom:26,background:theme.surfaceAlt,backdropFilter:"blur(14px)",fontSize:14,letterSpacing:".14em",textTransform:"uppercase",color:theme.text,opacity:.9}}>
@@ -341,8 +325,8 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           </div>
           <h1 ref={heroTitleRef} className="hero-title" style={{fontFamily:"'Roboto',sans-serif",fontSize:"clamp(42px,8.5vw,90px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",marginBottom:12,color:theme.text,opacity:.9}}>Michael<br/><span style={{color:theme.accent,opacity:.85}}>Gaitho</span></h1>
           <div ref={heroSubRef} className="hero-subtitle" style={{fontFamily:"'Space Mono',monospace",fontSize:"clamp(13px,1.8vw,17px)",marginBottom:32,minHeight:26}}><Typewriter words={["Frontend Developer","UI/UX Designer","Creative Coder","Problem Solver"]} theme={theme}/></div>
-          <p className="hero-description" style={{fontSize:16,color:theme.textMuted,maxWidth:460,margin:"0 auto 36px",lineHeight:1.9,opacity:.85,"@media (max-width: 768px)":{fontSize:14,maxWidth:"100%",margin:"0 auto 24px"}}}>Building premium digital experiences — Nakuru, Kenya 🇰🇪</p>
-          <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap","@media (max-width: 768px)":{gap:8,flexDirection:"column",alignItems:"center"}}}>
+          <p className="hero-description" style={{fontSize:16,color:theme.textMuted,maxWidth:460,margin:"0 auto 36px",lineHeight:1.9,opacity:.85}}>Building premium digital experiences — Nakuru, Kenya 🇰🇪</p>
+          <div ref={heroCtaRef} className="hero-cta" style={{display:"flex",gap:11,justifyContent:"center",flexWrap:"wrap"}}>
             <button className="bp" onClick={()=>scrollTo("projects")}>View My Work ↓</button>
             <button className="bg" onClick={()=>scrollTo("contact")}>Let's Build</button>
           </div>
@@ -360,9 +344,9 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
     </div>
 
     {/* ABOUT — diagonal offset */}
-    <section ref={aboutRef} id="about" className="forest-about" style={{padding:"110px 40px",maxWidth:1010,margin:"0 auto",position:"relative","@media (max-width: 768px)":{padding:"60px 20px",maxWidth:"100%"}}}>
+    <section ref={aboutRef} id="about" className="forest-about" style={{padding:"110px 40px",maxWidth:1010,margin:"0 auto",position:"relative"}}>
       <ScrollReveal theme={theme} direction="up" delay={0.1}>
-        <div className="about-grid" style={{display:"grid",gridTemplateColumns:"1fr 1.3fr",gap:80,alignItems:"center","@media (max-width: 768px)":{gridTemplateColumns:"1fr",gap:40}}}>
+        <div className="about-grid" style={{display:"grid",gridTemplateColumns:"1fr 1.3fr",gap:80,alignItems:"center"}}>
         <div ref={aboutImgRef} style={{position:"relative"}}>
           {/* Organic shape frame */}
           <div style={{width:"100%",maxWidth:350,aspectRatio:"1",borderRadius:"48% 52% 62% 38% / 44% 56% 44% 56%",background:theme.surface,border:`1px solid ${theme.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:82,boxShadow:theme.shadowMd,position:"relative",overflow:"hidden"}}>
@@ -456,10 +440,7 @@ export function ForestLayout({ theme, devMode, showGrid, scrollTo, tIdx, setTIdx
           <div className="projects-grid" style={{
             display:"grid",
             gridTemplateColumns:"repeat(2,1fr)",
-            gap:24,
-            "@media (max-width: 768px)": {
-              gridTemplateColumns:"1fr"
-            }
+            gap:24
           }}>
           {PROJECTS.map((project,i)=>(
             <ScrollReveal key={project.id} theme={theme} direction="up" delay={0.4+i*0.1}>
