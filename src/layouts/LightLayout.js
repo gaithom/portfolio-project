@@ -199,6 +199,35 @@ const CONTACT_INTENTS = [
   { id: "hello", label: "Something else", note: "Questions, or just hello", subject: "Hello" }
 ];
 
+// ── Capability pages ─────────────────────────────────────────────────────────
+// Two at a time rather than a sticky deck. A page is two cards that bend
+// opposite ways and nest: the first narrow on top and widening below, the
+// second wide on top and narrowing to the right, each one's step sitting in
+// the space the other leaves.
+//
+// Measured off the reference, the page is a 3 x 2 grid of 492 : 172 : 494 by
+// 423 : 335, which puts every piece within 0.3% of its size there. The split
+// suits these cards exactly — each one already had a copy half and an artwork
+// half, which is what the two halves of a bend hold.
+//
+//   A-copy   B-art    B-art       A  copy on top, artwork below
+//   A-art    A-art    B-copy      B  artwork on top, copy below
+//
+// An odd card at the end gets a page to itself in the same shape, widened by
+// a column so it still fills the page.
+const CAP_PAGES = CAPABILITIES.reduce((pages, c, i) => {
+  if (i % 2 === 0) pages.push([c]); else pages[pages.length - 1].push(c);
+  return pages;
+}, []);
+
+/* [slot, what it holds, which bend] per position. shin and leg are the narrow
+   halves that reach out to meet their wider partner; bar and foot are wide. */
+const CAP_SLOTS = {
+  lead:  [["a-head", "copy", "shin"], ["a-body", "art", "foot"]],
+  trail: [["b-head", "art", "bar"], ["b-body", "copy", "leg"]],
+  solo:  [["solo-head", "copy", "shin"], ["solo-body", "art", "foot"]]
+};
+
 // ── Hero navigation ──────────────────────────────────────────────────────────
 // Mapped to the sections this layout actually renders, not the labels from the
 // reference.
@@ -337,7 +366,16 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),typeCanvasRef=useRef(null),contactRef=useRef(null);
   const designSectionRef=useRef(null);
   const [developerFill, setDeveloperFill] = useState(0);
-  const [activeWhatIDo, setActiveWhatIDo] = useState(0);
+  /* Which capability artworks are on screen. It was a single centred index,
+     which only made sense when one card covered the viewport; in a field
+     several are visible at once, so this is a set.
+
+     Seeded with every card, not empty. The observer's job is to QUIET the
+     ones that scroll away, so if it never reports — no support, or a host
+     that does not deliver the callback — the artwork still draws rather than
+     sitting dead. Same fail-safe direction as the reveals elsewhere here:
+     the default state is the visible one. */
+  const [liveCaps, setLiveCaps] = useState(() => new Set(CAPABILITIES.map((c) => c.id)));
   // Screenshots that failed to load. A project can name an image before the
   // file exists; the card then falls back to its title card instead of
   // rendering an empty rectangle.
@@ -359,6 +397,8 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
      each end instead of looking live when they would do nothing. */
   const workRailRef = useRef(null);
   const [railEdges, setRailEdges] = useState({ atStart: true, atEnd: false });
+  const capRailRef = useRef(null);
+  const [capEdges, setCapEdges] = useState({ atStart: true, atEnd: false });
   /* Which panel is the one you have scrolled to. Its copy card rises; the
      others stay retracted, which is what makes the rail read as a deck you
      move through rather than three equal cards. */
@@ -399,6 +439,34 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       window.removeEventListener("resize", onScroll);
     };
   }, []);
+
+  // The capability field pages sideways on the same terms as the work rail.
+  useEffect(() => {
+    const rail = capRailRef.current;
+    if (!rail) return undefined;
+    const read = () => {
+      // 1px of slack: fractional layout widths mean scrollLeft rarely lands
+      // exactly on the maximum, which would leave the arrow enabled forever.
+      const max = rail.scrollWidth - rail.clientWidth;
+      setCapEdges({ atStart: rail.scrollLeft <= 1, atEnd: rail.scrollLeft >= max - 1 });
+    };
+    read();
+    rail.addEventListener("scroll", read, { passive: true });
+    window.addEventListener("resize", read);
+    return () => {
+      rail.removeEventListener("scroll", read);
+      window.removeEventListener("resize", read);
+    };
+  }, []);
+
+  const scrollCapRail = (dir) => {
+    const rail = capRailRef.current;
+    if (!rail) return;
+    const page = rail.querySelector(".cap-page");
+    const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+    const step = page ? page.getBoundingClientRect().width + gap : rail.clientWidth * 0.8;
+    rail.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
 
   // One panel plus its gap, read from the live layout rather than hard-coded,
   // so it stays correct as the panel width clamps with the viewport.
@@ -472,24 +540,27 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     };
   }, []);
 
-  // Marks the card currently sitting in the middle of the viewport, which is
-  // what drives each artefact's assembly. An observer only fires on threshold
-  // crossings, so the stack itself stays pure CSS and perfectly smooth.
+  // Which artworks are allowed to run. Still an observer — it only fires on
+  // threshold crossings, so nothing is measured on scroll — but it now tracks
+  // every card that is on screen rather than the one in the middle, because
+  // the field shows several at once.
   useEffect(() => {
-    const cards = Array.from(document.querySelectorAll(".cap-card"));
-    if (!cards.length) return;
+    const pieces = Array.from(document.querySelectorAll(".cap-card[data-cap]"));
+    if (!pieces.length) return;
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            const i = cards.indexOf(e.target);
-            if (i > -1) setActiveWhatIDo(i);
-          }
+        setLiveCaps((prev) => {
+          const next = new Set(prev);
+          entries.forEach((e) => {
+            const id = e.target.dataset.cap;
+            if (e.isIntersecting) next.add(id); else next.delete(id);
+          });
+          return next;
         });
       },
-      { rootMargin: "-42% 0px -42% 0px", threshold: 0 }
+      { rootMargin: "-5% 0px -5% 0px", threshold: 0 }
     );
-    cards.forEach((c) => io.observe(c));
+    pieces.forEach((c) => io.observe(c));
     return () => io.disconnect();
   }, []);
 
@@ -866,30 +937,82 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         already passed stay visible as a stepped edge behind the current one.
         No pinning and no scroll-driven JS: the browser does all of it. */}
     <section ref={designSectionRef} id="what-i-do" className="whatido-section light-section-shell section-whatido">
-      <div className="cap-stack">
-        {CAPABILITIES.map((item, i) => (
-          <article
-            key={item.id}
-            style={{ "--i": i, "--depth": CAPABILITIES.length - 1 - i }}
-            className={`cap-card tone-${item.tone} cap-variant-${item.variant} ${i === activeWhatIDo ? "is-active" : ""}`}
-          >
-            <div className="cap-card-inner">
-              <div className="cap-copy">
-                <div className="cap-meta">
-                  <span className="cap-index">{item.id}</span>
+      <div className="cap-field" ref={capRailRef}>
+        {CAP_PAGES.map((pair, pi) => (
+          <div className="cap-page" key={pi}>
+            {pair.map((item, k) => {
+              const role = pair.length === 1 ? "solo" : k === 0 ? "lead" : "trail";
+              const live = liveCaps.has(item.id) ? " is-active" : "";
+
+              return CAP_SLOTS[role].map(([slot, holds, bend]) => (
+                <div
+                  key={`${item.id}-${slot}`}
+                  data-cap={item.id}
+                  className={`cap-card tone-${item.tone} cap-variant-${item.variant} cap-piece--${bend} cap-slot--${slot}${live}`}
+                >
+                  {holds === "copy" ? (
+                    <div className="cap-copy">
+                      <div className="cap-meta">
+                        <span className="cap-index">{item.id}</span>
+                      </div>
+                      <h3 className="cap-title">{item.title}</h3>
+                      <p className="cap-desc">{item.desc}</p>
+                      <ul className="cap-tags">
+                        {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="cap-visual">
+                      <CapabilityVisual variant={item.variant} />
+                    </div>
+                  )}
                 </div>
-                <h3 className="cap-title">{item.title}</h3>
-                <p className="cap-desc">{item.desc}</p>
-                <ul className="cap-tags">
-                  {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                </ul>
-              </div>
-              <div className="cap-visual">
-                <CapabilityVisual variant={item.variant} />
-              </div>
-            </div>
-          </article>
+              ));
+            })}
+          </div>
         ))}
+      </div>
+
+      {/* The same control as the work rail, down to the class names — one
+          chevron that appears to pass through the button. Two paging rails on
+          one page should not have two different controls. */}
+      <div className="wk-nav cap-nav">
+        <button
+          type="button"
+          className="wk-arrow wk-arrow--prev"
+          onClick={() => scrollCapRail(-1)}
+          disabled={capEdges.atStart}
+          aria-label="Previous capabilities"
+        >
+          <span className="wk-chev" aria-hidden="true">
+            <span className="wk-chev-track">
+              <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                <polyline points="13,2 4,12 13,22" />
+              </svg>
+              <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                <polyline points="13,2 4,12 13,22" />
+              </svg>
+            </span>
+          </span>
+        </button>
+        <button
+          type="button"
+          className="wk-arrow wk-arrow--next"
+          onClick={() => scrollCapRail(1)}
+          disabled={capEdges.atEnd}
+          aria-label="Next capabilities"
+        >
+          <span className="wk-chev" aria-hidden="true">
+            <span className="wk-chev-track">
+              <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                <polyline points="3,2 12,12 3,22" />
+              </svg>
+              <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                <polyline points="3,2 12,12 3,22" />
+              </svg>
+            </span>
+          </span>
+        </button>
       </div>
       {devMode&&<DevBadge id="what-i-do" devMode={devMode} theme={theme}/>}
     </section>

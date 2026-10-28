@@ -631,69 +631,215 @@
 
 .whatido-section {
   position: relative;
-  padding: clamp(40px, 8vh, 90px) clamp(20px, 4vw, 56px) clamp(56px, 9vh, 110px);
+  /* Named so the rail can cancel exactly this and run to the screen edges. */
+  --cap-shell-pad: clamp(20px, 4vw, 56px);
+  padding: clamp(40px, 8vh, 90px) var(--cap-shell-pad) clamp(56px, 9vh, 110px);
 }
 
-.cap-stack {
-  /* Taller and wider than before, and sized so the copy never needs to clip. */
-  --card-h: clamp(460px, 70vh, 672px);
-  max-width: 1320px;
-  margin: 0 auto;
+/* ── A page of two ──
+   The deck no longer stacks one card over another; the field shows two at a
+   time. A page is two cards that bend opposite ways and nest — the first
+   narrow on top and widening below, the second wide on top and narrowing to
+   the right, each one's step sitting in the space the other leaves.
+
+   The tracks are the reference's own measurements, which puts every piece
+   within 0.3% of its size there:
+
+     A-copy   B-art    B-art
+     A-art    A-art    B-copy                                                */
+/* Pages sideways, on the same terms as the work rail: full-bleed to the
+   screen edges, one page per snap stop, scrollbar hidden because the chevrons
+   under it are the control. */
+.cap-field {
+  /* Bled against THIS section's padding, not --page-gutter. That variable is
+     measured off .work-inner — the projects section's centred 1320px column —
+     so on a wide screen it is far larger than the 56px this section carries.
+     Cancelling 298px of a 56px inset dragged the rail 242px left, which put
+     its right edge 242px inside the screen: an invisible wall the cards
+     vanished behind well before they reached the edge. */
+  width: calc(100vw - var(--sbw, 0px));
+  margin-left: calc(-1 * var(--cap-shell-pad));
+  /* Two different measurements doing two different jobs. The BLEED cancels
+     this section's own padding, so the rail reaches the screen edge and cards
+     scroll off it. The INSET is the page column, so the first card lines up
+     with the work section and with where this deck sat before. Using the page
+     column for both was the bug; using the section padding for both would
+     leave these cards 242px left of everything else on the page. */
+  scroll-padding-left: var(--page-gutter, 0px);
+  scroll-behavior: smooth;
+  display: flex;
+  gap: clamp(16px, 1.8vw, 26px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  padding: 4px var(--page-gutter, 0px) 6px var(--page-gutter, 0px);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.cap-field::-webkit-scrollbar { display: none; }
+
+/* The nav is a plain child of the section, so it already sits inside the
+   section's padding; this adds only the difference up to the page column, so
+   it lands under the first card rather than 242px left of it. */
+.cap-nav { margin-left: calc(var(--page-gutter, 0px) - var(--cap-shell-pad)); }
+
+.cap-page {
+  --cap-r: clamp(16px, 1.8vw, 28px);
+  --cap-gap: clamp(12px, 1.5vw, 22px);
+  /* The fillet radius is the gutter, so the curve at a bend runs exactly up
+     to the card it bends around and no further. */
+  --cap-fillet: var(--cap-gap);
+  /* How far a card's two halves overlap. Meeting exactly leaves a hairline of
+     ground along the join on fractional device pixels. */
+  --cap-weld: 1px;
+
+  /* Width chosen so the reference aspect fits under the max-height on a
+     normal laptop: 1060 / 1.54 = 688, just under 82vh of an 840px window.
+     The cap only binds on genuinely short viewports. */
+  flex: 0 0 min(1060px, 84vw);
+  min-width: 0;
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-columns: 492fr 172fr 494fr;
+  grid-template-rows: 423fr 335fr;
+  gap: var(--cap-gap);
+  aspect-ratio: 1198 / 778;
+  max-height: 82vh;
+}
+
+.cap-slot--a-head    { grid-area: 1 / 1 / 2 / 2; }
+.cap-slot--a-body    { grid-area: 2 / 1 / 3 / 3; }
+.cap-slot--b-head    { grid-area: 1 / 2 / 2 / 4; }
+.cap-slot--b-body    { grid-area: 2 / 3 / 3 / 4; }
+/* An odd card at the end keeps the same bend, widened by a column so it fills
+   its page rather than sitting in half of one. */
+.cap-slot--solo-head { grid-area: 1 / 1 / 2 / 3; }
+.cap-slot--solo-body { grid-area: 2 / 1 / 3 / 4; }
 
 .cap-card {
-  position: sticky;
-  /* Every card rests at the same offset, so they land exactly where the first
-     one sat rather than drifting lower down the stack. Sits above centre, so
-     the deck reads higher in the viewport. */
-  top: calc((100vh - var(--card-h)) / 2 - clamp(26px, 6vh, 70px));
-  height: var(--card-h);
-  /* Scroll distance each card gets before the next one covers it. Short
-     enough that the section moves at reading pace rather than crawling. */
-  margin-bottom: clamp(90px, 16vh, 170px);
-  display: flex;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: var(--cap-bg, #f6f3ec);
-  box-shadow: var(--shadow-lift);
-  contain: paint;
-  transition: transform 0.5s var(--ease-glide);
-}
-
-/* The card being covered settles back a touch, which reads as depth without
-   any scroll maths. */
-.cap-card:not(.is-active) { transform: scale(0.985); }
-
-.cap-card:last-child { margin-bottom: 0; }
-
-.cap-card-inner {
   position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  display: flex;
   align-items: center;
-  gap: clamp(20px, 3.5vw, 56px);
-  padding: clamp(30px, 4vw, 60px);
+  padding: clamp(20px, 2.4vw, 44px);
+  background: var(--cap-bg, #f6f3ec);
   box-sizing: border-box;
 }
 
-@media (max-width: 900px) {
-  .cap-stack { --card-h: clamp(470px, 72vh, 620px); }
-  .cap-card-inner {
-    grid-template-columns: minmax(0, 1fr);
-    align-content: center;
-    gap: clamp(16px, 3vh, 28px);
-    padding: clamp(24px, 5vw, 34px);
-  }
-  .cap-visual { order: -1; height: min(34%, 190px); }
+/* ── The two bends ──
+   Each card is ONE card drawn as two fused rects: a single element cannot be
+   L-shaped and keep rounded outer corners, since clip-path would square them
+   all off. Every rect rounds only the corners that land on the silhouette and
+   squares the ones that run into its partner.
+
+   The narrow half always reaches out to the wide one, never the reverse — a
+   rect reaches across its whole width, and reaching from the wide half would
+   close the gutter beside the card it is nesting with. */
+.cap-piece--shin {                      /* narrow top, widening below */
+  margin-bottom: calc(-1 * var(--cap-gap) - var(--cap-weld));
+  border-radius: var(--cap-r) var(--cap-r) 0 0;
+  z-index: 2;
 }
 
-/* Tones: a proper colour story rather than six near-identical washes. Each
-   pairs a saturated ground with an ink verified at AAA against the darker
-   gradient stop (7.5:1 or better), so the extra chroma costs no legibility. */
+.cap-piece--foot {                      /* the wide half under it */
+  border-radius: 0 var(--cap-r) var(--cap-r) var(--cap-r);
+}
+
+.cap-piece--bar {                       /* wide top, narrowing below right */
+  border-radius: var(--cap-r) var(--cap-r) 0 var(--cap-r);
+}
+
+.cap-piece--leg {                       /* the narrow half under it */
+  margin-top: calc(-1 * var(--cap-gap) - var(--cap-weld));
+  border-radius: 0 0 var(--cap-r) var(--cap-r);
+  z-index: 2;
+}
+
+/* ── The inner angles ──
+   Where one rect's edge turns into the other's the silhouette makes a 270°
+   turn. Rounding a corner like that ADDS material — the curve bulges into the
+   notch so the card's colour sweeps around it. Taking material away would
+   bite a chunk out of the wider half and show ground through the bend.
+
+   So each fillet is a square of the card's own tone set in the gutter at the
+   angle, with a quarter disc cut from the corner it curves around. The two
+   are mirrored: the shin's sits to its right at the bottom, the leg's to its
+   left at the top. Both back off by the weld, because the rect they hang from
+   reaches a pixel past its true edge. */
+.cap-piece--shin::after,
+.cap-piece--leg::after {
+  content: "";
+  position: absolute;
+  width: var(--cap-fillet);
+  height: var(--cap-fillet);
+  pointer-events: none;
+}
+
+.cap-piece--shin::after {
+  left: 100%;
+  bottom: var(--cap-weld);
+  background: radial-gradient(
+    circle var(--cap-fillet) at 100% 0,
+    transparent 0 calc(var(--cap-fillet) - 0.5px),
+    var(--cap-bg) var(--cap-fillet)
+  );
+}
+
+.cap-piece--leg::after {
+  right: 100%;
+  top: var(--cap-weld);
+  background: radial-gradient(
+    circle var(--cap-fillet) at 0 100%,
+    transparent 0 calc(var(--cap-fillet) - 0.5px),
+    var(--cap-bg) var(--cap-fillet)
+  );
+}
+
+
+/* Below the grid's comfortable width the nesting stops working: a page
+   becomes one column, each card's two halves stay welded into one tall block
+   with its copy above its artwork, and the bends are dropped — there is
+   nothing left for a card to nest with. */
+@media (max-width: 900px) {
+  .cap-field { gap: 16px; }
+
+  .cap-page {
+    flex-basis: min(560px, 86vw);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    aspect-ratio: auto;
+    max-height: none;
+    /* The variable, not the gap property: the welds are negative margins of
+       exactly --cap-gap, so overriding `gap` alone would leave them
+       cancelling the wrong distance and split every card in two. */
+    --cap-gap: clamp(18px, 4vh, 30px);
+  }
+
+  .cap-card {
+    grid-area: auto !important;
+    min-height: 0;
+  }
+
+  .cap-piece--shin,
+  .cap-piece--bar {
+    margin-bottom: calc(-1 * var(--cap-gap) - var(--cap-weld));
+    border-radius: var(--cap-r) var(--cap-r) 0 0;
+  }
+
+  .cap-piece--foot,
+  .cap-piece--leg {
+    margin-top: 0;
+    border-radius: 0 0 var(--cap-r) var(--cap-r);
+  }
+
+  .cap-piece--shin::after,
+  .cap-piece--leg::after { display: none; }
+}
+
 .cap-card.tone-moss { --cap-bg: #C9E4D4; --cap-ink: #1F3B33; --cap-tint: rgba(31, 59, 51, 0.2); }
 .cap-card.tone-dusk { --cap-bg: #CFDAF5; --cap-ink: #232047; --cap-tint: rgba(35, 32, 71, 0.18); }
 .cap-card.tone-lilac { --cap-bg: #E0D2F3; --cap-ink: #33244F; --cap-tint: rgba(51, 36, 79, 0.18); }
@@ -703,33 +849,16 @@
 
 /* A soft bloom of the card's own hue, so the colour has somewhere to breathe
    instead of sitting flat edge to edge. */
-/* One flat colour per card, edge to edge. */
-
-.cap-card-inner { position: relative; z-index: 1; }
-
-/* A hairline seam instead of a hard divider */
-
-
-.cap-card-inner {
+/* ── Copy half ── */
+.cap-copy {
+  min-width: 0;
   width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(28px, 5vw, 80px);
-  padding: clamp(72px, 11vh, 120px) clamp(28px, 7vw, 128px) clamp(132px, 19vh, 176px);
-  box-sizing: border-box;
-  max-width: 1560px;
-  margin: 0 auto;
 }
-
-/* ── Copy column ── */
-.cap-copy { min-width: 0; }
 
 .cap-meta {
   display: flex;
   align-items: center;
-  margin-bottom: clamp(10px, 1.8vh, 18px);
+  margin-bottom: clamp(7px, 1.1vh, 11px);
 }
 
 .cap-index {
@@ -743,17 +872,20 @@
 
 
 
-/* Sized so the copy fits the card at every width. The old 78px was set for
-   full-viewport cards and overflows the deck. */
+/* Sized for the half it now sits in, not a full-width card. The tightest
+   copy slot is the narrow bottom-right one — 494 x 335 less padding, so 406 x
+   248 — and at 44px the longest title ran that to 271px and pushed its tags
+   out of the card. 32px brings the same copy to 226px, leaving 22px of
+   headroom on the worst case. */
 .cap-title {
   font-family: var(--font-display);
-  font-size: clamp(26px, 3.2vw, 44px);
+  font-size: clamp(22px, 2.1vw, 32px);
   font-weight: 700;
   line-height: 1.08;
   letter-spacing: var(--display-tracking);
   color: var(--cap-ink);
-  margin: 0 0 clamp(12px, 1.8vh, 18px);
-  max-width: 15ch;
+  margin: 0 0 clamp(8px, 1.2vh, 12px);
+  max-width: 18ch;
 }
 
 .cap-desc {
@@ -799,10 +931,14 @@
 
 
 /* ── Visual column ── */
+/* ── Artwork half ──
+   Fills its own piece now rather than sharing a column with the copy, so it
+   is sized off the piece instead of a fixed height. */
 .cap-visual {
   position: relative;
   min-width: 0;
-  height: min(78%, 420px);
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1035,15 +1171,10 @@
 
 
 @media (max-width: 1024px) {
-  .cap-card-inner { grid-template-columns: minmax(0, 1fr); align-content: center; }
-  .cap-visual { height: min(34vh, 300px); order: -1; }
   .cap-title { max-width: none; }
-  
 }
 
 @media (max-width: 767px) {
-  .cap-card-inner { padding: clamp(56px, 9vh, 88px) 22px clamp(124px, 18vh, 150px); gap: 22px; }
-  .cap-visual { height: min(26vh, 220px); }
   .cap-desc { font-size: 15px; max-width: none; }
   
   
@@ -3933,6 +4064,58 @@
   .wk-foot { flex-direction: column; align-items: stretch; }
   .wk-all { justify-content: center; }
   .wk-cta { width: 100%; justify-content: center; }
+}
+
+/* ── Artwork fit ──
+   The variants were drawn for a card that filled the viewport, so several
+   carry fixed pixel sizes — .cap-ring is a 400px square, which overhung the
+   226px half it now sits in by 74px. Capping both axes lets each one's own
+   aspect-ratio do the scaling instead of stretching it, and the clip catches
+   anything positioned out of flow.
+
+   These sit here, after the variant rules, because `.cap-art > *` and
+   `.cap-ring` carry the same specificity — source order is what decides. */
+.cap-visual { overflow: hidden; }
+.cap-art > * { max-width: 100%; max-height: 100%; }
+
+/* Sized off height, not width. Every one of these was written as a percentage
+   of the WIDTH back when the artwork half was taller than it was wide; in the
+   reshaped halves it is the other way round, so a ring at 78% of a 406px box
+   came out 317px tall in a 226px slot. Driving them from the height and
+   letting aspect-ratio supply the width keeps each one circular AND inside
+   its half. */
+.cap-art-motion .cap-ring,
+.cap-art-motion .cap-orbit {
+  width: auto;
+  height: min(400px, 86%);
+}
+
+.cap-ring.r2 { height: min(260px, 56%); }
+
+/* The gauge shares its column with the readouts below it — 187 + 25 + 68
+   against 226 — so it has to be allowed to give way rather than just be
+   capped. min-height:0 is what lets a flex item shrink past its content. */
+.cap-gauge {
+  width: auto;
+  height: min(220px, 100%);
+  min-height: 0;
+  flex: 0 1 auto;
+}
+
+.cap-gauge b { font-size: clamp(22px, 2.6vw, 38px); }
+
+.cap-vitals span { padding: clamp(7px, 1vh, 12px) clamp(11px, 1.4vw, 20px); }
+
+/* The artwork half is sized by its grid row on desktop. Stacked, the row is
+   auto, so height:100% has nothing to resolve against and falls back to the
+   artwork's intrinsic size — which ranged from 90px to 494px across the seven
+   variants. It needs a height of its own here.
+
+   This lives after the base rule, not in the stacked block above it, because
+   a media query adds no specificity: `.cap-visual { height: 100% }` is
+   declared later in the file and would win from inside any earlier query. */
+@media (max-width: 900px) {
+  .cap-visual { height: clamp(200px, 38vh, 300px); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
