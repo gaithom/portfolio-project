@@ -55,64 +55,137 @@ const TYPEFACES = [
 ];
 
 // ── Colour system ────────────────────────────────────────────────────────────
-// Contrast ratios are measured against the page background (#F2EFE7) using the
-// WCAG 2.1 relative-luminance formula. Tints below 300 are surface tones and
-// are not intended to carry text, so no ratio is claimed for them.
+// Grouped by shade family rather than by job: every green sits in one ramp,
+// every warm in the next, and so on. The old "Signal" group was semantic, not
+// chromatic — it held a teal, an orange, a near-black and two blues — so its
+// members moved to the family each one actually belongs to and what was left
+// became the blue-neutral ramp.
+//
+// `ratio` is against this layout's page background. That background moved from
+// #F2EFE7 to #EFEBE4 and the figures were never re-derived, so all of them are
+// recomputed here (WCAG 2.1 relative luminance). No published grade changed,
+// but several numbers did — Moss 900 was claiming 8.06 and reads 7.79.
+//
+// `on` is the label colour printed on that swatch, and is measured against the
+// swatch itself. Normally it is the family's own 100 tint or 900, whichever
+// clears AA. Three mid-tones clear neither — #7A9E8E manages 2.63 on its tint
+// and 3.14 on its 900 — so those carry a near-black mixed from the family's
+// own hue rather than a neutral grey that would read as a different system.
+//
+// Slate 700 and 500 are new. That ramp inherited only three members from the
+// redistribution and read as a broken ladder beside the six-step families.
 const PALETTES = [
-  { name: "Moss", use: "Brand, primary actions", steps: [
-    { step: "900", hex: "#2F4D45", role: "Text", ratio: "8.06", grade: "AAA" },
-    { step: "700", hex: "#3C6057", role: "Body", ratio: "6.09", grade: "AA" },
-    { step: "500", hex: "#7A9E8E", role: "Accent" },
-    { step: "300", hex: "#C7D9D0", role: "Line" },
-    { step: "100", hex: "#EDF3EF", role: "Surface" }
+  { name: "Moss", use: "Greens — brand, primary actions", steps: [
+    { step: "900", hex: "#2F4D45", role: "Text",    ratio: "7.79",  grade: "AAA", on: "#EDF3EF" },
+    { step: "800", hex: "#3C6057", role: "Body",    ratio: "5.89",  grade: "AA",  on: "#EDF3EF" },
+    { step: "600", hex: "#0F766E", role: "Success", ratio: "4.61",  grade: "AA",  on: "#EDF3EF" },
+    { step: "500", hex: "#7A9E8E", role: "Accent",  on: "#101C18" },
+    { step: "300", hex: "#C7D9D0", role: "Line",    on: "#2F4D45" },
+    { step: "100", hex: "#EDF3EF", role: "Surface", on: "#2F4D45" }
   ] },
-  { name: "Clay", use: "Warm neutrals, editorial", steps: [
-    { step: "900", hex: "#4A3A24", role: "Text", ratio: "9.51", grade: "AAA" },
-    { step: "700", hex: "#7E6440", role: "Body", ratio: "4.83", grade: "AA" },
-    { step: "500", hex: "#C4A882", role: "Accent" },
-    { step: "300", hex: "#E4D3BC", role: "Line" },
-    { step: "100", hex: "#F8EFE9", role: "Surface" }
+  { name: "Clay", use: "Warm earth — editorial, warning", steps: [
+    { step: "900", hex: "#4A3A24", role: "Text",    ratio: "9.20",  grade: "AAA", on: "#F8EFE9" },
+    { step: "800", hex: "#7E6440", role: "Body",    ratio: "4.67",  grade: "AA",  on: "#F8EFE9" },
+    { step: "600", hex: "#A24908", role: "Warning", ratio: "5.06",  grade: "AA",  on: "#F8EFE9" },
+    { step: "500", hex: "#C4A882", role: "Accent",  on: "#4A3A24" },
+    { step: "300", hex: "#E4D3BC", role: "Line",    on: "#4A3A24" },
+    { step: "100", hex: "#F8EFE9", role: "Surface", on: "#4A3A24" }
   ] },
-  { name: "Dusk", use: "Secondary accent, depth", steps: [
-    { step: "900", hex: "#2A2438", role: "Text", ratio: "12.98", grade: "AAA" },
-    { step: "700", hex: "#4A3F6B", role: "Body", ratio: "8.25", grade: "AAA" },
-    { step: "500", hex: "#8B7CB8", role: "Accent" },
-    { step: "300", hex: "#C3B8E0", role: "Line" },
-    { step: "100", hex: "#E8DFF5", role: "Surface" }
+  { name: "Dusk", use: "Violets — secondary accent, depth", steps: [
+    { step: "900", hex: "#2A2438", role: "Text",    ratio: "12.55", grade: "AAA", on: "#E8DFF5" },
+    { step: "700", hex: "#4A3F6B", role: "Body",    ratio: "7.98",  grade: "AAA", on: "#E8DFF5" },
+    { step: "500", hex: "#8B7CB8", role: "Accent",  ratio: "3.12",  grade: "AA Large", on: "#0E0B14" },
+    { step: "300", hex: "#C3B8E0", role: "Line",    on: "#2A2438" },
+    { step: "100", hex: "#E8DFF5", role: "Surface", on: "#2A2438" }
   ] },
-  { name: "Signal", use: "State, feedback, code", steps: [
-    { step: "900", hex: "#14202E", role: "Text", ratio: "14.33", grade: "AAA" },
-    { step: "700", hex: "#0F766E", role: "Success", ratio: "4.76", grade: "AA" },
-    { step: "500", hex: "#A24908", role: "Warning", ratio: "5.23", grade: "AA" },
-    { step: "300", hex: "#DCE6FF", role: "Info" },
-    { step: "100", hex: "#F1F5FF", role: "Surface" }
+  { name: "Slate", use: "Blue neutrals — state, code, info", steps: [
+    { step: "900", hex: "#14202E", role: "Text",    ratio: "13.85", grade: "AAA", on: "#F1F5FF" },
+    { step: "700", hex: "#33465C", role: "Body",    ratio: "8.14",  grade: "AAA", on: "#F1F5FF" },
+    { step: "500", hex: "#6F89A8", role: "Accent",  ratio: "3.04",  grade: "AA Large", on: "#14202E" },
+    { step: "300", hex: "#DCE6FF", role: "Info",    on: "#14202E" },
+    { step: "100", hex: "#F1F5FF", role: "Surface", on: "#14202E" }
   ] }
 ];
 
 // ── Expression canvas composition ────────────────────────────────────────────
-// Specimens and palettes are scattered across the canvas, but every block is
-// placed on an explicit 12-column grid and nothing overlaps — the looseness is
-// composed, not random. Word colours are drawn from PALETTES above, so the
-// section demonstrates the system it is documenting.
+// Each palette reproduces the reference composition in its own shades — the
+// family IS the shape, not a card holding one.
+//
+// Each family gets its own small grid rather than being spread across one
+// shared fine grid. That is what makes the proportions land: on a shared grid
+// a card spanning four tracks swallows three gutters, so it can never sit in
+// the right ratio to the gutter beside it. With a grid per family every gutter
+// is a real gutter, and the tracks are the reference's own measurements:
+//
+//   columns  179 : 45 : 179 : 185        rows  157 : 10 : 155 : 142
+//
+//        A     bar   bar   bar
+//        A     leg   leg   C
+//        shin  leg   leg   C
+//        foot  foot  E     C
+//
+// The thin second row is what lets A run deeper than the bar while the leg
+// starts higher than the shin — the one asymmetry the reference turns on.
+// Every card comes out within 0.7% of its measured size, most of them exact.
+//
+// TWO cards bend, and opposite ways:
+//   bar + leg    wide on top, narrower below; notch opens bottom-right and
+//                the tall card C tucks into it
+//   shin + foot  narrow on top, wider below; notch opens top-right and the
+//                leg above sits in it
+// Each is ONE card drawn as two fused rects, because a single element cannot
+// be L-shaped and keep rounded outer corners — clip-path would square them
+// all off. They overlap by a pixel so no seam shows, they do not answer hover
+// separately, and a fillet closes the inner angle.
+const FAM_SLOTS = {
+  A:    "1 / 1 / 3 / 2",
+  bar:  "1 / 2 / 2 / 5",   leg:  "2 / 2 / 4 / 4",
+  shin: "3 / 1 / 4 / 2",   foot: "4 / 1 / 5 / 3",
+  C:    "2 / 4 / 5 / 5",   C1:   "2 / 4 / 4 / 5",  C2: "4 / 4 / 5 / 5",
+  E:    "4 / 3 / 5 / 4"
+};
+
+/* Where each family sits on the canvas. Stepped rather than set out in a
+   straight 2x2 — each starts on a different row and column, so the four walk
+   across the full width as a collage. Still on the grid: every origin is a
+   whole cell, which is what keeps a loose arrangement from reading as a
+   mistake. */
+const FAM_AREA = {
+  Moss:  "1 / 1 / 7 / 6",
+  Clay:  "3 / 9 / 9 / 14",
+  Dusk:  "11 / 3 / 17 / 8",
+  Slate: "13 / 10 / 19 / 15"
+};
+
+/* Slot per shade, biggest card first, so a family still reads as a ramp even
+   though its cards are scattered. "B" and "D" are the bent ones and each
+   expands to a pair at render. Six-shade families split the tall card. */
+const FAM_ORDER = {
+  6: ["B", "D", "C1", "A", "E", "C2"],
+  5: ["B", "D", "C", "A", "E"]
+};
+
+/* Which pair a bent slot draws as: [labelled piece, inert piece]. The label
+   goes on the piece at the bottom of the silhouette, as in the reference. */
+const BENT_PAIRS = { B: ["leg", "bar"], D: ["foot", "shin"] };
+
+// Set into the pockets the stepped families leave.
 const EXPRESSION_WORDS = [
-  { word: "Structure", face: "Roboto",           role: "Display",            font: "'Roboto', sans-serif",              weight: 900, size: 5.4, colour: "#2F4D45", area: "1 / 1 / 3 / 6" },
-  { word: "Editorial", face: "Playfair Display", role: "Transitional serif", font: "'Playfair Display', serif",       weight: 700, size: 4.6, colour: "#4A3F6B", area: "3 / 2 / 5 / 7", italic: true },
-  { word: "Legible",   face: "Inter",            role: "UI sans",            font: "'Inter', sans-serif",             weight: 500, size: 3.6, colour: "#3C6057", area: "4 / 8 / 6 / 12" },
-  { word: "Rhythm",    face: "Lora",             role: "Old-style serif",    font: "'Lora', serif",                   weight: 500, size: 4.2, colour: "#7E6440", area: "6 / 7 / 8 / 12" },
-  { word: "Balance",   face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",           weight: 700, size: 4.8, colour: "#2A2438", area: "8 / 3 / 10 / 8" },
-  { word: "Metadata",  face: "Space Mono",       role: "Monospace",          font: "'Space Mono', monospace",         weight: 400, size: 2.4, colour: "#0F766E", area: "10 / 1 / 12 / 5" },
-  { word: "Contrast",  face: "Roboto",           role: "Text",               font: "'Roboto', sans-serif",              weight: 400, size: 4.2, colour: "#A24908", area: "11 / 6 / 13 / 10" },
-  { word: "System",    face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",           weight: 600, size: 3.8, colour: "#4A3A24", area: "13 / 7 / 15 / 12" }
+  { word: "Structure", face: "Roboto",           role: "Display",            font: "'Roboto', sans-serif",      weight: 900, size: 4.6, colour: "#2F4D45", area: "1 / 7 / 3 / 15" },
+  { word: "Editorial", face: "Playfair Display", role: "Transitional serif", font: "'Playfair Display', serif", weight: 700, size: 3.4, colour: "#4A3F6B", area: "7 / 1 / 9 / 5", italic: true },
+  { word: "Legible",   face: "Inter",            role: "UI sans",            font: "'Inter', sans-serif",       weight: 500, size: 2.8, colour: "#3C6057", area: "7 / 5 / 9 / 9" },
+  { word: "Balance",   face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",     weight: 700, size: 2.8, colour: "#2A2438", area: "9 / 1 / 11 / 5" },
+  { word: "Rhythm",    face: "Lora",             role: "Old-style serif",    font: "'Lora', serif",             weight: 500, size: 2.9, colour: "#7E6440", area: "9 / 5 / 11 / 9" },
+  { word: "System",    face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",     weight: 600, size: 2.4, colour: "#33465C", area: "9 / 9 / 11 / 12" },
+  { word: "Metadata",  face: "Space Mono",       role: "Monospace",          font: "'Space Mono', monospace",   weight: 400, size: 1.9, colour: "#0F766E", area: "9 / 12 / 11 / 15" },
+  { word: "Contrast",  face: "Roboto",           role: "Text",               font: "'Roboto', sans-serif",      weight: 400, size: 3.0, colour: "#A24908", area: "17 / 1 / 19 / 8" }
 ];
 
-/* Horizontal rule positions, as a share of the canvas height.
-   They were even fifths (20/40/60/80), but two of them struck through a word:
-   20% cut across Editorial and 80% across Contrast. Those two moved down to
-   land just under the baseline of the word they were crossing, which is the
-   relationship 60% already had with Balance — the word sits on the rule rather
-   than being crossed by it. 40% and 60% were clear of every word and are
-   unchanged. */
-const EXPR_RULE_TOPS = [24.1, 40, 60, 81.5];
+/* Each rule sits in a gutter no word spans. Every word occupies an odd row and
+   the one after it, so a gutter after an even row can never fall inside one.
+   The lines run the width of the screen, disappear behind whichever cards they
+   meet and reappear in the gaps — which is what ties the collage to a grid. */
+const EXPR_RULE_ROWS = [2, 6, 8, 10, 16];
 
 // ── Contact ──────────────────────────────────────────────────────────────────
 // The intent only sets the subject line. Nothing is collected here and nothing
@@ -126,13 +199,6 @@ const CONTACT_INTENTS = [
   { id: "hello", label: "Something else", note: "Questions, or just hello", subject: "Hello" }
 ];
 
-const EXPRESSION_PALETTE_AREAS = {
-  Moss: "1 / 8 / 4 / 13",
-  Clay: "5 / 1 / 8 / 6",
-  Dusk: "8 / 9 / 11 / 13",
-  Signal: "12 / 1 / 15 / 6"
-};
-
 // ── Hero navigation ──────────────────────────────────────────────────────────
 // Mapped to the sections this layout actually renders, not the labels from the
 // reference.
@@ -144,6 +210,13 @@ const HERO_NAV = [
   { label: "Type", id: "type-canvas" },
   { label: "Contact", id: "contact" }
 ];
+
+// Split either side of the mark. In the condensed bar the first two sit to the
+// LEFT of the logo, which moves the bar's empty middle to its actual middle —
+// with everything after a narrow logo the gap sat well off-centre. The hero
+// column puts them back in reading order with `order`, so only the bar changes.
+const HERO_NAV_LEAD = HERO_NAV.slice(0, 2);
+const HERO_NAV_TRAIL = HERO_NAV.slice(2);
 
 // ── Capability artwork ───────────────────────────────────────────────────────
 // One contained artefact per capability. Each sits inside the card's visual
@@ -270,6 +343,17 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   // rendering an empty rectangle.
   const [missingShots, setMissingShots] = useState({});
   const [activeSection, setActiveSection] = useState(null);
+
+  /* The hero rail is this layout's navbar. Once you leave the top of the page
+     it detaches and rides along as a bar; 60px rather than 0 so a one-notch
+     wheel nudge does not toggle it. */
+  const [navCondensed, setNavCondensed] = useState(false);
+  useEffect(() => {
+    const read = () => setNavCondensed(window.scrollY > 60);
+    read();
+    window.addEventListener("scroll", read, { passive: true });
+    return () => window.removeEventListener("scroll", read);
+  }, []);
 
   /* The work rail's scroll position, so the arrows can disable themselves at
      each end instead of looking live when they would do nothing. */
@@ -628,11 +712,41 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <span /><span /><span /><span />
         </div>
 
-        <div className="hero-rail">
-          <img className="hero-logo" src="/logo_transparent_shadow.png" alt="Michael Gaitho" />
+        <div className={`hero-rail${navCondensed ? " is-condensed" : ""}`}>
+          {/* Two groups around the mark. Only one of them is the labelled
+              landmark — a second <nav aria-label="Sections"> would announce a
+              duplicate region for what is one menu. */}
+          <div className="hero-nav hero-nav--lead">
+            {HERO_NAV_LEAD.map((n) => (
+              <button
+                key={n.id}
+                type="button"
+                className={`hero-nav-link${activeSection === n.id ? " is-active" : ""}`}
+                aria-current={activeSection === n.id ? "true" : undefined}
+                onClick={() => { setActiveSection(n.id); scrollTo(n.id); }}
+              >
+                {n.label}
+              </button>
+            ))}
+          </div>
 
-          <nav className="hero-nav" aria-label="Sections">
-            {HERO_NAV.map((n) => (
+          {/* Two marks stacked and cross-faded rather than a CSS filter: a
+              filter chain can only approximate a target colour, and this way
+              the orange is exactly the file's own. */}
+          <button
+            type="button"
+            className="hero-logo-wrap"
+            onClick={() => scrollTo("hero")}
+            aria-label="Michael Gaitho — back to top"
+          >
+            {/* alt is empty on both: the button's aria-label already names it,
+                and alt text here would be read out twice. */}
+            <img className="hero-logo" src="/logo_transparent_shadow.png" alt="" />
+            <img className="hero-logo hero-logo-hot" src="/logo_orange.png" alt="" aria-hidden="true" />
+          </button>
+
+          <nav className="hero-nav hero-nav--trail" aria-label="Sections">
+            {HERO_NAV_TRAIL.map((n) => (
               <button
                 key={n.id}
                 type="button"
@@ -907,24 +1021,47 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           })}
         </div>
 
+        {/* Each chevron is drawn twice. The pair sits in a track one cell
+            wide, so only ever one is on screen: hovering slides the track by a
+            cell, and the mark you were looking at leaves in the direction of
+            travel while its twin arrives from behind. One chevron appearing to
+            pass through the button, rather than a glyph that nudges. */}
         <div className="wk-nav">
           <button
             type="button"
-            className="wk-arrow"
+            className="wk-arrow wk-arrow--prev"
             onClick={() => scrollWorkRail(-1)}
             disabled={railEdges.atStart}
             aria-label="Previous projects"
           >
-            <span aria-hidden="true">&#8592;</span>
+            <span className="wk-chev" aria-hidden="true">
+              <span className="wk-chev-track">
+                <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                  <polyline points="13,2 4,12 13,22" />
+                </svg>
+                <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                  <polyline points="13,2 4,12 13,22" />
+                </svg>
+              </span>
+            </span>
           </button>
           <button
             type="button"
-            className="wk-arrow"
+            className="wk-arrow wk-arrow--next"
             onClick={() => scrollWorkRail(1)}
             disabled={railEdges.atEnd}
             aria-label="Next projects"
           >
-            <span aria-hidden="true">&#8594;</span>
+            <span className="wk-chev" aria-hidden="true">
+              <span className="wk-chev-track">
+                <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                  <polyline points="3,2 12,12 3,22" />
+                </svg>
+                <svg className="wk-chev-mark" viewBox="0 0 16 24" focusable="false">
+                  <polyline points="3,2 12,12 3,22" />
+                </svg>
+              </span>
+            </span>
           </button>
         </div>
 
@@ -955,7 +1092,13 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         {/* Horizontal rules only. They run the full width of the viewport, so
             the layer they live in is bled out to the screen edges in CSS. */}
         <div className="expr-rules" aria-hidden="true">
-          {EXPR_RULE_TOPS.map((top, i) => <span key={`h${i}`} className="expr-rule expr-rule-h" style={{ top: `${top}%` }} />)}
+          {EXPR_RULE_ROWS.map((n) => (
+            <span
+              key={`h${n}`}
+              className="expr-rule expr-rule-h"
+              style={{ top: `calc(${n} * var(--expr-row) + ${n - 0.5} * var(--expr-gap))` }}
+            />
+          ))}
         </div>
 
         {EXPRESSION_WORDS.map((w) => (
@@ -981,31 +1124,58 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           </button>
         ))}
 
+        {/* One grid per family. The wrapper draws nothing — no background,
+            no border — it only holds the four tracks that give the cards the
+            reference's proportions. */}
         {PALETTES.map((p) => (
-          <div
-            key={p.name}
-            className="expr-palette"
-            style={{ gridArea: EXPRESSION_PALETTE_AREAS[p.name] }}
-            tabIndex={0}
-          >
-            <span className="expr-palette-head">
-              <span className="expr-palette-name">{p.name}</span>
-            </span>
-            <span className="expr-palette-chips">
-              {p.steps.map((c) => (
-                <span
-                  key={c.hex}
-                  className={`expr-chip${c.grade ? " has-grade" : ""}`}
-                  style={{ background: c.hex }}
-                >
-                  <span className="expr-chip-tip">
-                    <code>{c.hex}</code>
-                    <em>{c.role}</em>
-                    <b>{c.ratio ? `${c.ratio}:1 ${c.grade}` : "Surface"}</b>
+          <div key={p.name} className="expr-family" style={{ gridArea: FAM_AREA[p.name] }}>
+            {p.steps.flatMap((c, i) => {
+              const slot = FAM_ORDER[p.steps.length][i];
+              const label = (
+                <span className="expr-swatch-label">
+                  <span className="expr-swatch-family">{p.name} {c.step}</span>
+                  <code className="expr-swatch-hex">{c.hex}</code>
+                  <span className="expr-swatch-role">
+                    {c.role}{c.ratio ? ` · ${c.ratio}:1 ${c.grade}` : ""}
                   </span>
                 </span>
-              ))}
-            </span>
+              );
+
+              if (!BENT_PAIRS[slot]) {
+                return [
+                  <div
+                    key={c.hex}
+                    className="expr-swatch"
+                    style={{ gridArea: FAM_SLOTS[slot], background: c.hex, color: c.on }}
+                    tabIndex={0}
+                  >
+                    {label}
+                  </div>
+                ];
+              }
+
+              /* One bent card, two fused rects. --sw-fill carries the colour
+                 to the fillet, which has to paint the card's own colour into
+                 the inner angle — `background` alone is not readable from a
+                 gradient in the pseudo-element. */
+              const [face, rest] = BENT_PAIRS[slot];
+              return [
+                <div
+                  key={c.hex}
+                  className={`expr-swatch expr-swatch--bent expr-swatch--${face}`}
+                  style={{ gridArea: FAM_SLOTS[face], background: c.hex, color: c.on, "--sw-fill": c.hex }}
+                  tabIndex={0}
+                >
+                  {label}
+                </div>,
+                <div
+                  key={`${c.hex}-${rest}`}
+                  className={`expr-swatch expr-swatch--bent expr-swatch--${rest}`}
+                  style={{ gridArea: FAM_SLOTS[rest], background: c.hex, "--sw-fill": c.hex }}
+                  aria-hidden="true"
+                />
+              ];
+            })}
           </div>
         ))}
       </div>

@@ -22,6 +22,16 @@ export default function App() {
   const [sent,setSent]=useState(false);
   const [form,setForm]=useState({name:"",email:"",subject:"",message:""});
   const [mobileMenuOpen,setMobileMenuOpen]=useState(false);
+
+  /* The nav retracts into a floating bar once you leave the top of the page.
+     60px rather than 0 so a one-notch wheel nudge does not toggle it. */
+  const [navCondensed,setNavCondensed]=useState(false);
+  useEffect(()=>{
+    const read=()=>setNavCondensed(window.scrollY>60);
+    read();
+    window.addEventListener("scroll",read,{passive:true});
+    return ()=>window.removeEventListener("scroll",read);
+  },[]);
   const navRef=useRef(null);
 
   useEffect(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*35;setLoadPct(Math.min(p,100));if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),150);}},50);return()=>clearInterval(iv);},[]);
@@ -481,7 +491,7 @@ export default function App() {
       {/* NAV — hidden on light theme for fullscreen sections */}
       {!isLight && (
       <>
-      <nav ref={navRef} className="main-nav" style={{
+      <nav ref={navRef} className={`main-nav main-nav--${themeKey}${navCondensed?" is-condensed":""}`} style={{
         position:"fixed",top:0,left:0,right:0,zIndex:1000,
         padding:`0 ${isVoid?"20px":isMidnight?"24px":"20px"}`,
         height:isVoid?72:isMidnight?68:62,display:"flex",alignItems:"center",justifyContent:"space-between",

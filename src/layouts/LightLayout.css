@@ -227,11 +227,53 @@
   display: block;
 }
 
+/* A button, so it is reachable by keyboard and announces itself — reset to
+   look like the bare mark it replaces. */
+.hero-logo-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.hero-logo-wrap:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
+.hero-logo-wrap:active .hero-logo { transform: scale(0.97); }
+.hero-logo-wrap .hero-logo { transition: transform 0.18s var(--ease-glide); }
+
+/* The orange mark sits exactly over the green one and fades in on hover.
+   Both are the same file at the same size, so nothing shifts. */
+.hero-logo-hot {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.42s var(--ease-soft);
+  pointer-events: none;
+}
+
+.hero-logo-wrap:hover .hero-logo-hot { opacity: 1; }
+
 .hero-nav {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: clamp(12px, 1.8vh, 20px);
+}
+
+/* In the hero the rail is still a column and still reads mark-then-links:
+   the leading group is ordered back behind the mark, so the split is purely
+   a condensed-bar arrangement. */
+.hero-rail .hero-logo-wrap { order: 1; }
+.hero-rail .hero-nav--lead { order: 2; }
+.hero-rail .hero-nav--trail { order: 3; }
+
+/* The rail's own gap sits between the two groups where a link-to-link gap
+   belongs. This closes the ~2px difference so the column reads as one run. */
+.hero-rail .hero-nav--lead {
+  margin-bottom: calc(clamp(12px, 1.8vh, 20px) - clamp(14px, 2vh, 22px));
 }
 
 .hero-nav-link {
@@ -254,7 +296,8 @@
   color: var(--ink);
   opacity: 0.85;
   white-space: nowrap;
-  transition: opacity var(--dur-base) var(--ease-soft);
+  transition: opacity var(--dur-base) var(--ease-soft),
+              color var(--dur-base) var(--ease-soft);
 }
 
 /* The rule under the current section, as in the reference. It wipes in from
@@ -272,11 +315,32 @@
   transition: transform var(--dur-base) var(--ease-glide), opacity var(--dur-base) var(--ease-soft);
 }
 
-.hero-nav-link:hover { opacity: 1; }
-.hero-nav-link:hover::after { transform: scaleX(1); opacity: 0.4; }
+/* Hover is carried by the word itself now, not by a rule underneath it.
+   #A24908 reads 5.06:1 on the bar — the brighter oranges (#C2410C 4.36,
+   #E8822C 2.31) both miss AA at this size, and hover text has to pass too. */
+.hero-nav-link:hover,
+.hero-nav-link:focus-visible { opacity: 1; color: #A24908; }
 
 .hero-nav-link.is-active { opacity: 1; }
 .hero-nav-link.is-active::after { transform: scaleX(1); opacity: 1; }
+
+/* Contact is the one item coloured at rest. Scoped to the trailing group:
+   a bare :last-child would also catch "What I Do", which is now the last
+   child of the leading group. Its rule follows the text rather than staying
+   ink, for the frames where it is also the active section. */
+.hero-nav--trail .hero-nav-link:last-child {
+  color: #A24908;
+  /* Full strength, not the 0.85 the other links rest at: that alpha drops
+     this orange to 3.89:1 on the bar. At 1 it reads 5.06 and clears AA. */
+  opacity: 1;
+}
+.hero-nav--trail .hero-nav-link:last-child::after { background: #A24908; }
+
+/* Contact cannot answer hover by turning orange — it already is — so it
+   deepens instead. Needs the extra specificity or the resting colour above
+   out-weighs the shared :hover rule and nothing happens. */
+.hero-nav--trail .hero-nav-link:last-child:hover,
+.hero-nav--trail .hero-nav-link:last-child:focus-visible { color: #7F3706; }
 
 .hero-title {
   font-family: var(--font-display);
@@ -1050,7 +1114,9 @@
 
 .expr-section {
   position: relative;
-  padding: clamp(64px, 9vh, 104px) clamp(20px, 4vw, 56px) clamp(72px, 10vh, 112px);
+  /* Named so the canvas can cancel it exactly and run to the screen edges. */
+  --expr-shell-pad: clamp(20px, 4vw, 56px);
+  padding: clamp(64px, 9vh, 104px) var(--expr-shell-pad) clamp(72px, 10vh, 112px);
   overflow: hidden;
 }
 
@@ -1076,12 +1142,39 @@
 
 .expr-canvas {
   position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
+  /* Full width, not a centred column. The section's own padding is cancelled
+     and a much smaller inset put back, so the colour runs out to the screen
+     rather than stopping at a 1400px measure. The heading above keeps the
+     text column — it is the composition that goes wide, not the type. */
+  --expr-inset: clamp(12px, 1.4vw, 26px);
+  max-width: none;
+  width: calc(100% + 2 * var(--expr-shell-pad) - 2 * var(--expr-inset));
+  margin-left: calc(var(--expr-inset) - var(--expr-shell-pad));
+  margin-right: calc(var(--expr-inset) - var(--expr-shell-pad));
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: repeat(14, minmax(58px, 7.2vh));
-  gap: clamp(6px, 1vw, 16px);
+  /* Row height and gutter are named, not written inline, because the rules
+     layer has to do arithmetic with both to find the gutters. A clamp inside
+     a calc resolves fine; two unrelated clamps guessing at each other do not. */
+  /* The canvas only has to position four families and eight words now — the
+     cards are laid out inside each family, not here. */
+  --expr-row: clamp(40px, 6.8vh, 72px);
+  --expr-gap: clamp(7px, 0.7vw, 12px);
+  --sw-r: clamp(8px, 0.85vw, 14px);
+  /* The fillet radius is the family's own gutter, as in the reference, where
+     the curve at the bend reaches exactly as far as the next card. Any larger
+     and it would run into the neighbour it is curving around. */
+  --fam-gap: clamp(7px, 0.81vw, 14px);
+  --sw-fillet: var(--fam-gap);
+  /* How far the two halves of a bent card overlap. Meeting exactly leaves a
+     hairline of ground along the join on fractional device pixels. */
+  --sw-weld: 1px;
+  /* The fillet is cut by painting the page's own ground over the inner angle,
+     which only works because that ground is flat. It must track the light
+     theme's bg in themes.js. */
+  --expr-ground: #EFEBE4;
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  grid-template-rows: repeat(18, var(--expr-row));
+  gap: var(--expr-gap);
 }
 
 /* Hairline rules — the visible evidence that the scatter is on a grid.
@@ -1174,102 +1267,193 @@
 .expr-word-spec span { font-size: 11px; opacity: 0.5; }
 
 /* ── Palette clusters ── */
-.expr-palette {
+/* The family's own grid. It draws nothing — no background, no border, no
+   padding — it exists only to give its cards the reference's track sizes.
+   Those are the measured card widths and heights, as fr units, so the gutters
+   between them are real gutters rather than tracks swallowed by a span. */
+.expr-family {
+  display: grid;
+  grid-template-columns: 179fr 45fr 179fr 185fr;
+  grid-template-rows: 157fr 10fr 155fr 142fr;
+  gap: var(--fam-gap);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ── Colour blocks ──
+   The swatches are the mosaic. No card wraps a family: each colour is its own
+   block, stretched to its whole grid area so neighbouring blocks meet, and a
+   family reads as a group purely because its blocks are adjacent.
+
+   Opaque, which is also what makes the full-width rules behind the canvas look
+   like they stop at the colour and carry on through the type pockets. */
+.expr-swatch {
   position: relative;
   z-index: 3;
-  align-self: center;
+  align-self: stretch;
   justify-self: stretch;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 4px 0;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: clamp(10px, 1.1vw, 18px);
+  border-radius: var(--sw-r);
   cursor: pointer;
-  transition: transform var(--dur-base) var(--ease-glide);
+  /* Background and label colour are set inline, per swatch. The label colour
+     is measured against the swatch it sits on, not assumed. */
+  transition: transform var(--dur-base) var(--ease-glide),
+              box-shadow var(--dur-base) var(--ease-soft);
 }
 
-.expr-palette:hover,
-.expr-palette:focus-within { transform: translateY(-3px) !important; outline: none; }
-
-.expr-palette-head { display: flex; flex-direction: column; gap: 2px; }
-
-.expr-palette-name {
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.6;
-  transition: opacity var(--dur-base) var(--ease-soft);
-}
-
-.expr-palette:hover .expr-palette-name,
-.expr-palette:focus-within .expr-palette-name { opacity: 0.95; }
-
-
-
-.expr-palette-chips { display: flex; gap: clamp(5px, 0.7vw, 9px); }
-
-.expr-chip {
-  position: relative;
-  flex: 1 1 0;
-  aspect-ratio: 1;
-  min-width: 0;
-  border-radius: var(--r-sm);
-  border: 1px solid rgba(47, 77, 69, 0.14);
-  box-shadow: var(--shadow-rest);
-  transition: transform var(--dur-base) var(--ease-glide), box-shadow var(--dur-base) var(--ease-soft);
-}
-
-/* Swatches lift in sequence, so the ramp fans rather than jumping as a block */
-.expr-palette:hover .expr-chip,
-.expr-palette:focus-within .expr-chip { transform: translateY(-7px); box-shadow: var(--shadow-lift); }
-.expr-palette:hover .expr-chip:nth-child(2), .expr-palette:focus-within .expr-chip:nth-child(2) { transition-delay: 0.04s; }
-.expr-palette:hover .expr-chip:nth-child(3), .expr-palette:focus-within .expr-chip:nth-child(3) { transition-delay: 0.08s; }
-.expr-palette:hover .expr-chip:nth-child(4), .expr-palette:focus-within .expr-chip:nth-child(4) { transition-delay: 0.12s; }
-.expr-palette:hover .expr-chip:nth-child(5), .expr-palette:focus-within .expr-chip:nth-child(5) { transition-delay: 0.16s; }
-
-/* A step that carries text is marked with a bar, so the ramp still reads as
-   a spec without introducing a dot. */
-.expr-chip.has-grade::after {
+/* The ramp's own tints are often a hair off the page ground — Moss 100 on
+   #EFEBE4 is barely more than 1:1 — so the palest blocks would otherwise have
+   no edge at all. An inset ring rather than a border: a border would change
+   the block's size and break the seams between neighbours. */
+.expr-swatch::before {
   content: "";
   position: absolute;
-  left: 7px;
-  top: 7px;
-  width: 14px;
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.85);
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(26, 43, 30, 0.10);
+  pointer-events: none;
 }
 
-.expr-chip-tip {
+/* Bent cards are excluded: each is one card drawn as two rects, and lifting
+   either rect on its own would pull the card apart at the bend. */
+.expr-swatch:not(.expr-swatch--bent):hover,
+.expr-swatch:not(.expr-swatch--bent):focus-visible {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-lift);
+  outline: none;
+  z-index: 5;
+}
+
+/* ── The two bent cards ──
+   Each is ONE card drawn as two fused rects. Every rect rounds only the
+   corners that fall on the silhouette and squares the ones that run into its
+   partner, so the pair reads as a single bent card rather than two tiles.
+
+   The lower rect is pulled up by a gutter PLUS a pixel. Meeting exactly left a
+   hairline of ground showing along the join on fractional device pixels; the
+   extra pixel overlaps them instead. It costs nothing, since both rects are
+   the same colour and the lower one's bottom is still pinned by its track. */
+/* Which rect reaches out to weld the pair matters, because a rect reaches
+   across its WHOLE width. The foot spans two columns but only one of them has
+   the shin above it — reaching up from the foot closed the gutter under the
+   leg in the other column and the two cards met. Same trap on the other bend:
+   the bar spans three columns and only two have the leg below.
+
+   So the narrower rect always reaches toward the wider one, never the other
+   way: the leg (2 cols) reaches up under the bar (3 cols), the shin (1 col)
+   reaches down into the foot (2 cols). Each weld then happens entirely within
+   its own card's footprint and no gutter anywhere else is touched. */
+.expr-swatch--bar {
+  border-radius: var(--sw-r) var(--sw-r) var(--sw-r) 0;
+}
+
+.expr-swatch--leg {
+  margin-top: calc(-1 * var(--fam-gap) - var(--sw-weld));
+  border-radius: 0 0 var(--sw-r) var(--sw-r);
+  overflow: visible;          /* the fillet sits outside this box */
+}
+
+.expr-swatch--shin {
+  margin-bottom: calc(-1 * var(--fam-gap) - var(--sw-weld));
+  border-radius: var(--sw-r) var(--sw-r) 0 0;
+  overflow: visible;
+}
+
+.expr-swatch--foot {
+  border-radius: 0 var(--sw-r) var(--sw-r) var(--sw-r);
+}
+
+/* Neither half takes the pointer on its own. */
+.expr-swatch--bar,
+.expr-swatch--shin { pointer-events: none; }
+
+/* ── The inner angle ──
+   Where one rect's edge turns into the other's, the silhouette makes a 270°
+   turn. Rounding a corner like that ADDS material: the curve bulges into the
+   notch, so the card's colour sweeps around the corner instead of mitring it.
+   Taking material away — which is what this did before — bites a chunk out of
+   the wider rect and shows ground through the bend.
+
+   So the fillet is a square of the card's own colour set in the notch, with a
+   quarter disc cut from the far corner. Radius equals the gutter, so the curve
+   runs exactly up to the card tucked into the notch and no further.
+
+   The two are mirrored: the leg's sits to its right at the top, curving down
+   out of the bar; the shin's sits to its right at the bottom, curving up out
+   of the foot. */
+.expr-swatch--leg::after,
+.expr-swatch--shin::after {
+  content: "";
   position: absolute;
-  left: 50%;
-  bottom: calc(100% + 9px);
-  z-index: 14;
+  left: 100%;
+  width: var(--sw-fillet);
+  height: var(--sw-fillet);
+  pointer-events: none;
+}
+
+.expr-swatch--leg::after {
+  /* Offset by the weld: the rect reaches a pixel past its own edge, and the
+     fillet has to sit on the true corner, not the welded one. */
+  top: var(--sw-weld);
+  background: radial-gradient(
+    circle var(--sw-fillet) at 100% 100%,
+    transparent 0 calc(var(--sw-fillet) - 0.5px),
+    var(--sw-fill) var(--sw-fillet)
+  );
+}
+
+.expr-swatch--shin::after {
+  bottom: var(--sw-weld);
+  background: radial-gradient(
+    circle var(--sw-fillet) at 100% 0,
+    transparent 0 calc(var(--sw-fillet) - 0.5px),
+    var(--sw-fill) var(--sw-fillet)
+  );
+}
+
+/* The hairline ring is for the palest cards, which would otherwise have no
+   edge against the ground. On a bent card it would trace both rects and
+   expose the join, so it is off there. */
+.expr-swatch--bent::before { display: none; }
+
+/* Bottom-left, as in the reference. */
+.expr-swatch-label {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 8px 11px;
-  border: 1px solid var(--line-mid);
-  border-radius: var(--r-xs);
-  background: rgba(251, 250, 247, 0.97);
-  backdrop-filter: blur(8px);
-  box-shadow: var(--shadow-lift);
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  color: var(--ink);
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-50%, 5px);
-  pointer-events: none;
-  transition: opacity var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-glide);
+  gap: 1px;
+  min-width: 0;
 }
 
-.expr-chip:hover .expr-chip-tip { opacity: 1; transform: translate(-50%, 0); }
+.expr-swatch-family {
+  font-family: "Space Mono", monospace;
+  font-size: clamp(9px, 0.72vw, 11px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
 
-.expr-chip-tip code { font-family: inherit; font-size: 11px; text-transform: uppercase; }
-.expr-chip-tip em { font-style: normal; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; }
-.expr-chip-tip b { font-weight: 400; opacity: 0.75; }
+.expr-swatch-hex {
+  font-family: var(--font-display);
+  font-size: clamp(13px, 1.15vw, 17px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.expr-swatch-role {
+  font-family: var(--font-display);
+  font-size: clamp(10px, 0.82vw, 12px);
+  font-weight: 500;
+  opacity: 0.78;
+  /* Wraps rather than truncates. The blocks that cannot fit "Accent · 3.12:1
+     AA Large" on one line are the narrow left columns, and those are five rows
+     tall — there is height to spare where there is no width. */
+  line-height: 1.25;
+}
 
 
 
@@ -1277,25 +1461,53 @@
 
 
 
-/* Below the grid's comfortable width the composition stops being composed —
-   fall back to a single ordered column rather than letting blocks collide. */
+/* Below the grid's comfortable width the mosaic stops being a mosaic. The
+   swatches keep tiling, two across, and the words span the full width between
+   them — a single column of 30 blocks would be an enormous scroll. */
 @media (max-width: 900px) {
   .expr-canvas {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: none;
-    gap: clamp(20px, 4vh, 34px);
+    gap: clamp(8px, 2vw, 14px);
   }
 
-  .expr-canvas > .expr-word,
-  .expr-canvas > .expr-palette {
+  /* Descendant, not child: the family wrapper is display:contents here, so
+     the cards render as grid items but are still DOM children of IT, not of
+     the canvas. A child combinator silently stops matching and every card
+     keeps its desktop grid-area. */
+  .expr-canvas .expr-word,
+  .expr-canvas .expr-swatch {
     grid-area: auto !important;
     justify-self: stretch;
+  }
+
+  .expr-canvas .expr-swatch { min-height: clamp(96px, 26vw, 140px); }
+
+  /* No bends down here — the inert halves carry no label of their own, so
+     they are dropped and the labelled half stands in for the whole card. */
+  .expr-swatch--bar,
+  .expr-swatch--shin { display: none; }
+  .expr-swatch--leg,
+  .expr-swatch--foot {
+    margin-top: 0;
+    border-radius: var(--sw-r);
+  }
+  .expr-swatch--shin { margin-bottom: 0; }
+  .expr-swatch--leg::after,
+  .expr-swatch--shin::after { display: none; }
+  /* The family grid collapses with everything else. */
+  .expr-family {
+    display: contents;
+  }
+
+  .expr-canvas .expr-word {
+    grid-column: 1 / -1 !important;
+    margin: clamp(10px, 3vh, 24px) 0;
   }
 
   .expr-word { font-size: clamp(30px, 9vw, 54px) !important; }
   .expr-word-text { white-space: normal; }
   .expr-rules { display: none; }
-  .expr-chip { aspect-ratio: 1 / 1.15; }
 }
 
 @media (max-width: 560px) {
@@ -1307,7 +1519,9 @@
     box-shadow: none;
     white-space: normal;
   }
-  .expr-chip-tip { display: none; }
+  /* The ratio tail is the first thing to lose when the blocks are this
+     narrow — the hex and the role still fit. */
+  .expr-swatch-role { font-size: 10px; }
 }
 
 /* ── Consistent chapter numbering across the whole page ── */
@@ -3526,65 +3740,121 @@
    Quiet by default: a hairline ring and nothing else, so they read as a
    control rather than a call to action. They sit on the page column with the
    cards, not out at the screen edge where the rail now ends. */
+/* ── Rail control ──
+   No box. An outlined, divided two-up control read as a utility widget bolted
+   onto an editorial page — the only thing in this layout wearing a frame. And
+   no arrow: just the chevron, which is all a rail control has ever needed.
+
+   The motion is where the work went. Each chevron is drawn twice inside a
+   track two cells wide, in a window one cell wide, so exactly one is ever
+   visible. Hover slides the track by a cell: the mark you were looking at
+   leaves in the direction of travel while its twin arrives from behind. It
+   reads as one chevron passing through the button — the rail advancing —
+   rather than a glyph that twitches and returns.
+
+   Hover also takes it orange, which is what every other interactive thing on
+   this page already does. One behaviour, learned once. */
 .wk-nav {
-  display: flex;
-  gap: 10px;
-  margin-top: clamp(14px, 2vh, 20px);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(22px, 2.6vw, 38px);
+  margin-top: clamp(16px, 2.4vh, 24px);
 }
 
-/* Rectangular, on the same 6px radius as the View all work button and the
-   stack tags, so the section keeps one corner language. Wider than tall,
-   which suits a horizontal control. */
 .wk-arrow {
-  width: 62px;
-  height: 46px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  /* Firmer than the hairline it used to carry: at 1px on --line-mid these
-     nearly vanished against the paper. 2px, not 1.5 — a sub-pixel width snaps
-     down to 1px on a 1x display, which is most of the weight lost. */
-  border: 2px solid var(--moss);
-  border-radius: 6px;
-  background: var(--paper);
+  /* Padding, not a width: it keeps a 44px pointer target around a mark only
+     24px tall, without drawing anything. */
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background: none;
   color: var(--ink);
-  font-size: 19px;
-  line-height: 1;
   cursor: pointer;
-  transition: background 0.16s var(--ease-soft),
-    border-color 0.16s var(--ease-soft),
-    color 0.16s var(--ease-soft),
-    opacity 0.16s var(--ease-soft);
+  transition: color 0.2s var(--ease-soft), opacity 0.2s var(--ease-soft);
 }
 
-.wk-arrow span {
+/* The window. One cell wide, and it clips — this is what makes a mark leave
+   the button instead of sliding around inside it. */
+.wk-chev {
+  --chev-w: 16px;
   display: block;
-  transition: transform 0.18s var(--ease-glide);
+  width: var(--chev-w);
+  height: 24px;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-glide);
 }
 
-/* Fills on hover rather than tinting, so the active one is unmistakable. */
-.wk-arrow:hover:not(:disabled) {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--cream);
+.wk-chev-track {
+  display: flex;
+  width: calc(var(--chev-w) * 2);
+  /* Eased hard out of the gate and settled at the end, so the swap lands
+     rather than drifting. */
+  transition: transform 0.34s cubic-bezier(0.62, 0, 0.2, 1);
+  will-change: transform;
 }
 
-/* The glyph leans the way it travels */
-.wk-arrow:first-child:hover:not(:disabled) span { transform: translateX(-2px); }
-.wk-arrow:last-child:hover:not(:disabled) span { transform: translateX(2px); }
+.wk-chev-mark {
+  flex: 0 0 var(--chev-w);
+  width: var(--chev-w);
+  height: 24px;
+  display: block;
+}
 
-.wk-arrow:active:not(:disabled) { background: var(--moss); border-color: var(--moss); }
-.wk-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.wk-chev-mark polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Holds the stroke at the 2px of the rules around it. */
+  vector-effect: non-scaling-stroke;
+}
 
-/* At the end of the rail the arrow stays visible but plainly inert, rather
+/* Which cell rests in the window decides which way the pair travels. Prev
+   rests on the first and pulls the track left, so its mark exits left. Next
+   rests on the second and pushes the track right, so its mark exits right. */
+.wk-arrow--next .wk-chev-track { transform: translateX(-50%); }
+
+.wk-arrow--prev:hover:not(:disabled) .wk-chev-track,
+.wk-arrow--prev:focus-visible:not(:disabled) .wk-chev-track { transform: translateX(-50%); }
+
+.wk-arrow--next:hover:not(:disabled) .wk-chev-track,
+.wk-arrow--next:focus-visible:not(:disabled) .wk-chev-track { transform: translateX(0); }
+
+.wk-arrow:hover:not(:disabled),
+.wk-arrow:focus-visible:not(:disabled) { color: #A24908; }
+
+.wk-arrow:active:not(:disabled) { color: #7F3706; }
+
+/* The idle mark leans the same way, so the two read as one mechanism being
+   driven rather than two separate buttons. :has() is the only way to reach
+   backwards from next to prev — they are siblings and prev comes first. */
+.wk-nav:has(.wk-arrow--next:hover:not(:disabled)) .wk-arrow--prev:not(:hover) .wk-chev { transform: translateX(4px); }
+.wk-nav:has(.wk-arrow--prev:hover:not(:disabled)) .wk-arrow--next:not(:hover) .wk-chev { transform: translateX(-4px); }
+
+/* Nothing is drawn at rest, so the ring needs room of its own. */
+.wk-arrow:focus-visible { outline: 2px solid #A24908; outline-offset: 2px; }
+
+/* At the end of the rail the mark stays put but reads plainly inert, rather
    than disappearing and shifting the pair sideways. */
 .wk-arrow:disabled {
-  opacity: 0.32;
+  opacity: 0.22;
   cursor: default;
-  border-color: var(--line-mid);
-  background: transparent;
 }
+
+/* The swap is the whole idea, so when motion is unwelcome it is dropped
+   outright rather than shortened — each mark simply holds its cell. */
+@media (prefers-reduced-motion: reduce) {
+  .wk-chev,
+  .wk-chev-track { transition: none; }
+  .wk-chev { transform: none !important; }
+  .wk-arrow--prev .wk-chev-track { transform: translateX(0) !important; }
+  .wk-arrow--next .wk-chev-track { transform: translateX(-50%) !important; }
+}
+
 
 /* ── Foot ── */
 .wk-foot {
@@ -3689,4 +3959,210 @@
 @media (max-width: 900px) {
   .expertise-skills-rail { width: 100%; margin-left: 0; }
   .expertise-tech-arena { width: 100%; margin-right: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NAV — retracts into a floating bar on scroll
+   At the top of the page the nav is a transparent full-width strip. Once you
+   scroll it pulls in from the sides and rounds off its bottom corners into a
+   bar that floats over the page.
+
+   !important throughout because the nav is styled inline in App.js, and an
+   inline declaration cannot be beaten any other way. The inline style already
+   carries `transition: all .4s`, which is what animates the change — these
+   rules only supply the destination.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.main-nav--light.is-condensed {
+  top: 0 !important;
+  left: clamp(10px, 2.2vw, 34px) !important;
+  right: clamp(10px, 2.2vw, 34px) !important;
+  height: 58px !important;
+  padding: 0 clamp(16px, 2vw, 30px) !important;
+  /* Square at the top so it still reads as attached to the edge of the
+     window, rounded below — the shape in the reference. */
+  border-radius: 0 0 26px 26px !important;
+  background: rgba(239, 235, 228, 0.9) !important;
+  -webkit-backdrop-filter: saturate(140%) blur(16px) !important;
+  backdrop-filter: saturate(140%) blur(16px) !important;
+  border: 1px solid rgba(47, 77, 69, 0.1) !important;
+  border-top: none !important;
+  box-shadow: 0 14px 34px -20px rgba(47, 77, 69, 0.38) !important;
+}
+
+/* The wordmark and links tighten slightly as the bar closes in, so the
+   retraction reads as one movement rather than a box shrinking around
+   unchanged contents. */
+.main-nav--light.is-condensed .nav-logo { font-size: 16px !important; }
+.main-nav--light.is-condensed .desktop-nav { gap: 18px !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .main-nav--light { transition: none !important; }
+}
+
+@media (max-width: 768px) {
+  /* Full width on a phone: a 10px inset either side only shaves the room the
+     logo and the menu button need. */
+  .main-nav--light.is-condensed {
+    left: 0 !important;
+    right: 0 !important;
+    border-radius: 0 0 18px 18px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   The hero rail, retracted
+   This layout has no separate top nav — App.js hides that one on the light
+   theme — so the hero rail is the navbar. At the top of the page it is a
+   column beside the headline; once you scroll it detaches, turns on its side
+   and rides at the top of the window as a bar with rounded lower corners.
+
+   The rail is placed on explicit grid cells, and so is everything else in the
+   hero, so taking it out of flow does not move the headline or the card.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero-rail {
+  transition: gap 0.38s var(--ease-glide);
+}
+
+.hero-rail.is-condensed {
+  position: fixed;
+  top: 0;
+  /* Centred and only as wide as its contents, rather than spanning the
+     window: left:50% with a -50% shift, and no `right`, so a fixed element
+     shrinks to fit. */
+  left: 50%;
+  right: auto;
+  /* Stated here as well as in the keyframes: centring must not depend on the
+     animation running. The keyframes override it while they play and their
+     `both` fill holds the end state, but if animation is off for any reason
+     the bar still sits centred rather than half a width to the right. */
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  z-index: 1000;
+
+  /* On its side: two links, the mark, then the rest. */
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* The leading links sit as close to the mark as the links sit to each
+     other, so that cluster reads as one run. The bar's width comes from the
+     middle space below, not from this. */
+  gap: clamp(14px, 1.6vw, 26px);
+  height: 62px;
+  padding: 0 clamp(22px, 3vw, 44px);
+
+  /* Orange edge. 1.5px rather than 1: a sub-pixel border snaps down to 1px on
+     a 1x display and most of the weight is lost. */
+  border: 1.5px solid rgba(194, 65, 12, 0.55);
+  border-top: none;
+  border-radius: 0 0 26px 26px;
+  background: rgba(239, 235, 228, 0.92);
+  -webkit-backdrop-filter: saturate(140%) blur(16px);
+  backdrop-filter: saturate(140%) blur(16px);
+  box-shadow: 0 14px 34px -20px rgba(47, 77, 69, 0.38);
+
+  /* position is not animatable, so the arrival is a keyframe sequence rather
+     than a transition. The bar drops in while unfurling outward from its own
+     centre — clip-path rather than scaleX, which would have squashed the
+     wordmark and links as it opened. */
+  animation: rail-unfurl 0.52s var(--ease-glide) both;
+}
+
+@keyframes rail-unfurl {
+  0% {
+    transform: translate(-50%, -100%);
+    clip-path: inset(0 44% 0 44% round 0 0 26px 26px);
+    opacity: 0;
+  }
+  55% {
+    transform: translate(-50%, 4%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    clip-path: inset(0 0 0 0 round 0 0 26px 26px);
+    opacity: 1;
+  }
+}
+
+/* The links settle in behind the bar rather than arriving with it, so the
+   change reads as the column folding down into a bar. */
+.hero-rail.is-condensed .hero-nav-link {
+  animation: rail-link-in 0.34s var(--ease-glide) both;
+}
+
+/* One stagger across both groups, so the delays carry on through the mark
+   instead of restarting at the second group. */
+.hero-rail.is-condensed .hero-nav--lead .hero-nav-link:nth-child(1) { animation-delay: 0.20s; }
+.hero-rail.is-condensed .hero-nav--lead .hero-nav-link:nth-child(2) { animation-delay: 0.25s; }
+.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(1) { animation-delay: 0.30s; }
+.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(2) { animation-delay: 0.35s; }
+.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(3) { animation-delay: 0.40s; }
+.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes rail-link-in {
+  from { opacity: 0; transform: translateY(-9px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* The links lie down with it. */
+.hero-rail.is-condensed .hero-nav {
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 26px);
+}
+
+/* The leading group comes back in front of the mark, and the column's 2px
+   gap correction is dropped — it only applies to the stacked layout. */
+.hero-rail.is-condensed .hero-nav--lead {
+  order: 0;
+  margin-bottom: 0;
+}
+
+/* The one wide space, and it now falls at the bar's middle rather than just
+   past a narrow mark. This is also what sets the bar's width: the element is
+   max-content, so widening the bar means widening this. */
+.hero-rail.is-condensed .hero-nav--trail {
+  margin-left: clamp(30px, 6vw, 104px);
+}
+
+.hero-rail.is-condensed .hero-nav-link { padding: 2px 0 4px; }
+
+/* The mark shrinks to bar height. */
+.hero-rail.is-condensed .hero-logo { width: 34px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rail.is-condensed,
+  .hero-rail.is-condensed .hero-nav-link { animation: none; }
+  /* Without the keyframes the centring shift has to be stated outright. */
+  .hero-rail.is-condensed { transform: translateX(-50%); }
+}
+
+@media (max-width: 900px) {
+  /* Full width, and the links scroll sideways rather than wrapping the bar
+     onto a second line. */
+  .hero-rail.is-condensed {
+    left: 50%;
+    right: auto;
+    max-width: calc(100vw - 16px);
+    border-radius: 0 0 16px 16px;
+    height: 56px;
+    padding: 0 14px;
+    /* The wide desktop gap would push the links off a phone screen. */
+    gap: 18px;
+  }
+
+  .hero-rail.is-condensed .hero-nav {
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 14px;
+  }
+
+  /* No room for a middle space on a phone — the groups close up and the
+     whole run scrolls sideways instead. */
+  .hero-rail.is-condensed .hero-nav--trail { margin-left: 14px; }
+
+  .hero-rail.is-condensed .hero-nav::-webkit-scrollbar { display: none; }
 }
