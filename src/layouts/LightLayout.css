@@ -4,6 +4,10 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
+  /* The bar is fixed, so every scroll target has to clear it or the heading
+     lands underneath. One token, used by the bar and by scroll-margin. */
+  --bar-h: clamp(58px, 7.6vh, 80px);
+
   /* Two faces for the whole site. Instrument Sans sets every heading, every
      body line and every control; Google Sans takes the small text — labels,
      indices, captions, tags — where its wider apertures hold up better at
@@ -212,13 +216,19 @@
    hangs directly beneath the logo instead of being pushed down by however
    tall the headline happens to be. */
 .hero-rail {
-  position: relative;
-  z-index: 1;
-  grid-column: 1 / 3;
-  grid-row: 1;
-  align-self: start;
+  /* Fixed even at rest, and outside the hero in the DOM. Both are needed: the
+     hero is a sticky stacking context, so a fixed child of it would be painted
+     inside that context and About — its sibling, one layer up — would slide
+     over the bar whatever its z-index. Out here nothing can cover it.
+     Fixed from the start also means the element does not change positioning
+     scheme when the bar arrives, so the mark does not jump. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  height: var(--bar-h);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: clamp(14px, 2vh, 22px);
 }
@@ -470,7 +480,7 @@
 
 /* UI/UX style section rhythm and scroll behavior */
 .light-section-shell {
-  scroll-margin-top: 96px;
+  scroll-margin-top: calc(var(--bar-h) + 18px);
   position: relative;
   isolation: isolate;
 }
@@ -1265,7 +1275,7 @@
   /* Capped rather than filling its half of the panel. The blocks were 398
      wide and dominated the section; this brings them down while keeping the
      narrowest card around 95px, which is what the three label lines need. */
-  width: min(100%, clamp(250px, 24vw, 330px));
+  width: min(100%, clamp(292px, 28.5vw, 396px));
   justify-self: center;
   min-width: 0;
   min-height: 0;
@@ -4058,16 +4068,7 @@
   .hero-stack .section-hero { position: relative; }
 }
 
-/* The rail overlays the first cell rather than being one, so the division
-   stays whole when it detaches and goes fixed on scroll. */
-.hero-rail {
-  grid-column: 1 / 4;
-  grid-row: 1;
-  z-index: 5;
-  align-self: start;
-  justify-self: start;
-  background: transparent;
-}
+/* The bar is no longer a cell in the grid — see .hero-rail further down. */
 
 /* ── The filled panels ──
    Inset inside their cells and rounded, as the reference sets them. That
@@ -4155,7 +4156,9 @@
   flex: 1;
   display: flex;
   align-items: center;
-  padding: clamp(16px, min(2.6vw, 3vh), 46px);
+  /* Tightened from 46px: the padding was the other half of the size ceiling.
+     The card is a third of the screen and has to hold three lines. */
+  padding: clamp(14px, min(1.9vw, 2.3vh), 32px);
   background: var(--paper);
   border-radius: clamp(8px, 0.9vw, 14px);
   min-width: 0;
@@ -4163,10 +4166,19 @@
 
 .hero-headline .hero-title {
   margin: 0;
+  /* 500, down from 700. Instrument Sans is variable across 400..700, so this
+     is a real master rather than a synthesised in-between. */
+  font-weight: 500;
+  /* 0.9, down from 1.02. Three lines have to fit the row, so the size can
+     only grow if the leading gives ground — at 1.02 the ceiling was 68px. */
+  line-height: 0.9;
   /* Three lines have to clear a third of the screen less the card's padding.
      The vh term is what does that — at 4.6vw alone this ran 70px and the
      headline overshot its row by 40px on a 840px display. */
-  font-size: clamp(26px, min(4.2vw, 6.2vh), 64px);
+  font-size: clamp(28px, min(5.4vw, 8.1vh), 92px);
+  /* The headline wraps onto two flex rows — name, then role — so this gap is
+     a third line's worth of height. Tightening it is what buys the size. */
+  gap: clamp(4px, 0.6vh, 11px);
 }
 
 /* The facts, as a card on an open cell — the same treatment the headline and
@@ -4227,16 +4239,74 @@
   min-height: 100svh;
 }
 
-/* The rail keeps an inset of its own — with the section at zero padding the
-   mark would otherwise sit in the very corner of the screen. */
-.hero-rail {
+/* Before you scroll there is no bar: the hero carries its own mark in the
+   lattice, and a second fixed one in the corner would be a duplicate. It is
+   hidden rather than unmounted so the unfurl has something to animate from,
+   and inert while hidden so it cannot be tabbed into. */
+.hero-rail:not(.is-bar) {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* The mark sits in the top-left cell at the inset the rail used to carry, so
+   it lands where it always was. It turns continuously and takes the orange on
+   a slower, unrelated clock — 17s against 11s — so the colour arrives at a
+   different angle every time rather than at the same point of each turn. */
+.hero-cell--r1a {
+  display: flex;
+  align-items: flex-start;
   padding: clamp(18px, 2.2vw, 34px);
 }
 
-/* Only the mark in the hero. The links are still in the markup and still
-   render in the bar once it condenses on scroll — this hides them just while
-   the rail is sitting in the lattice. */
-.hero-rail:not(.is-condensed) .hero-nav { display: none; }
+.hero-brand {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: 50%;
+}
+
+.hero-brand:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
+
+.hero-brand-spin {
+  position: relative;
+  display: block;
+  line-height: 0;
+  animation: brand-burst 7s cubic-bezier(0.62, 0, 0.3, 1) infinite;
+}
+
+.hero-brand .hero-logo-hot {
+  /* The same 7s, deliberately. Two different durations would drift apart and
+     the colour would eventually land mid-spin instead of on the turn. */
+  animation: brand-swap 7s step-end infinite;
+  /* The hover cross-fade on the bar's copy would fight the keyframes. */
+  transition: none;
+}
+
+/* One full turn in 0.9s, a 2.6s stand, another full turn, another stand. The
+   rotation accumulates to 720deg rather than resetting, so the loop back to 0
+   is seamless — 720 and 0 are the same picture. */
+@keyframes brand-burst {
+  0%            { transform: rotate(0deg); }
+  12.857%, 50%  { transform: rotate(360deg); }
+  62.857%, 100% { transform: rotate(720deg); }
+}
+
+/* step-end on the animation, so this does not fade — it cuts. The cut falls
+   at 50%, exactly where the second turn starts, so that turn runs in the new
+   colour from its first frame and holds it through the stand that follows. */
+@keyframes brand-swap {
+  0%   { opacity: 0; }
+  50%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-brand-spin { animation: none; }
+  .hero-brand .hero-logo-hot { animation: none; opacity: 0; }
+}
 
 /* The wordmark runs up the edge of its box rather than sitting in the middle
    of it, and smaller — centred and large it read as a headline rather than a
@@ -4353,7 +4423,7 @@
    rules only supply the destination.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.main-nav--light.is-condensed {
+.main-nav--light.is-bar {
   top: 0 !important;
   left: clamp(10px, 2.2vw, 34px) !important;
   right: clamp(10px, 2.2vw, 34px) !important;
@@ -4373,8 +4443,8 @@
 /* The wordmark and links tighten slightly as the bar closes in, so the
    retraction reads as one movement rather than a box shrinking around
    unchanged contents. */
-.main-nav--light.is-condensed .nav-logo { font-size: 16px !important; }
-.main-nav--light.is-condensed .desktop-nav { gap: 18px !important; }
+.main-nav--light.is-bar .nav-logo { font-size: 16px !important; }
+.main-nav--light.is-bar .desktop-nav { gap: 18px !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .main-nav--light { transition: none !important; }
@@ -4383,7 +4453,7 @@
 @media (max-width: 768px) {
   /* Full width on a phone: a 10px inset either side only shaves the room the
      logo and the menu button need. */
-  .main-nav--light.is-condensed {
+  .main-nav--light.is-bar {
     left: 0 !important;
     right: 0 !important;
     border-radius: 0 0 18px 18px !important;
@@ -4405,12 +4475,20 @@
   transition: gap 0.38s var(--ease-glide);
 }
 
-.hero-rail.is-condensed {
+.hero-rail.is-bar {
   position: fixed;
   top: 0;
-  /* Centred and only as wide as its contents, rather than spanning the
-     window: left:50% with a -50% shift, and no `right`, so a fixed element
-     shrinks to fit. */
+  /* A measure rather than near full-bleed. The groups no longer set the
+     width — the width is given, and the gap between them is what flexes. */
+  width: min(76vw, 1240px);
+  max-width: calc(100vw - 2 * clamp(10px, 1.6vw, 34px));
+  /* flex-start, not space-between: with a width this wide, space-between
+     would push About and What I Do out to the middle of the screen, away
+     from the mark they are meant to sit beside. */
+  justify-content: flex-start;
+  height: var(--bar-h);
+  padding: 0 clamp(20px, 2.8vw, 52px);
+  border-radius: 0 0 clamp(16px, 1.8vw, 26px) clamp(16px, 1.8vw, 26px);
   left: 50%;
   right: auto;
   /* Stated here as well as in the keyframes: centring must not depend on the
@@ -4418,26 +4496,20 @@
      `both` fill holds the end state, but if animation is off for any reason
      the bar still sits centred rather than half a width to the right. */
   transform: translateX(-50%);
-  width: max-content;
-  max-width: calc(100vw - 24px);
   z-index: 1000;
 
   /* On its side: the mark, the two links that follow it, then the rest. */
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   /* Between the mark and the links that sit beside it. Wider than the gap
      the links keep from each other, so the mark reads as its own thing
      rather than a third item in the run. */
   gap: clamp(22px, 2.6vw, 44px);
-  height: 74px;
-  padding: 0 clamp(28px, 3.6vw, 56px);
 
   /* Orange edge. 1.5px rather than 1: a sub-pixel border snaps down to 1px on
      a 1x display and most of the weight is lost. */
   border: 1.5px solid rgba(194, 65, 12, 0.55);
   border-top: none;
-  border-radius: 0 0 30px 30px;
   background: rgba(239, 235, 228, 0.92);
   -webkit-backdrop-filter: saturate(140%) blur(16px);
   backdrop-filter: saturate(140%) blur(16px);
@@ -4469,18 +4541,18 @@
 
 /* The links settle in behind the bar rather than arriving with it, so the
    change reads as the column folding down into a bar. */
-.hero-rail.is-condensed .hero-nav-link {
+.hero-rail.is-bar .hero-nav-link {
   animation: rail-link-in 0.34s var(--ease-glide) both;
 }
 
 /* One stagger across both groups, so the delays carry on through the mark
    instead of restarting at the second group. */
-.hero-rail.is-condensed .hero-nav--lead .hero-nav-link:nth-child(1) { animation-delay: 0.20s; }
-.hero-rail.is-condensed .hero-nav--lead .hero-nav-link:nth-child(2) { animation-delay: 0.25s; }
-.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(1) { animation-delay: 0.30s; }
-.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(2) { animation-delay: 0.35s; }
-.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(3) { animation-delay: 0.40s; }
-.hero-rail.is-condensed .hero-nav--trail .hero-nav-link:nth-child(4) { animation-delay: 0.45s; }
+.hero-rail.is-bar .hero-nav--lead .hero-nav-link:nth-child(1) { animation-delay: 0.20s; }
+.hero-rail.is-bar .hero-nav--lead .hero-nav-link:nth-child(2) { animation-delay: 0.25s; }
+.hero-rail.is-bar .hero-nav--trail .hero-nav-link:nth-child(1) { animation-delay: 0.30s; }
+.hero-rail.is-bar .hero-nav--trail .hero-nav-link:nth-child(2) { animation-delay: 0.35s; }
+.hero-rail.is-bar .hero-nav--trail .hero-nav-link:nth-child(3) { animation-delay: 0.40s; }
+.hero-rail.is-bar .hero-nav--trail .hero-nav-link:nth-child(4) { animation-delay: 0.45s; }
 
 @keyframes rail-link-in {
   from { opacity: 0; transform: translateY(-9px); }
@@ -4488,7 +4560,7 @@
 }
 
 /* The links lie down with it. */
-.hero-rail.is-condensed .hero-nav {
+.hero-rail.is-bar .hero-nav {
   flex-direction: row;
   align-items: center;
   gap: clamp(14px, 1.6vw, 26px);
@@ -4499,44 +4571,50 @@
    mark back at the head with About and What I Do following it. The column's
    2px gap correction still goes, since it only applies to the stacked
    layout. */
-.hero-rail.is-condensed .hero-nav--lead {
+.hero-rail.is-bar .hero-nav--lead {
   margin-bottom: 0;
 }
 
-/* The one wide space, and it now falls at the bar's middle rather than just
-   past a narrow mark. This is also what sets the bar's width: the element is
-   max-content, so widening the bar means widening this. */
-.hero-rail.is-condensed .hero-nav--trail {
-  margin-left: clamp(48px, 9vw, 168px);
+/* `auto` rather than a measured value: it eats whatever is left over, so the
+   lead group stays welded to the mark and the trail group sits hard against
+   the right edge at any width. */
+.hero-rail.is-bar .hero-nav--trail {
+  margin-left: auto;
 }
 
-.hero-rail.is-condensed .hero-nav-link { padding: 2px 0 4px; }
+.hero-rail.is-bar .hero-nav-link {
+  padding: 4px 0 6px;
+  font-size: clamp(12.5px, 1.02vw, 15.5px);
+}
 
-/* The mark shrinks to bar height. */
-.hero-rail.is-condensed .hero-logo { width: 42px; }
+.hero-rail.is-bar .hero-logo { width: clamp(36px, 3.1vw, 50px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-rail.is-condensed,
-  .hero-rail.is-condensed .hero-nav-link { animation: none; }
+  .hero-rail.is-bar,
+  .hero-rail.is-bar .hero-nav-link { animation: none; }
   /* Without the keyframes the centring shift has to be stated outright. */
-  .hero-rail.is-condensed { transform: translateX(-50%); }
+  .hero-rail.is-bar { transform: translateX(-50%); }
 }
 
 @media (max-width: 900px) {
+  /* Through the token, not a hardcoded height on the bar: anything else
+     sized against --bar-h would then disagree with the bar's real height. */
+  :root { --bar-h: 56px; }
+
   /* Full width, and the links scroll sideways rather than wrapping the bar
      onto a second line. */
-  .hero-rail.is-condensed {
+  .hero-rail.is-bar {
     left: 50%;
     right: auto;
+    width: calc(100vw - 16px);
     max-width: calc(100vw - 16px);
     border-radius: 0 0 16px 16px;
-    height: 56px;
     padding: 0 14px;
     /* The wide desktop gap would push the links off a phone screen. */
     gap: 18px;
   }
 
-  .hero-rail.is-condensed .hero-nav {
+  .hero-rail.is-bar .hero-nav {
     overflow-x: auto;
     scrollbar-width: none;
     gap: 14px;
@@ -4544,7 +4622,7 @@
 
   /* No room for a middle space on a phone — the groups close up and the
      whole run scrolls sideways instead. */
-  .hero-rail.is-condensed .hero-nav--trail { margin-left: 14px; }
+  .hero-rail.is-bar .hero-nav--trail { margin-left: 14px; }
 
-  .hero-rail.is-condensed .hero-nav::-webkit-scrollbar { display: none; }
+  .hero-rail.is-bar .hero-nav::-webkit-scrollbar { display: none; }
 }

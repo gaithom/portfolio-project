@@ -242,9 +242,9 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   const [missingShots, setMissingShots] = useState({});
   const [activeSection, setActiveSection] = useState(null);
 
-  /* The hero rail is this layout's navbar. Once you leave the top of the page
-     it detaches and rides along as a bar; 60px rather than 0 so a one-notch
-     wheel nudge does not toggle it. */
+  /* The bar arrives on scroll rather than being there from the start; 60px
+     rather than 0 so a one-notch wheel nudge does not toggle it. At rest the
+     same element is just the mark sitting in the hero's top band. */
   const [navCondensed, setNavCondensed] = useState(false);
   useEffect(() => {
     const read = () => setNavCondensed(window.scrollY > 60);
@@ -610,6 +610,58 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* Main content with higher z-index */}
     <div style={{position:"relative",zIndex:1}}>
+    {/* The bar lives outside .hero-stack on purpose. The hero is a sticky
+        stacking context, so a fixed child of it is painted inside that context
+        and About — its sibling, one layer up — would slide over the bar no
+        matter how high its z-index went. Out here it is above every section. */}
+      <header className={`hero-rail${navCondensed ? " is-bar" : ""}`}>
+        {/* Two groups around the mark. Only one of them is the labelled
+            landmark — a second <nav aria-label="Sections"> would announce a
+            duplicate region for what is one menu. */}
+        <div className="hero-nav hero-nav--lead">
+          {HERO_NAV_LEAD.map((n) => (
+            <button
+              key={n.id}
+              type="button"
+              className={`hero-nav-link${activeSection === n.id ? " is-active" : ""}`}
+              aria-current={activeSection === n.id ? "true" : undefined}
+              onClick={() => { setActiveSection(n.id); scrollTo(n.id); }}
+            >
+              {n.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Two marks stacked and cross-faded rather than a CSS filter: a
+            filter chain can only approximate a target colour, and this way
+            the orange is exactly the file's own. */}
+        <button
+          type="button"
+          className="hero-logo-wrap"
+          onClick={() => scrollTo("hero")}
+          aria-label="Michael Gaitho — back to top"
+        >
+          {/* alt is empty on both: the button's aria-label already names it,
+              and alt text here would be read out twice. */}
+          <img className="hero-logo" src="/logo_transparent_shadow.png" alt="" />
+          <img className="hero-logo hero-logo-hot" src="/logo_orange.png" alt="" aria-hidden="true" />
+        </button>
+
+        <nav className="hero-nav hero-nav--trail" aria-label="Sections">
+          {HERO_NAV_TRAIL.map((n) => (
+            <button
+              key={n.id}
+              type="button"
+              className={`hero-nav-link${activeSection === n.id ? " is-active" : ""}`}
+              aria-current={activeSection === n.id ? "true" : undefined}
+              onClick={() => { setActiveSection(n.id); scrollTo(n.id); }}
+            >
+              {n.label}
+            </button>
+          ))}
+        </nav>
+      </header>
+
     {/* The hero pins and About rides up over it. The two live in one wrapper
         so the pin releases the moment About has fully covered the hero —
         leaving it stuck for the whole page would park it behind every later
@@ -620,53 +672,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       <div className="hero-grid">
         {/* Column rules only — the boxy lattice that used to sit behind them
             is gone, so these read as guides on a plain ground. */}
-        <div className={`hero-rail${navCondensed ? " is-condensed" : ""}`}>
-          {/* Two groups around the mark. Only one of them is the labelled
-              landmark — a second <nav aria-label="Sections"> would announce a
-              duplicate region for what is one menu. */}
-          <div className="hero-nav hero-nav--lead">
-            {HERO_NAV_LEAD.map((n) => (
-              <button
-                key={n.id}
-                type="button"
-                className={`hero-nav-link${activeSection === n.id ? " is-active" : ""}`}
-                aria-current={activeSection === n.id ? "true" : undefined}
-                onClick={() => { setActiveSection(n.id); scrollTo(n.id); }}
-              >
-                {n.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Two marks stacked and cross-faded rather than a CSS filter: a
-              filter chain can only approximate a target colour, and this way
-              the orange is exactly the file's own. */}
-          <button
-            type="button"
-            className="hero-logo-wrap"
-            onClick={() => scrollTo("hero")}
-            aria-label="Michael Gaitho — back to top"
-          >
-            {/* alt is empty on both: the button's aria-label already names it,
-                and alt text here would be read out twice. */}
-            <img className="hero-logo" src="/logo_transparent_shadow.png" alt="" />
-            <img className="hero-logo hero-logo-hot" src="/logo_orange.png" alt="" aria-hidden="true" />
-          </button>
-
-          <nav className="hero-nav hero-nav--trail" aria-label="Sections">
-            {HERO_NAV_TRAIL.map((n) => (
-              <button
-                key={n.id}
-                type="button"
-                className={`hero-nav-link${activeSection === n.id ? " is-active" : ""}`}
-                aria-current={activeSection === n.id ? "true" : undefined}
-                onClick={() => { setActiveSection(n.id); scrollTo(n.id); }}
-              >
-                {n.label}
-              </button>
-            ))}
-          </nav>
-        </div>
 
         {/* The division, read off the reference: five columns, three rows,
             each row cut differently — 60% on the first two, 40% and 80% on
@@ -676,7 +681,22 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             The cards sit INSIDE their cells with a small inset; they are not
             cells themselves. That is what lets the wordmark sit at the right
             of its cell with no line between it and the open ground beside. */}
-        <div className="hero-cell hero-cell--r1a" aria-hidden="true" />
+        {/* The mark, back in the lattice's top-left where it was. The bar out
+            in the wrapper has its own copy, but that one is hidden until you
+            scroll, so only ever one is on screen. */}
+        <div className="hero-cell hero-cell--r1a">
+          <button
+            type="button"
+            className="hero-brand"
+            onClick={() => scrollTo("hero")}
+            aria-label="Michael Gaitho — back to top"
+          >
+            <span className="hero-brand-spin">
+              <img className="hero-logo" src="/logo_transparent_shadow.png" alt="" />
+              <img className="hero-logo hero-logo-hot" src="/logo_orange.png" alt="" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
         <div className="hero-cell hero-cell--mark">
           <div className="hero-mark">
             <span className="hero-mark-text">Quantamania</span>
@@ -729,8 +749,8 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         <div className="hero-cell hero-cell--quote">
         <figure ref={heroDescRef} className="hero-quote">
           <blockquote className="hero-quote-text">
-            I design interfaces that stay clear at scale, then build them myself,
-            so nothing is lost between the file and the browser.
+            I draw the interface, then write the code that ships it. Nothing gets
+            lost in the handoff, because there isn&apos;t one.
           </blockquote>
           <figcaption className="hero-quote-mark" aria-hidden="true">&#8221;</figcaption>
         </figure>
