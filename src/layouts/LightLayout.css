@@ -4,12 +4,14 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Display type. Satoshi sets every heading and large line; Roboto stays as
-     the fallback so the page still reads correctly in its old face if the
-     Fontshare CDN is slow or blocked. Satoshi's sidebearings are tighter than
-     Roboto's, so the display tracking below eases to -0.02em — the old
-     -0.03/-0.04em was tuned for Roboto and collides in this face. */
-  --font-display: "Satoshi", "Roboto", sans-serif;
+  /* Two faces for the whole site. Instrument Sans sets every heading, every
+     body line and every control; Google Sans takes the small text — labels,
+     indices, captions, tags — where its wider apertures hold up better at
+     9-13px than a display face does.
+     Tracking stays at -0.02em: Instrument Sans has sidebearings close to
+     Satoshi's, which this was tuned for. */
+  --font-display: "Instrument Sans", sans-serif;
+  --font-small: "Google Sans", sans-serif;
   --display-tracking: -0.02em;
 
   /* Ink & paper */
@@ -284,13 +286,12 @@
   cursor: pointer;
   font-family: var(--font-display);
   font-size: clamp(12px, 1.1vw, 14px);
-  /* 900 is Satoshi Black, a real master requested in index.html rather than a
-     synthesised bold. It has to stay loaded: the display rules only need up to
-     700, and dropping 900 from the request would silently resolve this back
-     down to 700 and lighten the nav.
-     Tracking stays positive here — this is uppercase at 14px, where the
+  /* 700, not the 900 this carried under Satoshi: Instrument Sans has no Black
+     master, so 900 would be synthesised — a smeared fake bold — or silently
+     resolve back to 700 anyway. Asking for what exists is honest.
+     Tracking stays positive here: this is uppercase at 14px, where the
      display's negative tracking would close the letterforms up. */
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--ink);
@@ -634,7 +635,27 @@
   /* Named so the rail can cancel exactly this and run to the screen edges. */
   --cap-shell-pad: clamp(20px, 4vw, 56px);
   padding: clamp(40px, 8vh, 90px) var(--cap-shell-pad) clamp(56px, 9vh, 110px);
+
+  /* The Who I Am panel carries on through this section, so the cards sit
+     inside it rather than on the page. Same --ink as that section and no
+     gap between the two, so the green reads as one container with the
+     folded corner at its top and the capability field in its lower half.
+     The cards hold up on it: 4.03 for the sage, 4.82 for the apricot. */
+  background: var(--ink);
 }
+
+/* The rail control was ink on cream. On the green it reads 1.00 — invisible —
+   and its orange hover 1.54, so both flip for this section only. Cream gives
+   8.06, and the hover takes the orange this panel already uses above, which
+   holds 3.43 as a 2px stroke. */
+.section-whatido .wk-arrow { color: var(--cream); }
+
+.section-whatido .wk-arrow:hover:not(:disabled),
+.section-whatido .wk-arrow:focus-visible:not(:disabled) { color: #E8834A; }
+
+.section-whatido .wk-arrow:active:not(:disabled) { color: #F0A070; }
+
+.section-whatido .wk-arrow:focus-visible { outline-color: #E8834A; }
 
 /* ── A page of two ──
    The deck no longer stacks one card over another; the field shows two at a
@@ -659,20 +680,19 @@
      vanished behind well before they reached the edge. */
   width: calc(100vw - var(--sbw, 0px));
   margin-left: calc(-1 * var(--cap-shell-pad));
-  /* Two different measurements doing two different jobs. The BLEED cancels
-     this section's own padding, so the rail reaches the screen edge and cards
-     scroll off it. The INSET is the page column, so the first card lines up
-     with the work section and with where this deck sat before. Using the page
-     column for both was the bug; using the section padding for both would
-     leave these cards 242px left of everything else on the page. */
-  scroll-padding-left: var(--page-gutter, 0px);
+  /* The bleed cancels this section's own padding so the rail reaches the
+     screen edge and cards scroll off it; the inset then puts the first card
+     back by that same small padding. It was inset by --page-gutter before,
+     which is the TEXT column — 298px on a wide screen — so the first card
+     began a long way in rather than at the edge of the page. */
+  scroll-padding-left: var(--cap-shell-pad);
   scroll-behavior: smooth;
   display: flex;
   gap: clamp(16px, 1.8vw, 26px);
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x proximity;
-  padding: 4px var(--page-gutter, 0px) 6px var(--page-gutter, 0px);
+  padding: 4px var(--cap-shell-pad) 6px var(--cap-shell-pad);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
@@ -681,10 +701,8 @@
 
 .cap-field::-webkit-scrollbar { display: none; }
 
-/* The nav is a plain child of the section, so it already sits inside the
-   section's padding; this adds only the difference up to the page column, so
-   it lands under the first card rather than 242px left of it. */
-.cap-nav { margin-left: calc(var(--page-gutter, 0px) - var(--cap-shell-pad)); }
+/* The nav sits inside the section's padding already, which is now exactly
+   where the first card starts — so no correction is needed. */
 
 .cap-page {
   --cap-r: clamp(16px, 1.8vw, 28px);
@@ -724,8 +742,14 @@
   min-width: 0;
   min-height: 0;
   display: flex;
-  align-items: center;
-  padding: clamp(20px, 2.4vw, 44px);
+  flex-direction: column;
+  justify-content: center;
+  /* Capped at 34, not 44. The page stops growing at 1060px wide, but this
+     clamp is against the VIEWPORT — so past about 1260px the padding kept
+     climbing inside a card that had stopped getting bigger, and at 1920 it
+     took 20px out of the copy half and pushed the text out of five cards.
+     34 is what it resolves to at the width the card reaches full size. */
+  padding: clamp(20px, 2.4vw, 34px);
   background: var(--cap-bg, #f6f3ec);
   box-sizing: border-box;
 }
@@ -824,6 +848,10 @@
     min-height: 0;
   }
 
+  /* Both halves carry something again — one the copy, one the tiles — so
+     both stay and weld into a single tall card. They were hidden here while
+     the open half was empty, which silently took the deliverables off four
+     of the seven cards on a phone. */
   .cap-piece--shin,
   .cap-piece--bar {
     margin-bottom: calc(-1 * var(--cap-gap) - var(--cap-weld));
@@ -836,16 +864,153 @@
     border-radius: 0 0 var(--cap-r) var(--cap-r);
   }
 
+  /* Only the cap comes off; the arrangements stay. Four columns across a
+     phone give ~73px cells, so the label steps down to match. */
+  .cap-tiles { width: 100%; }
+  .cap-tile { padding: 6px; }
+  .cap-tile span { font-size: 8.5px; letter-spacing: 0.06em; }
+
   .cap-piece--shin::after,
   .cap-piece--leg::after { display: none; }
 }
 
-.cap-card.tone-moss { --cap-bg: #C9E4D4; --cap-ink: #1F3B33; --cap-tint: rgba(31, 59, 51, 0.2); }
-.cap-card.tone-dusk { --cap-bg: #CFDAF5; --cap-ink: #232047; --cap-tint: rgba(35, 32, 71, 0.18); }
-.cap-card.tone-lilac { --cap-bg: #E0D2F3; --cap-ink: #33244F; --cap-tint: rgba(51, 36, 79, 0.18); }
-.cap-card.tone-sage { --cap-bg: #C4E9DA; --cap-ink: #17453A; --cap-tint: rgba(23, 69, 58, 0.19); }
-.cap-card.tone-clay { --cap-bg: #F8DDC0; --cap-ink: #4A3218; --cap-tint: rgba(74, 50, 24, 0.2); }
-.cap-card.tone-mist { --cap-bg: #C6E6EF; --cap-ink: #12414F; --cap-tint: rgba(18, 65, 79, 0.19); }
+/* ── The deliverables, as a field of boxes ──
+   Same language as the tools constellation: square cells, a hairline border,
+   the shared edges collapsed to one line, and a tick at each outer corner.
+   Three of them, so they run as a single connected strip rather than the
+   stepped scatter that needs fifteen tiles to read.
+
+   Stepped rather than set in a row, after the reference: the tiles turn a
+   corner and leave cells empty around them. A straight three-across reads as
+   a table — the gaps are what make it a field.
+
+   Capped, too. Three boxes spread over the solo card's 950px half would be
+   the same table at a larger size, and the point of the open half is that it
+   stays open. */
+.cap-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* Four columns at this width give 108px cells, so the two rows come to 216
+     — inside the 226 the shallowest open half has. */
+  width: min(100%, 440px);
+  /* The corner ticks straddle the tile edge by 2.5px; this gives the ones on
+     the outside of the strip somewhere to sit. */
+  padding: 3px;
+  /* The card is a column flex, so align-self works on the horizontal axis —
+     `end` here parked the strip against the right edge, not the bottom. */
+  align-self: flex-start;
+}
+
+/* Corners only, and a different arrangement on every card.
+
+   Two patterns alternating by tone meant the same two figures repeated three
+   times each down the field. These are seven, keyed to the capability, with
+   no two alike: some are a V, some an inverted V, some set one tile off on
+   its own entirely.
+
+   Every one was checked for edge contact before being written here — each
+   pair of tiles either meets at a single point or does not meet at all. Four
+   columns rather than three is what buys the room to vary them. */
+[data-cap="01"] .cap-tile:nth-child(1) { grid-column: 1; grid-row: 1; }
+[data-cap="01"] .cap-tile:nth-child(2) { grid-column: 2; grid-row: 2; }
+[data-cap="01"] .cap-tile:nth-child(3) { grid-column: 3; grid-row: 1; }
+
+[data-cap="02"] .cap-tile:nth-child(1) { grid-column: 2; grid-row: 1; }
+[data-cap="02"] .cap-tile:nth-child(2) { grid-column: 3; grid-row: 2; }
+[data-cap="02"] .cap-tile:nth-child(3) { grid-column: 4; grid-row: 1; }
+
+[data-cap="03"] .cap-tile:nth-child(1) { grid-column: 1; grid-row: 2; }
+[data-cap="03"] .cap-tile:nth-child(2) { grid-column: 2; grid-row: 1; }
+[data-cap="03"] .cap-tile:nth-child(3) { grid-column: 3; grid-row: 2; }
+
+[data-cap="04"] .cap-tile:nth-child(1) { grid-column: 2; grid-row: 2; }
+[data-cap="04"] .cap-tile:nth-child(2) { grid-column: 3; grid-row: 1; }
+[data-cap="04"] .cap-tile:nth-child(3) { grid-column: 4; grid-row: 2; }
+
+[data-cap="05"] .cap-tile:nth-child(1) { grid-column: 1; grid-row: 1; }
+[data-cap="05"] .cap-tile:nth-child(2) { grid-column: 2; grid-row: 2; }
+[data-cap="05"] .cap-tile:nth-child(3) { grid-column: 4; grid-row: 1; }
+
+[data-cap="06"] .cap-tile:nth-child(1) { grid-column: 1; grid-row: 2; }
+[data-cap="06"] .cap-tile:nth-child(2) { grid-column: 3; grid-row: 1; }
+[data-cap="06"] .cap-tile:nth-child(3) { grid-column: 4; grid-row: 2; }
+
+[data-cap="07"] .cap-tile:nth-child(1) { grid-column: 1; grid-row: 1; }
+[data-cap="07"] .cap-tile:nth-child(2) { grid-column: 3; grid-row: 2; }
+[data-cap="07"] .cap-tile:nth-child(3) { grid-column: 4; grid-row: 1; }
+
+.cap-tile {
+  position: relative;
+  aspect-ratio: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(8px, 1vw, 14px);
+  border: 1px solid var(--cap-alt-tint);
+  background: var(--cap-alt);
+  text-align: center;
+}
+
+.cap-tile span {
+  font-family: var(--font-small);
+  font-size: clamp(9px, 0.82vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--cap-alt-ink);
+}
+
+.cap-tile::before,
+.cap-tile::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: var(--cap-alt-ink);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.cap-tile::before { top: -2.5px; left: -2.5px; }
+.cap-tile::after { bottom: -2.5px; right: -2.5px; }
+
+/* ── The two tones ──
+   Lighter than the full-strength moss and burnt orange these replaced, which
+   read too heavy as whole blocks. Going lighter meant flipping the copy to
+   dark ink: with cream copy the orange has nowhere to go — one step up from
+   #A24908 already drops it to 4.02 and under AA.
+
+   So these are the site's two hues held at mid-light, carrying their own
+   near-black. Copy runs at 0.92 and still reads 5.30 on the sage and 5.66 on
+   the apricot. As blocks they sit 1.93 and 1.62 off the page, so they are
+   plainly colour rather than a tinted background — which is where the first
+   pale pair went wrong. */
+/* One dark card and one light one, each carrying the copy colour that suits
+   it: white on the green at 5.40, black on the apricot at 10.92. That is what
+   lets the apricot stay bright — white would have capped it at #B9590F and
+   4.67, and anything brighter failed.
+
+   The pair also reads properly on the green panel underneath: the apricot
+   stands 4.82 off it. The green card is the quiet one at 1.71, which is the
+   price of using a tone close to the panel's own.
+
+   --cap-alt is the tiles, and is simply the other card's colour — so a green
+   card carries apricot boxes and an apricot card carries green ones, each
+   with that colour's own copy. Either way the tiles sit 2.81 off the card
+   they are on, and their labels read 10.92 and 5.40. */
+.cap-card.tone-moss {
+  --cap-bg: #4A7265; --cap-ink: #FFFFFF; --cap-tint: rgba(255, 255, 255, 0.26);
+  --cap-alt: #E8B07A; --cap-alt-ink: #000000; --cap-alt-tint: rgba(0, 0, 0, 0.3);
+}
+.cap-card.tone-clay {
+  --cap-bg: #E8B07A; --cap-ink: #000000; --cap-tint: rgba(0, 0, 0, 0.26);
+  --cap-alt: #4A7265; --cap-alt-ink: #FFFFFF; --cap-alt-tint: rgba(255, 255, 255, 0.3);
+}
 
 /* A soft bloom of the card's own hue, so the colour has somewhere to breathe
    instead of sitting flat edge to edge. */
@@ -862,63 +1027,44 @@
 }
 
 .cap-index {
-  font-family: "Space Mono", monospace;
-  font-size: 12px;
+  font-family: var(--font-small);
+  font-size: clamp(12px, 1vw, 14px);
   font-weight: 700;
   letter-spacing: 0.16em;
   color: var(--cap-ink);
-  opacity: 0.75;
+  opacity: 1;             /* as the description, and for the same reason */
 }
 
 
 
-/* Sized for the half it now sits in, not a full-width card. The tightest
-   copy slot is the narrow bottom-right one — 494 x 335 less padding, so 406 x
-   248 — and at 44px the longest title ran that to 271px and pushed its tags
-   out of the card. 32px brings the same copy to 226px, leaving 22px of
-   headroom on the worst case. */
+/* Bigger than it was, but the tags are back, so the budget is the tightest
+   copy half — the narrow foot of the trailing card, 366 x 226 after padding.
+   Title and description are both up a step; past this the tags fall out of
+   the card. */
 .cap-title {
   font-family: var(--font-display);
-  font-size: clamp(22px, 2.1vw, 32px);
+  font-size: clamp(26px, 2.9vw, 42px);
   font-weight: 700;
-  line-height: 1.08;
+  line-height: 1.06;
   letter-spacing: var(--display-tracking);
   color: var(--cap-ink);
-  margin: 0 0 clamp(8px, 1.2vh, 12px);
-  max-width: 18ch;
+  margin: 0 0 clamp(9px, 1.4vh, 14px);
+  max-width: 17ch;
 }
 
 .cap-desc {
-  font-size: clamp(14px, 1.1vw, 17px);
-  line-height: 1.65;
+  font-size: clamp(15px, 1.3vw, 18.5px);
+  line-height: 1.5;
   color: var(--cap-ink);
-  opacity: 0.76;
-  margin: 0 0 clamp(14px, 2.2vh, 22px);
+  /* Full strength. The copy is white now, and thinning it was costing the
+     orange card its headroom — at 0.92 the description read 4.52, which
+     pinned the card a step darker than it needed to be. Hierarchy comes from
+     size and weight instead. */
+  opacity: 1;
+  margin: 0;
   max-width: 46ch;
 }
 
-.cap-tags {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-}
-
-.cap-tags li {
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cap-ink);
-  padding: 7px 14px;
-  border: 1px solid var(--cap-tint);
-  border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.6);
-  transition: transform var(--dur-base) var(--ease-glide),
-    background var(--dur-base) var(--ease-soft);
-}
 
 
 
@@ -931,224 +1077,6 @@
 
 
 /* ── Visual column ── */
-/* ── Artwork half ──
-   Fills its own piece now rather than sharing a column with the copy, so it
-   is sized off the piece instead of a fixed height. */
-.cap-visual {
-  position: relative;
-  min-width: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cap-art {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 560px;
-}
-
-/* Blueprint — stacked wireframe artboards */
-.cap-art-blueprint .cap-board {
-  position: absolute;
-  border: 1px solid rgba(47, 77, 69, 0.3);
-  border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.72);
-}
-.cap-board-back {
-  inset: 14% 4% 22% 16%;
-  border-style: dashed;
-  background: rgba(255, 255, 255, 0.35);
-  transform: rotate(-2.5deg);
-}
-.cap-board-front {
-  inset: 8% 12% 16% 4%;
-  box-shadow: var(--shadow-lift);
-  overflow: hidden;
-}
-.cap-board-bar { position: absolute; top: 0; left: 0; right: 0; height: 34px; border-bottom: 1px solid rgba(47, 77, 69, 0.16); background: rgba(60, 96, 87, 0.05); }
-.cap-board-side { position: absolute; top: 34px; left: 0; bottom: 0; width: 26%; border-right: 1px solid rgba(47, 77, 69, 0.12); background: rgba(60, 96, 87, 0.03); }
-.cap-board-block { position: absolute; left: 32%; right: 8%; border-radius: var(--r-xs); background: rgba(60, 96, 87, 0.1); }
-.cap-board-block.b1 { top: 54px; height: 20%; }
-.cap-board-block.b2 { top: 40%; right: 26%; height: 14%; }
-.cap-board-block.b3 { bottom: 12%; height: 26%; background: rgba(60, 96, 87, 0.07); }
-
-/* Terminal — rounded code window */
-.cap-art-terminal .cap-window {
-  position: absolute;
-  inset: 8% 2% 12%;
-  border-radius: var(--r-md);
-  background: #14202e;
-  box-shadow: var(--shadow-float);
-  overflow: hidden;
-}
-.cap-window-chrome { display: block; height: 34px; border-bottom: 1px solid rgba(255, 255, 255, 0.09); }
-.cap-code {
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 20px 22px;
-  font-family: "Space Mono", monospace;
-  font-size: clamp(10px, 1vw, 13px);
-  line-height: 1.6;
-  color: #c9d6e4;
-}
-.cap-code em { font-style: normal; color: #8b7cb8; }
-.cap-code b { font-weight: 400; color: #7ee8a8; }
-.cap-code .ind1 { padding-left: 1.6em; }
-.cap-code .ind2 { padding-left: 3.2em; }
-.cap-caret {
-  display: inline-block; width: 7px; height: 1.05em;
-  margin-left: 6px; vertical-align: -2px;
-  background: #7ee8a8; animation: blink 1.1s step-end infinite;
-}
-
-/* Motion — orbit plus the actual easing curve */
-.cap-art-motion .cap-ring {
-  position: absolute; top: 44%; left: 50%;
-  border-radius: 50%; border: 1px solid var(--cap-tint);
-  transform: translate(-50%, -50%);
-}
-.cap-ring.r1 { width: min(400px, 78%); aspect-ratio: 1; }
-.cap-ring.r2 { width: min(260px, 52%); aspect-ratio: 1; border-style: dashed; }
-.cap-orbit {
-  position: absolute; top: 44%; left: 50%;
-  width: min(400px, 78%); aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  animation: cap-spin 16s linear infinite;
-}
-/* The orbit is now an arc segment sweeping the ring, so the motion survives
-   without a travelling dot. */
-.cap-orbit {
-  border: 2px solid transparent;
-  border-top-color: var(--cap-ink);
-  border-right-color: var(--cap-ink);
-  border-radius: 50%;
-  opacity: 0.55;
-}
-@keyframes cap-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-.cap-curve {
-  position: absolute; left: 50%; top: 44%;
-  width: min(150px, 30%); aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-}
-.cap-curve path { stroke: var(--cap-ink); stroke-width: 2.5; opacity: 0.8; fill: none; stroke-linecap: round; }
-.cap-caption {
-  position: absolute; left: 50%; bottom: 4%;
-  transform: translateX(-50%);
-  font-family: "Space Mono", monospace; font-size: 11px;
-  letter-spacing: 0.1em; color: var(--cap-ink); opacity: 0.55;
-  white-space: nowrap;
-}
-
-/* Responsive — three device frames */
-.cap-art-responsive {
-  display: flex; align-items: flex-end; justify-content: center;
-  gap: clamp(10px, 2vw, 22px);
-  padding-bottom: 8%;
-}
-.cap-device {
-  position: relative; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-end; gap: 8px;
-  border: 1px solid rgba(47, 77, 69, 0.28);
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: var(--shadow-soft);
-}
-.cap-device i {
-  display: block; width: 100%; flex: 1;
-  border-radius: var(--r-sm) var(--r-sm) 0 0;
-  background: var(--cap-tint);
-  opacity: 0.75;
-}
-.cap-device b {
-  font-family: "Space Mono", monospace; font-size: 11px; font-weight: 400;
-  letter-spacing: 0.1em; color: var(--cap-ink); opacity: 0.6; padding-bottom: 8px;
-}
-.cap-device.sm { width: clamp(48px, 9%, 66px); height: 42%; border-radius: 10px; }
-.cap-device.md { width: clamp(78px, 16%, 110px); height: 62%; }
-.cap-device.lg { width: clamp(140px, 34%, 230px); height: 82%; }
-
-/* Accessibility — a real contrast readout */
-.cap-art-a11y { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 0 6%; }
-.cap-contrast { display: flex; flex-direction: column; gap: 10px; }
-.cap-contrast-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 13px 18px;
-  border: 1px solid var(--cap-tint);
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: var(--shadow-rest);
-}
-.cap-contrast-row i { width: 30px; height: 30px; border-radius: var(--r-xs); flex-shrink: 0; }
-.cap-contrast-row b { font-family: "Space Mono", monospace; font-size: 14px; color: var(--cap-ink); }
-.cap-contrast-row em {
-  margin-left: auto; font-style: normal;
-  font-family: "Space Mono", monospace; font-size: 11px;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 4px 10px; border-radius: var(--r-pill);
-  background: rgba(15, 118, 110, 0.14); color: #0f766e;
-}
-.cap-contrast-row.is-weak em { background: rgba(162, 73, 8, 0.13); color: #a24908; }
-.cap-focus {
-  align-self: flex-start;
-  font-family: "Space Mono", monospace; font-size: 11px;
-  letter-spacing: 0.12em; color: var(--cap-ink);
-  padding: 9px 16px; border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.7);
-  outline: 2px solid var(--cap-ink); outline-offset: 3px;
-  opacity: 0.85;
-}
-
-/* Design systems — token chips */
-.cap-art-tokens {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: center; gap: 12px; padding: 0 6%;
-}
-.cap-token {
-  display: flex; align-items: center; gap: 12px;
-  padding: 15px 16px;
-  border: 1px solid var(--cap-tint);
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: var(--shadow-rest);
-}
-.cap-token i { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; }
-.cap-token code {
-  font-family: "Space Mono", monospace; font-size: 11px;
-  color: var(--cap-ink); opacity: 0.8;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-
-/* Performance — gauge and vitals */
-.cap-art-metrics { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(18px, 3vh, 30px); }
-.cap-gauge { position: relative; width: min(220px, 46%); aspect-ratio: 1; display: grid; place-items: center; }
-.cap-gauge svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.cap-gauge-track { fill: none; stroke: var(--cap-tint); stroke-width: 10; }
-.cap-gauge-fill {
-  fill: none; stroke: var(--cap-ink); stroke-width: 10; stroke-linecap: round;
-  stroke-dasharray: 327; stroke-dashoffset: 7;
-}
-.cap-gauge b { font-family: var(--font-display); font-size: clamp(34px, 5vw, 54px); font-weight: 700; color: var(--cap-ink); line-height: 1; }
-.cap-gauge em {
-  position: absolute; bottom: 22%; font-style: normal;
-  font-family: "Space Mono", monospace; font-size: 11px;
-  letter-spacing: 0.16em; text-transform: uppercase; color: var(--cap-ink); opacity: 0.5;
-}
-.cap-vitals { display: flex; gap: 10px; }
-.cap-vitals span {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 12px 20px;
-  border: 1px solid var(--cap-tint); border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.78);
-}
-.cap-vitals b { font-family: "Roboto", sans-serif; font-size: 19px; font-weight: 800; color: var(--cap-ink); }
-.cap-vitals em {
-  font-style: normal; font-family: "Space Mono", monospace; font-size: 11px;
-  letter-spacing: 0.14em; text-transform: uppercase; color: var(--cap-ink); opacity: 0.5;
-}
-
 /* ── Fixed chapter dock ── */
 
 
@@ -1176,11 +1104,6 @@
 
 @media (max-width: 767px) {
   .cap-desc { font-size: 15px; max-width: none; }
-  
-  
-  
-  .cap-art-tokens { grid-template-columns: 1fr; }
-  .cap-vitals span { padding: 9px 13px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1272,84 +1195,103 @@
 }
 
 .expr-canvas {
+  --sw-r: clamp(10px, 1vw, 15px);
+  --sw-weld: 1px;
+  /* The gutter inside a family block. Welds and fillets both cancel
+     exactly this, so it is one name used in all three places. */
+  --fam-gap: clamp(5px, 0.7vw, 11px);
+  /* The fillet radius is the gutter, so the curve at a bend runs exactly as
+     far as the card beside it and no further. */
+  --sw-fillet: var(--fam-gap);
+  /* The panel's ground; the fillet paints it back into the inner angle. */
+  --expr-ground: #EAE6DE;
+
   position: relative;
-  /* Full width, not a centred column. The section's own padding is cancelled
-     and a much smaller inset put back, so the colour runs out to the screen
-     rather than stopping at a 1400px measure. The heading above keeps the
-     text column — it is the composition that goes wide, not the type. */
-  --expr-inset: clamp(12px, 1.4vw, 26px);
   max-width: none;
   width: calc(100% + 2 * var(--expr-shell-pad) - 2 * var(--expr-inset));
+  --expr-inset: clamp(12px, 1.4vw, 26px);
   margin-left: calc(var(--expr-inset) - var(--expr-shell-pad));
   margin-right: calc(var(--expr-inset) - var(--expr-shell-pad));
+
+  /* Two panels, roughly a third to two thirds, as the reference sets them. */
   display: grid;
-  /* Row height and gutter are named, not written inline, because the rules
-     layer has to do arithmetic with both to find the gutters. A clamp inside
-     a calc resolves fine; two unrelated clamps guessing at each other do not. */
-  /* The canvas only has to position four families and eight words now — the
-     cards are laid out inside each family, not here. */
-  --expr-row: clamp(40px, 6.8vh, 72px);
-  --expr-gap: clamp(7px, 0.7vw, 12px);
-  --sw-r: clamp(8px, 0.85vw, 14px);
-  /* The fillet radius is the family's own gutter, as in the reference, where
-     the curve at the bend reaches exactly as far as the next card. Any larger
-     and it would run into the neighbour it is curving around. */
-  --fam-gap: clamp(7px, 0.81vw, 14px);
-  --sw-fillet: var(--fam-gap);
-  /* How far the two halves of a bent card overlap. Meeting exactly leaves a
-     hairline of ground along the join on fractional device pixels. */
-  --sw-weld: 1px;
-  /* The fillet is cut by painting the page's own ground over the inner angle,
-     which only works because that ground is flat. It must track the light
-     theme's bg in themes.js. */
-  --expr-ground: #EFEBE4;
-  grid-template-columns: repeat(14, minmax(0, 1fr));
-  grid-template-rows: repeat(18, var(--expr-row));
-  gap: var(--expr-gap);
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 2fr);
+  align-items: stretch;
+  gap: clamp(16px, 1.8vw, 30px);
 }
 
-/* Hairline rules — the visible evidence that the scatter is on a grid.
-   Static: nothing here reacts to the pointer. */
-/* Bled out to the full width of the screen rather than the canvas. The canvas
-   is centred in the viewport, so anchoring at its 50% and pulling back half a
-   viewport width lands the layer exactly on the screen edges, whatever padding
-   the section shell carries. --sbw is the scrollbar width: 100vw includes it
-   but the layout does not, and without the correction the rules overhang to
-   the right by that amount. */
-.expr-rules {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: calc(100vw - var(--sbw, 0px));
-  transform: translateX(-50%);
-  pointer-events: none;
-  z-index: 0;
+/* ── Left panel: the type, listed ──
+   A card of its own, as the reference sets it — the type side was a bare
+   list sitting on the page while the colour side had a panel under it, so
+   the two did not read as a pair. */
+.expr-type {
+  background: var(--paper);
+  border-radius: clamp(14px, 1.6vw, 24px);
+  padding: clamp(18px, 2vw, 34px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(8px, 1.2vh, 18px);
+  align-self: stretch;
 }
 
-/* The firm grid tone, the same one that separates the projects — these read as
-   solid rules across the page rather than the faint lattice used elsewhere. */
-.expr-rule { position: absolute; background: var(--grid-line-strong); }
-.expr-rule-h { left: 0; right: 0; height: 1px; }
+/* ── Right panel: the colour, on its own ground ──
+   Rounded and tinted a shade off the page so it reads as a surface the cards
+   sit on, with the same dot grid the reference lays under its field. */
+.expr-colour {
+  background: var(--expr-ground);
+  border-radius: clamp(14px, 1.6vw, 24px);
+  padding: clamp(14px, 1.7vw, 30px);
+  background-image: radial-gradient(rgba(47, 77, 69, 0.16) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+
+  /* Four family blocks, two across. */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 30px);
+}
+
+/* Each family's own grid. It draws nothing — no background, no border — it
+   only holds the four tracks that give its cards the reference's proportions.
+   Those are the measured card widths and heights as fr units, so the gutters
+   between them are real gutters rather than tracks swallowed by a span. */
+.expr-family {
+  display: grid;
+  grid-template-columns: 179fr 45fr 179fr 185fr;
+  grid-template-rows: 157fr 10fr 155fr 142fr;
+  gap: var(--fam-gap);
+  aspect-ratio: 637 / 509;
+  /* Capped rather than filling its half of the panel. The blocks were 398
+     wide and dominated the section; this brings them down while keeping the
+     narrowest card around 95px, which is what the three label lines need. */
+  width: min(100%, clamp(250px, 24vw, 330px));
+  justify-self: center;
+  min-width: 0;
+  min-height: 0;
+}
 
 /* ── Specimens ── */
 .expr-word {
   position: relative;
-  z-index: 2;
-  align-self: center;
-  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
   margin: 0;
-  padding: 6px 2px;
+  padding: 0;
   border: none;
   background: none;
-  line-height: 0.94;
-  letter-spacing: -0.035em;
   text-align: left;
   cursor: pointer;
-  transition: transform var(--dur-base) var(--ease-glide), filter var(--dur-base) var(--ease-soft);
+  line-height: 1;
 }
 
-.expr-word-text { display: block; white-space: nowrap; }
+.expr-word-text {
+  display: block;
+  font-size: clamp(26px, 3vw, 46px);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
 
 /* !important: the reveal leaves an inline transform on the button. */
 .expr-word:hover,
@@ -1377,7 +1319,7 @@
   background: rgba(251, 250, 247, 0.97);
   backdrop-filter: blur(8px);
   box-shadow: var(--shadow-lift);
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   font-style: normal;
   font-weight: 400;
@@ -1402,14 +1344,6 @@
    padding — it exists only to give its cards the reference's track sizes.
    Those are the measured card widths and heights, as fr units, so the gutters
    between them are real gutters rather than tracks swallowed by a span. */
-.expr-family {
-  display: grid;
-  grid-template-columns: 179fr 45fr 179fr 185fr;
-  grid-template-rows: 157fr 10fr 155fr 142fr;
-  gap: var(--fam-gap);
-  min-width: 0;
-  min-height: 0;
-}
 
 /* ── Colour blocks ──
    The swatches are the mosaic. No card wraps a family: each colour is its own
@@ -1425,9 +1359,14 @@
   justify-self: stretch;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  /* Name at the head, hex and role at the foot, the colour left open between
+     them — which is how the reference sets its cards. It was all bunched at
+     the bottom. */
+  justify-content: space-between;
   overflow: hidden;
-  padding: clamp(10px, 1.1vw, 18px);
+  /* Sized for the smaller blocks. At the old 22px the padding alone ate
+     36 of a 77px card and pushed all three label lines out. */
+  padding: clamp(7px, 0.85vw, 13px);
   border-radius: var(--sw-r);
   cursor: pointer;
   /* Background and label colour are set inline, per swatch. The label colour
@@ -1498,24 +1437,25 @@
   border-radius: 0 var(--sw-r) var(--sw-r) var(--sw-r);
 }
 
-/* Neither half takes the pointer on its own. */
+/* The inert halves take no pointer of their own. */
 .expr-swatch--bar,
-.expr-swatch--shin { pointer-events: none; }
+.expr-swatch--foot { pointer-events: none; }
 
-/* ── The inner angle ──
+/* ── The inner angles ──
    Where one rect's edge turns into the other's, the silhouette makes a 270°
    turn. Rounding a corner like that ADDS material: the curve bulges into the
    notch, so the card's colour sweeps around the corner instead of mitring it.
-   Taking material away — which is what this did before — bites a chunk out of
-   the wider rect and shows ground through the bend.
+   Taking material away bites a chunk out of the wider rect and shows ground
+   through the bend.
 
-   So the fillet is a square of the card's own colour set in the notch, with a
-   quarter disc cut from the far corner. Radius equals the gutter, so the curve
-   runs exactly up to the card tucked into the notch and no further.
+   So each fillet is a square of the card's own colour set in the notch, with
+   a quarter disc cut from the corner it curves around. Radius equals the
+   gutter, so the curve runs exactly up to the card in the notch, no further.
 
    The two are mirrored: the leg's sits to its right at the top, curving down
-   out of the bar; the shin's sits to its right at the bottom, curving up out
-   of the foot. */
+   out of the bar; the shin's to its right at the bottom, curving up out of
+   the foot. Both back off by the weld, because the rect they hang from
+   reaches a pixel past its true edge. */
 .expr-swatch--leg::after,
 .expr-swatch--shin::after {
   content: "";
@@ -1527,8 +1467,6 @@
 }
 
 .expr-swatch--leg::after {
-  /* Offset by the weld: the rect reaches a pixel past its own edge, and the
-     fillet has to sit on the true corner, not the welded one. */
   top: var(--sw-weld);
   background: radial-gradient(
     circle var(--sw-fillet) at 100% 100%,
@@ -1552,38 +1490,40 @@
 .expr-swatch--bent::before { display: none; }
 
 /* Bottom-left, as in the reference. */
-.expr-swatch-label {
+/* The card's name, set like a title rather than a caption — the reference
+   leads each block with it. */
+.expr-swatch-name {
+  font-family: var(--font-display);
+  /* The narrowest card is 85px wide, 61px inside its padding — "Slate 700"
+     at 13px measures 59. Anything larger clips. */
+  font-size: clamp(10px, 0.9vw, 13px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.expr-swatch-foot {
   display: flex;
   flex-direction: column;
   gap: 1px;
   min-width: 0;
 }
 
-.expr-swatch-family {
-  font-family: "Space Mono", monospace;
-  font-size: clamp(9px, 0.72vw, 11px);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.72;
-}
-
 .expr-swatch-hex {
-  font-family: var(--font-display);
-  font-size: clamp(13px, 1.15vw, 17px);
+  font-family: var(--font-small);
+  font-size: clamp(8px, 0.72vw, 10.5px);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  opacity: 0.9;
 }
 
 .expr-swatch-role {
-  font-family: var(--font-display);
-  font-size: clamp(10px, 0.82vw, 12px);
+  font-family: var(--font-small);
+  font-size: clamp(8px, 0.68vw, 9.5px);
   font-weight: 500;
-  opacity: 0.78;
-  /* Wraps rather than truncates. The blocks that cannot fit "Accent · 3.12:1
-     AA Large" on one line are the narrow left columns, and those are five rows
-     tall — there is height to spare where there is no width. */
-  line-height: 1.25;
+  opacity: 0.74;
+  line-height: 1.3;
 }
 
 
@@ -1592,53 +1532,31 @@
 
 
 
-/* Below the grid's comfortable width the mosaic stops being a mosaic. The
-   swatches keep tiling, two across, and the words span the full width between
-   them — a single column of 30 blocks would be an enormous scroll. */
+/* Below the lattice's comfortable width the two panels stack and the family
+   blocks run one to a row. The bends stay: at full panel width the narrowest
+   card is still about 90px, which the labels fit.
+
+   This block used to re-place every swatch with `grid-area: auto` — written
+   for a flat field of uniform cards that no longer exists. Against the family
+   grids it pulled every card out of its slot and ten of them spilled. */
 @media (max-width: 900px) {
   .expr-canvas {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: none;
-    gap: clamp(8px, 2vw, 14px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 3vh, 26px);
   }
 
-  /* Descendant, not child: the family wrapper is display:contents here, so
-     the cards render as grid items but are still DOM children of IT, not of
-     the canvas. A child combinator silently stops matching and every card
-     keeps its desktop grid-area. */
-  .expr-canvas .expr-word,
-  .expr-canvas .expr-swatch {
-    grid-area: auto !important;
+  .expr-colour {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(14px, 3vh, 24px);
+  }
+
+  /* No cap down here — each family takes the panel's full width. */
+  .expr-family {
+    width: 100%;
     justify-self: stretch;
   }
 
-  .expr-canvas .expr-swatch { min-height: clamp(96px, 26vw, 140px); }
-
-  /* No bends down here — the inert halves carry no label of their own, so
-     they are dropped and the labelled half stands in for the whole card. */
-  .expr-swatch--bar,
-  .expr-swatch--shin { display: none; }
-  .expr-swatch--leg,
-  .expr-swatch--foot {
-    margin-top: 0;
-    border-radius: var(--sw-r);
-  }
-  .expr-swatch--shin { margin-bottom: 0; }
-  .expr-swatch--leg::after,
-  .expr-swatch--shin::after { display: none; }
-  /* The family grid collapses with everything else. */
-  .expr-family {
-    display: contents;
-  }
-
-  .expr-canvas .expr-word {
-    grid-column: 1 / -1 !important;
-    margin: clamp(10px, 3vh, 24px) 0;
-  }
-
-  .expr-word { font-size: clamp(30px, 9vw, 54px) !important; }
-  .expr-word-text { white-space: normal; }
-  .expr-rules { display: none; }
+  .expr-word-text { font-size: clamp(28px, 8vw, 44px) !important; }
 }
 
 @media (max-width: 560px) {
@@ -1660,121 +1578,6 @@
 .section-contact { position: relative; }
 
 
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   CAPABILITY ARTEFACTS
-   These used to be hidden on every card except the centred one and assemble
-   as it became active. That worked when one full-screen card showed at a
-   time; in a stack several cards are on screen at once, so it left most of
-   them with invisible tags, shifted copy and half-built artwork. Everything
-   is now drawn in full on every card, and only the card's own scale marks
-   which one is current.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* The orbit turns only on the card being read, so six copies are not
-   animating off-screen at once. */
-.cap-orbit { animation-play-state: paused; }
-.cap-card.is-active .cap-orbit { animation-play-state: running; }
-
-/* The easing curve and the gauge draw themselves on the active card, and rest
-   fully drawn everywhere else — never blank. */
-.cap-curve path { stroke-dasharray: 210; stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease-glide); }
-.cap-card.is-active .cap-curve path { stroke-dashoffset: 0; }
-.cap-gauge-fill { stroke-dashoffset: 7; transition: stroke-dashoffset 1.3s var(--ease-glide); }
-
-@media (prefers-reduced-motion: reduce) {
-  .cap-orbit { animation: none; }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   CAPABILITY ARTEFACTS — each one assembles when its card becomes active
-   Driven entirely by the .is-active class, so the motion survives even if
-   GSAP never loads. No gradients: pieces move, they don't fade through colour.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* Resting (off-screen) state — parts sit slightly out of place */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Active state — everything lands, staggered so the artefact assembles */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* The orbit only spins while its card is the active one */
-
-
-
-/* The easing curve draws itself in */
-.cap-curve path {
-  stroke-dasharray: 210;
-  stroke-dashoffset: 210;
-  transition: stroke-dashoffset 1.2s var(--ease-glide) 0.15s;
-}
-
-
-/* The performance gauge sweeps round instead of appearing complete */
-.cap-gauge-fill {
-  stroke-dashoffset: 327;
-  transition: stroke-dashoffset 1.3s var(--ease-glide) 0.2s;
-}
-.cap-card.is-active .cap-gauge-fill { stroke-dashoffset: 7; }
-
-
-
-
-
-
-
-
-
-
-
-
-@media (prefers-reduced-motion: reduce) {
-  
-  .cap-curve path { stroke-dashoffset: 0 !important; }
-  .cap-gauge-fill { stroke-dashoffset: 7 !important; }
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    HERO — headline left, a design artefact filling the right
@@ -1838,7 +1641,7 @@
   gap: clamp(12px, 1.9vw, 26px);
   font-size: clamp(28px, 6.2vw, 88px);
   line-height: 1.02;
-  /* Overrides the -0.045em this rule carried for Roboto: Satoshi is already
+  /* Overrides the -0.045em this rule carried for Roboto: Instrument Sans is already
      tightly fitted, and at 88px that value ran the letterforms together. */
   letter-spacing: var(--display-tracking);
 }
@@ -1902,7 +1705,7 @@
 }
 
 .hero-meta dt {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: clamp(10px, 0.85vw, 12px);
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1981,7 +1784,7 @@
   }
 }
 
-/* Satoshi, same as every other display line on the page. Sans at this size
+/* Instrument Sans, as every other display line on the page. Sans at this size
    sets wider than the serif it replaces, so the size eases back a little and
    the tracking tightens to the display value. */
 .hero-quote-text {
@@ -1995,7 +1798,7 @@
 }
 
 /* An oversized closing mark sitting low in the card. Follows the card text
-   into Satoshi — left in Playfair it would be the only serif on the page. */
+   into Instrument Sans — left in Playfair it would be the only serif here. */
 .hero-quote-mark {
   position: absolute;
   right: clamp(16px, 2vw, 34px);
@@ -2066,21 +1869,12 @@
 /* ── Hero column rules ──
    Kept on a plain ground: these are the hero's own guides, not the boxy
    lattice that was removed from behind them. */
-.hero-rules { position: absolute; inset: -14px 0; pointer-events: none; z-index: 3; }
-.hero-rules span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid-line); }
-.hero-rules span:nth-child(1) { left: 25%; }
-.hero-rules span:nth-child(2) { left: 50%; }
-.hero-rules span:nth-child(3) { left: 75%; }
-.hero-rules span:nth-child(4) { left: 100%; }
 
 @media (max-width: 900px) {
   /* Two rules instead of four — at this width the outer pair crowds the copy. */
-  .hero-rules span:nth-child(1),
-  .hero-rules span:nth-child(3) { display: none; }
 }
 
 @media (max-width: 560px) {
-  .hero-rules { display: none; }
 }
 
 /* ── Who I Am ──
@@ -2291,7 +2085,7 @@
 }
 
 .about-facts dt {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -2341,7 +2135,7 @@
   padding: 8px 16px;
   border: 1px solid var(--line-mid);
   border-radius: var(--r-pill);
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -2656,7 +2450,7 @@
    strongest few instead of every row shouting. */
 .ex-band {
   display: block;
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2784,7 +2578,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--ink);
+  background: var(--veil, var(--ink));
   /* --wipe is the share of the panel already cleared, from the top down.
      100% means fully wiped, which is the default on purpose: GSAP sets it to
      0% just before animating, so if the animation never runs the tool is
@@ -2801,8 +2595,33 @@
   width: 38%;
   max-width: 54px;
   height: auto;
-  filter: brightness(0) invert(1);
+  /* Flipped with the veil it sits on: a white silhouette reads 5.40 on the
+     green but only 1.92 on the apricot, where it has to go black for 10.92. */
+  filter: var(--veil-mark, brightness(0) invert(1));
   opacity: 0.42;
+}
+
+/* ── The veil, in the two capability-card colours ──
+   It was one flat --ink green. These are the same two tones the What I Do
+   cards use, laid out as a checkerboard so no two touching tiles reveal from
+   under the same colour — the parity is (column + row) of each tile's place
+   in the constellation, which is why the run of child numbers below looks
+   arbitrary. Every shared edge in that field separates two different
+   colours. */
+.expertise-stack-tile {
+  --veil: #4A7265;
+  --veil-mark: brightness(0) invert(1);
+}
+
+.expertise-stack-tile:nth-child(3),
+.expertise-stack-tile:nth-child(4),
+.expertise-stack-tile:nth-child(6),
+.expertise-stack-tile:nth-child(7),
+.expertise-stack-tile:nth-child(9),
+.expertise-stack-tile:nth-child(11),
+.expertise-stack-tile:nth-child(14) {
+  --veil: #E8B07A;
+  --veil-mark: brightness(0);
 }
 
 .expertise-stack-tile.is-spotlight .tool-blueprint { width: 42%; }
@@ -3082,7 +2901,7 @@
 
 .contact-field label {
   display: block;
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.17em;
@@ -3101,7 +2920,7 @@
   background: rgba(255, 255, 255, 0.6);
   color: var(--ink);
   font-size: 15px;
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-display);
   outline: none;
   box-shadow: none;
 }
@@ -3296,7 +3115,7 @@
 .section-about .about-paragraph {
   color: var(--cream);
   opacity: 0.95;
-  /* Satoshi, matching the headings. Set at 400 — the display tracking is left
+  /* Instrument Sans, matching the headings. Set at 400 — the tracking is left
      off deliberately, since -0.02em tightens a multi-line paragraph in a way
      that hurts reading at this measure. */
   font-family: var(--font-display);
@@ -3438,14 +3257,14 @@
 .cd-step + .cd-intents { margin-bottom: clamp(26px, 3.6vh, 40px); }
 
 .cd-step-num {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.16em;
   color: #A24908;
 }
 
 .cd-step-label {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3519,7 +3338,7 @@
 }
 
 .cd-intent-note {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.06em;
   color: var(--moss);
@@ -3570,7 +3389,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3631,7 +3450,7 @@
 
 .cd-note {
   margin: 14px 0 0;
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.1em;
   color: var(--moss);
@@ -3651,9 +3470,9 @@
    client/year/outcome row, a rule, the description and the stack. A count and
    a link close the section under a full-width rule.
 
-   Type and colour are the page's own throughout — Satoshi for display, Space
-   Mono for metadata, ink/moss on paper with terracotta for accents. Only the
-   arrangement is taken from the reference.
+   Type and colour are the page's own throughout — Instrument Sans for
+   display, Google Sans for metadata, ink/moss on paper with terracotta for
+   accents. Only the arrangement is taken from the reference.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Head ── */
@@ -3858,7 +3677,7 @@
   border-radius: 999px;
   background: rgba(20, 32, 28, 0.55);
   backdrop-filter: blur(6px);
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -4000,7 +3819,7 @@
 }
 
 .wk-count {
-  font-family: "Space Mono", monospace;
+  font-family: var(--font-small);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -4066,56 +3885,357 @@
   .wk-cta { width: 100%; justify-content: center; }
 }
 
-/* ── Artwork fit ──
-   The variants were drawn for a card that filled the viewport, so several
-   carry fixed pixel sizes — .cap-ring is a 400px square, which overhung the
-   226px half it now sits in by 74px. Capping both axes lets each one's own
-   aspect-ratio do the scaling instead of stretching it, and the clip catches
-   anything positioned out of flow.
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO — the division
+   Five columns, three rows, and each row cut differently: at 60% on the first
+   two, at 40% and 80% on the last. That is the reference's own grid, read off
+   its hairlines — 766, 1155 and 1537 of 1916, which are 40 / 60 / 80.
 
-   These sit here, after the variant rules, because `.cap-art > *` and
-   `.cap-ring` carry the same specificity — source order is what decides. */
-.cap-visual { overflow: hidden; }
-.cap-art > * { max-width: 100%; max-height: 100%; }
+   Seven cells, every one of them present. The hairlines ARE the grid's 1px
+   gaps showing the container through, so an empty area draws no line and each
+   cell has to exist even when it carries nothing.
 
-/* Sized off height, not width. Every one of these was written as a percentage
-   of the WIDTH back when the artwork half was taller than it was wide; in the
-   reshaped halves it is the other way round, so a ring at 78% of a 406px box
-   came out 317px tall in a 226px slot. Driving them from the height and
-   letting aspect-ratio supply the width keeps each one circular AND inside
-   its half. */
-.cap-art-motion .cap-ring,
-.cap-art-motion .cap-orbit {
-  width: auto;
-  height: min(400px, 86%);
+   The cards sit inside their cells with a small inset rather than being cells
+   themselves — that is why there is no line between the wordmark and the open
+   ground beside it, and why each card can be rounded.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  /* Its own line, not --line-mid. That reads 1.38 against the page, which is
+     barely a line at all; this is 2.05 and actually divides. */
+  background: rgba(47, 77, 69, 0.42);
+  align-items: stretch;
 }
 
-.cap-ring.r2 { height: min(260px, 56%); }
+.hero-grid > * { background: #EFEBE4; }
 
-/* The gauge shares its column with the readouts below it — 187 + 25 + 68
-   against 226 — so it has to be allowed to give way rather than just be
-   capped. min-height:0 is what lets a flex item shrink past its content. */
-.cap-gauge {
-  width: auto;
-  height: min(220px, 100%);
-  min-height: 0;
-  flex: 0 1 auto;
+/* Six cells across the first two rows, three on the last. The wordmark is a
+   cell in its own right rather than a card floating in a wider one — which
+   is what puts a divider between it and the open ground beside it. */
+.hero-cell--r1a  { grid-column: 1 / 3; grid-row: 1; }
+.hero-cell--mark { grid-column: 3 / 4; grid-row: 1; }
+.hero-cell--quote { grid-column: 4 / 6; grid-row: 1; }
+.hero-cell--head { grid-column: 1 / 4; grid-row: 2; }
+.hero-cell--r2b  { grid-column: 4 / 6; grid-row: 2; }
+.hero-cell--r3a  { grid-column: 1 / 3; grid-row: 3; }
+.hero-cell--facts { grid-column: 3 / 5; grid-row: 3; }
+.hero-cell--cta  { grid-column: 5 / 6; grid-row: 3; }
+
+/* ── The open ground breathes ───────────────────────────────────────────────
+   The four cells that carry nothing fill with colour and drain again, each on
+   its own clock. Durations are deliberately coprime-ish (8.6 / 9.2 / 11.3 /
+   12.1s) so the four never settle into lockstep — the order reads as random
+   however long you watch, without any JS deciding it. Each one alternates
+   apricot → moss → apricot across its cycle, and half start on the opposite
+   colour so no two neighbours ever rise together in the same shade.
+
+   The fill is full-bleed inside its cell, not inset like the cards — the
+   section itself colours in, and the 1px grid gaps stay visible through it. */
+.hero-cell--open { position: relative; overflow: hidden; }
+
+.hero-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+  transform-origin: var(--fill-from, bottom);
+  will-change: transform;
+  animation: var(--fill-keys, heroFillWarm) var(--fill-dur, 10s)
+             cubic-bezier(0.66, 0, 0.26, 1) var(--fill-delay, 0s) infinite;
 }
 
-.cap-gauge b { font-size: clamp(22px, 2.6vw, 38px); }
+/* Up from the floor, down from the ceiling — alternating, so the field moves
+   in both directions at once rather than all sliding one way. */
+.hero-cell--r1a .hero-fill { --fill-from: bottom; --fill-dur: 9.2s;  --fill-delay: 0s;    --fill-keys: heroFillWarm; }
+.hero-cell--r2b .hero-fill { --fill-from: top;    --fill-dur: 11.3s; --fill-delay: 2.1s;  --fill-keys: heroFillCool; }
+.hero-cell--r3a .hero-fill { --fill-from: top;    --fill-dur: 8.6s;  --fill-delay: 4.7s;  --fill-keys: heroFillWarm; }
+.hero-cell--cta .hero-fill { --fill-from: bottom; --fill-dur: 12.1s; --fill-delay: 1.35s; --fill-keys: heroFillCool; }
 
-.cap-vitals span { padding: clamp(7px, 1vh, 12px) clamp(11px, 1.4vw, 20px); }
+/* Each cycle is two fills. The colour only ever changes at scaleY(0), where
+   there is nothing on screen to see it change — so it reads as a new fill
+   arriving in a new colour, never as a block cross-fading. */
+@keyframes heroFillWarm {
+  0%,  4%   { transform: scaleY(0); background: #E8B07A; }
+  22%, 40%  { transform: scaleY(1); background: #E8B07A; }
+  50%       { transform: scaleY(0); background: #E8B07A; }
+  50.01%,
+  54%       { transform: scaleY(0); background: #4A7265; }
+  72%, 90%  { transform: scaleY(1); background: #4A7265; }
+  100%      { transform: scaleY(0); background: #4A7265; }
+}
 
-/* The artwork half is sized by its grid row on desktop. Stacked, the row is
-   auto, so height:100% has nothing to resolve against and falls back to the
-   artwork's intrinsic size — which ranged from 90px to 494px across the seven
-   variants. It needs a height of its own here.
+@keyframes heroFillCool {
+  0%,  4%   { transform: scaleY(0); background: #4A7265; }
+  22%, 40%  { transform: scaleY(1); background: #4A7265; }
+  50%       { transform: scaleY(0); background: #4A7265; }
+  50.01%,
+  54%       { transform: scaleY(0); background: #E8B07A; }
+  72%, 90%  { transform: scaleY(1); background: #E8B07A; }
+  100%      { transform: scaleY(0); background: #E8B07A; }
+}
 
-   This lives after the base rule, not in the stacked block above it, because
-   a media query adds no specificity: `.cap-visual { height: 100% }` is
-   declared later in the file and would win from inside any earlier query. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-fill { animation: none; transform: scaleY(0); }
+}
+
+/* The rail overlays the first cell rather than being one, so the division
+   stays whole when it detaches and goes fixed on scroll. */
+.hero-rail {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  z-index: 5;
+  align-self: start;
+  justify-self: start;
+  background: transparent;
+}
+
+/* ── The filled panels ──
+   Inset inside their cells and rounded, as the reference sets them. That
+   inset is what MAKES the dividers readable: the lines run through open
+   ground around each panel instead of being a seam where two filled blocks
+   butt together. Flat, edge-to-edge cells looked like one solid field with
+   hairline cracks in it.
+
+   The empty cells stay flat — they are only background. */
+.hero-grid { --panel-inset: clamp(7px, 0.75vw, 13px); }
+
+.hero-cell--head { display: flex; padding: var(--panel-inset); }
+
+/* The wordmark sits in a padded cell like every other card, rather than being
+   the cell itself with a margin. As the cell it had nothing painting the page
+   behind it, so its margin exposed the grid — and the grid's background is
+   the divider colour, which is a green. That was the halo around it. */
+.hero-cell--mark { display: flex; padding: var(--panel-inset); }
+
+.hero-mark {
+  flex: 1;
+  display: grid;
+  place-items: center start;
+  border-radius: clamp(8px, 0.9vw, 14px);
+  padding: clamp(12px, 1.4vw, 22px);
+  /* The apricot the What I Do cards run on, so the two sections share one
+     orange rather than each having their own. */
+  background: #E8B07A !important;
+  overflow: hidden;
+}
+
+.hero-mark-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: "Archivo", sans-serif;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  font-weight: 900;
+  font-size: clamp(15px, 1.6vw, 26px);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  /* Drawn, not filled — the hollow lettering from the brief, and black at
+     last: on this lighter apricot black reads 10.92, where on the deeper
+     #A24908 it was 3.49 and could not be used. */
+  color: transparent;
+  -webkit-text-stroke: 1px #000;
+  white-space: nowrap;
+}
+
+/* Without text-stroke a transparent fill would simply vanish, so the
+   wordmark falls back to solid cream. */
+@supports not ((-webkit-text-stroke: 1px #000) or (text-stroke: 1px #000)) {
+  .hero-mark-text { color: #000; -webkit-text-stroke: 0; }
+}
+
+/* The standfirst, as a card on an open cell — the same treatment the headline
+   gets, not the filled dark panel it was. Every cell in this field is open
+   ground now; the only things drawn on it are the two paper cards and the
+   wordmark. */
+.hero-cell--quote { display: flex; padding: var(--panel-inset); }
+
+.hero-quote {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  margin: 0 !important;
+  padding: clamp(16px, min(2.2vw, 2.6vh), 36px) !important;
+  /* The green half of that same pair — white copy reads 5.40 on it, and it
+     stands 4.55 off the page where paper would barely separate. */
+  background: #4A7265 !important;
+  border: none !important;
+  border-radius: clamp(8px, 0.9vw, 14px) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+/* The headline card. */
+/* The paper is on the inner panel, not the cell, so the cell's own inset
+   stays page-coloured and the dividers show through it. Height-aware padding:
+   a row is a third of the viewport, so it has to be bounded by vh as well as
+   vw or it eats the line it frames. */
+.hero-headline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: clamp(16px, min(2.6vw, 3vh), 46px);
+  background: var(--paper);
+  border-radius: clamp(8px, 0.9vw, 14px);
+  min-width: 0;
+}
+
+.hero-headline .hero-title {
+  margin: 0;
+  /* Three lines have to clear a third of the screen less the card's padding.
+     The vh term is what does that — at 4.6vw alone this ran 70px and the
+     headline overshot its row by 40px on a 840px display. */
+  font-size: clamp(26px, min(4.2vw, 6.2vh), 64px);
+}
+
+/* The facts, as a card on an open cell — the same treatment the headline and
+   the standfirst get. Every drawn thing in this field is now a card inset on
+   open ground; nothing is a filled cell. */
+.hero-cell--facts { display: flex; padding: var(--panel-inset); }
+
+.hero-meta {
+  flex: 1;
+  /* An earlier .hero-meta rule — written when this sat on the old grid —
+     still carries align-self: end, which stopped it stretching and left the
+     card 15px short of its cell. */
+  align-self: stretch;
+  margin: 0;
+  padding: clamp(14px, min(2vw, 2.4vh), 32px);
+  background: var(--paper);
+  border-radius: clamp(8px, 0.9vw, 14px);
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 44px);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* The quote glyph was drawn to hang off the bottom of a free-floating card —
+   negative bottom offset, 260px tall. Inside a panel that is a third of the
+   screen it ran 40px past the edge, and the panel clips. Pulled inside and
+   scaled to the panel it now lives in. */
+.hero-quote .hero-quote-text { color: #FFFFFF; }
+
+/* The glyph was terracotta for a paper card; on the green it has to be the
+   same white the copy is, held well back. */
+.hero-quote .hero-quote-mark {
+  color: #FFFFFF;
+  opacity: 0.18;
+  bottom: clamp(-14px, -1vw, -4px);
+  right: clamp(10px, 1.4vw, 24px);
+  font-size: clamp(90px, min(10vw, 17vh), 190px);
+}
+
+/* ── The hero, full bleed ──
+   Edge to edge and top to bottom: no page padding, no centred measure, the
+   lattice simply is the viewport. Every one of these overrides an earlier
+   .hero-section or .hero-grid rule, which is why they sit here at the end —
+   a media query adds no specificity and anything earlier would lose. */
+.hero-section {
+  padding: 0 !important;
+  min-height: 100svh;
+  display: block;
+}
+
+.hero-grid {
+  /* Fixed, not a minimum. At min-height the rows still grew to whatever the
+     headline and the facts needed and the hero ran 1004px against an 840px
+     screen — which is not full screen. Pinned, each row is exactly a third of
+     the viewport and the type below is sized to fit one. */
+  height: 100svh;
+  min-height: 100svh;
+}
+
+/* The rail keeps an inset of its own — with the section at zero padding the
+   mark would otherwise sit in the very corner of the screen. */
+.hero-rail {
+  padding: clamp(18px, 2.2vw, 34px);
+}
+
+/* Only the mark in the hero. The links are still in the markup and still
+   render in the bar once it condenses on scroll — this hides them just while
+   the rail is sitting in the lattice. */
+.hero-rail:not(.is-condensed) .hero-nav { display: none; }
+
+/* The wordmark runs up the edge of its box rather than sitting in the middle
+   of it, and smaller — centred and large it read as a headline rather than a
+   mark. */
+.hero-mark {
+  place-items: center start;
+  padding: clamp(12px, 1.4vw, 22px);
+}
+
+.hero-mark-text {
+  font-size: clamp(13px, 1.3vw, 21px);
+  letter-spacing: 0.06em;
+}
+
+/* Below the division's comfortable width it stops being a division: one
+   column, no hairlines, and the height released — three rows pinned to a
+   third of a phone screen each would be 280px of nothing above a headline
+   with nowhere to go.
+
+   This was missing the columns and the pinned height, so the five-column
+   grid and the 100svh survived onto the phone. */
 @media (max-width: 900px) {
-  .cap-visual { height: clamp(200px, 38vh, 300px); }
+  .hero-section { min-height: 0; }
+
+  .hero-grid {
+    height: auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    gap: clamp(10px, 2.4vh, 18px);
+    background: transparent;
+    /* The one place an inset comes back: full bleed on a phone leaves the
+       copy against the glass. */
+    padding: clamp(16px, 5vw, 26px);
+  }
+
+  .hero-grid > * { background: transparent; }
+  .hero-mark,
+  .hero-cell--quote,
+  .hero-cell--facts,
+  .hero-cell--head { padding: 0; }
+  .hero-cell--head { padding: 0; }
+
+  .hero-cell--r1a,
+  .hero-cell--mark,
+  .hero-cell--quote,
+  .hero-cell--head,
+  .hero-cell--facts,
+  .hero-cell--cta,
+  .hero-rail {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  /* These two only ever drew hairlines. */
+  .hero-cell--r1a,
+  .hero-cell--r2b,
+  .hero-cell--r3a,
+  .hero-cell--cta { display: none; }
+
+
+  .hero-mark {
+    place-items: center;
+    min-height: clamp(96px, 16vh, 150px);
+  }
+
+  .hero-mark-text {
+    /* Upright on a phone: a vertical wordmark in a short box would be cut. */
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: clamp(22px, 7vw, 38px);
+  }
+
+
+  .hero-headline .hero-title { font-size: clamp(30px, 8.4vw, 52px); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -4225,22 +4345,22 @@
   max-width: calc(100vw - 24px);
   z-index: 1000;
 
-  /* On its side: two links, the mark, then the rest. */
+  /* On its side: the mark, the two links that follow it, then the rest. */
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  /* The leading links sit as close to the mark as the links sit to each
-     other, so that cluster reads as one run. The bar's width comes from the
-     middle space below, not from this. */
-  gap: clamp(14px, 1.6vw, 26px);
-  height: 62px;
-  padding: 0 clamp(22px, 3vw, 44px);
+  /* Between the mark and the links that sit beside it. Wider than the gap
+     the links keep from each other, so the mark reads as its own thing
+     rather than a third item in the run. */
+  gap: clamp(22px, 2.6vw, 44px);
+  height: 74px;
+  padding: 0 clamp(28px, 3.6vw, 56px);
 
   /* Orange edge. 1.5px rather than 1: a sub-pixel border snaps down to 1px on
      a 1x display and most of the weight is lost. */
   border: 1.5px solid rgba(194, 65, 12, 0.55);
   border-top: none;
-  border-radius: 0 0 26px 26px;
+  border-radius: 0 0 30px 30px;
   background: rgba(239, 235, 228, 0.92);
   -webkit-backdrop-filter: saturate(140%) blur(16px);
   backdrop-filter: saturate(140%) blur(16px);
@@ -4256,7 +4376,7 @@
 @keyframes rail-unfurl {
   0% {
     transform: translate(-50%, -100%);
-    clip-path: inset(0 44% 0 44% round 0 0 26px 26px);
+    clip-path: inset(0 44% 0 44% round 0 0 30px 30px);
     opacity: 0;
   }
   55% {
@@ -4265,7 +4385,7 @@
   }
   100% {
     transform: translate(-50%, 0);
-    clip-path: inset(0 0 0 0 round 0 0 26px 26px);
+    clip-path: inset(0 0 0 0 round 0 0 30px 30px);
     opacity: 1;
   }
 }
@@ -4297,10 +4417,12 @@
   gap: clamp(14px, 1.6vw, 26px);
 }
 
-/* The leading group comes back in front of the mark, and the column's 2px
-   gap correction is dropped — it only applies to the stacked layout. */
+/* The mark leads again. The base rule already orders it first — this used to
+   override the leading group to 0 to pull it in front; dropping that puts the
+   mark back at the head with About and What I Do following it. The column's
+   2px gap correction still goes, since it only applies to the stacked
+   layout. */
 .hero-rail.is-condensed .hero-nav--lead {
-  order: 0;
   margin-bottom: 0;
 }
 
@@ -4308,13 +4430,13 @@
    past a narrow mark. This is also what sets the bar's width: the element is
    max-content, so widening the bar means widening this. */
 .hero-rail.is-condensed .hero-nav--trail {
-  margin-left: clamp(30px, 6vw, 104px);
+  margin-left: clamp(48px, 9vw, 168px);
 }
 
 .hero-rail.is-condensed .hero-nav-link { padding: 2px 0 4px; }
 
 /* The mark shrinks to bar height. */
-.hero-rail.is-condensed .hero-logo { width: 34px; }
+.hero-rail.is-condensed .hero-logo { width: 42px; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-rail.is-condensed,

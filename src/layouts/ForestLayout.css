@@ -120,7 +120,7 @@
 .forest-timeline .section-title,
 .forest-services .section-title,
 .forest-contact .section-title {
-  font-family: "Satoshi", "Roboto", sans-serif !important;
+  font-family: "Instrument Sans", sans-serif !important;
   letter-spacing: -0.02em !important;
 }
 
@@ -391,7 +391,7 @@
   display: block !important;
   margin: 0 !important;
   padding: 10px 0 !important;
-  font-family: "Space Mono", monospace !important;
+  font-family: "Google Sans", sans-serif !important;
   font-size: 10px !important;
   letter-spacing: 0.34em !important;
   text-transform: uppercase !important;

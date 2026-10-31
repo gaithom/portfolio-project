@@ -15,10 +15,12 @@ export const THEMES = {
     particleRgb:"155,205,170",
     devAccent:"#00FF88", devBg:"rgba(2,12,6,0.97)", devBorder:"rgba(0,255,136,0.22)",
     // Fonts
-    fontFamily:"'Roboto', sans-serif",
-    headingFont:"'Satoshi', 'Roboto', sans-serif",
-    bodyFont:"'DM Sans', sans-serif",
-    monoFont:"'Space Mono', monospace",
+    fontFamily:"'Instrument Sans', sans-serif",
+    headingFont:"'Instrument Sans', sans-serif",
+    bodyFont:"'Instrument Sans', sans-serif",
+    /* Not a monospace any more — this token only ever dressed small labels,
+       and those are Google Sans across the site now. */
+    monoFont:"'Google Sans', sans-serif",
     // Layout personality: organic, asymmetric, nature-coded
     heroRadius:"0 0 60% 60% / 0 0 40px 40px",
     cardRadius:"18px 4px 18px 4px",
@@ -40,10 +42,12 @@ export const THEMES = {
     particleRgb:"60,96,87",
     devAccent:"#3c6057", devBg:"rgba(248,252,249,0.98)", devBorder:"rgba(60,96,87,0.22)",
     // Fonts
-    fontFamily:"'Roboto', sans-serif",
-    headingFont:"'Satoshi', 'Roboto', sans-serif",
-    bodyFont:"'Inter', sans-serif",
-    monoFont:"'SF Mono', monospace",
+    fontFamily:"'Instrument Sans', sans-serif",
+    headingFont:"'Instrument Sans', sans-serif",
+    bodyFont:"'Instrument Sans', sans-serif",
+    /* Not a monospace any more — this token only ever dressed small labels,
+       and those are Google Sans across the site now. */
+    monoFont:"'Google Sans', sans-serif",
     // Layout personality: airy, minimal, Swiss grid
     heroRadius:"0",
     cardRadius:"8px",

@@ -472,11 +472,11 @@ export default function App() {
         <div style={{position:"absolute",inset:0,borderRadius:"50%",border:`1px solid ${theme.border}`,animation:"spinSlow 8s linear infinite"}}/>
         <div style={{position:"absolute",inset:8,borderRadius:"50%",border:`1px solid ${theme.borderMid}`,borderTopColor:"transparent",animation:"spinSlow 3s linear infinite",opacity:.6}}/>
         <div style={{position:"absolute",inset:18,borderRadius:"50%",border:`1px solid ${theme.textMuted}`,borderTopColor:"transparent",animation:"spinSlow 1.5s linear infinite",opacity:.4}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Roboto',sans-serif",fontWeight:800,fontSize:12,color:theme.textMuted,opacity:.7}}>MG</div>
+        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Instrument Sans',sans-serif",fontWeight:700,fontSize:12,color:theme.textMuted,opacity:.7}}>MG</div>
       </div>
-      <div style={{fontSize:9,letterSpacing:".28em",textTransform:"uppercase",color:theme.textMuted,marginBottom:18,fontFamily:"'Space Mono',monospace",opacity:.5}}>Loading</div>
+      <div style={{fontSize:9,letterSpacing:".28em",textTransform:"uppercase",color:theme.textMuted,marginBottom:18,fontFamily:"'Google Sans',sans-serif",opacity:.5}}>Loading</div>
       <div style={{width:130,height:1,background:theme.border,borderRadius:99,overflow:"hidden"}}><div style={{height:"100%",width:`${loadPct}%`,background:theme.textMuted,transition:"width .1s",opacity:.5}}/></div>
-      <div style={{marginTop:9,fontSize:11,color:theme.textMuted,fontFamily:"'Space Mono',monospace",opacity:.4}}>{Math.round(loadPct)}%</div>
+      <div style={{marginTop:9,fontSize:11,color:theme.textMuted,fontFamily:"'Google Sans',sans-serif",opacity:.4}}>{Math.round(loadPct)}%</div>
     </div>
   );
 
@@ -842,7 +842,7 @@ export default function App() {
         <PerfMeter devMode={devMode} theme={theme}/>
         <AnimDebugBand devMode={devMode} theme={theme}/>
         {/* Dev mode banner */}
-        <div style={{position:"fixed",top:isLight?0:62,left:0,right:0,zIndex:999,background:theme.devBg,borderBottom:`1px solid ${theme.devBorder}`,padding:"6px 20px",display:"flex",alignItems:"center",gap:12,fontFamily:"'Space Mono',monospace"}}>
+        <div style={{position:"fixed",top:isLight?0:62,left:0,right:0,zIndex:999,background:theme.devBg,borderBottom:`1px solid ${theme.devBorder}`,padding:"6px 20px",display:"flex",alignItems:"center",gap:12,fontFamily:"'Google Sans',sans-serif"}}>
           <span style={{fontSize:9,color:theme.devAccent,fontWeight:700,letterSpacing:".1em"}}>◉ DEV MODE ACTIVE</span>
           <span style={{fontSize:9,color:theme.textMuted,opacity:.6}}>Hover sections to inspect components, see code snippets, check performance metrics</span>
           <span style={{marginLeft:"auto",fontSize:9,color:theme.textMuted,opacity:.5}}>Layout: <span style={{color:theme.devAccent}}>{theme.layout.toUpperCase()}</span></span>
@@ -864,7 +864,7 @@ export default function App() {
       {/* FOOTER */}
       <footer style={{borderTop:`${isVoid?"2px":"1px"} solid ${theme.border}`,padding:`${isVoid?"28px 60px":"28px 40px"}`,background:theme.bg}}>
         <div style={{maxWidth:isVoid||isMidnight?1200:1010,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16}}>
-          <div style={{fontFamily:theme.headingFont,fontWeight:800,fontSize:isVoid?13:15,color:theme.text,opacity:.7,letterSpacing:isVoid?".1em":"-.01em",textTransform:isVoid?"uppercase":"none"}}>
+          <div style={{fontFamily:theme.headingFont,fontWeight:700,fontSize:isVoid?13:15,color:theme.text,opacity:.7,letterSpacing:isVoid?".1em":"-.01em",textTransform:isVoid?"uppercase":"none"}}>
             {isVoid?"MG_PORTFOLIO":"M"}<span style={{color:theme.accent}}>{isVoid?"":"."}</span>{isVoid?"":"Gaitho"}
           </div>
           <div className="social-links" style={{display:"flex",gap:18}}>

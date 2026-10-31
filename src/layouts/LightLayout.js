@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useGSAP } from "../hooks/useGSAP";
 import { Typewriter, SkillBar, Modal } from "../components/Shared";
 import { DevBadge } from "../components/DeveloperMode";
@@ -7,37 +7,37 @@ import "./LightLayout.css";
 
 // ── Capabilities shown in the horizontal case-study rail ─────────────────────
 const CAPABILITIES = [
-  { id: "01", title: "UI/UX Design", variant: "blueprint", tone: "moss",
+  { id: "01", title: "UI/UX Design", variant: "blueprint",
     kicker: "Interface & flow",
     desc: "Design systems, information hierarchy and flow mapping for products that stay legible as they grow.",
     tags: ["Wireframes", "User flows", "Prototypes"],
     deliverable: "Figma library + annotated flows" },
-  { id: "02", title: "Frontend Development", variant: "terminal", tone: "dusk",
+  { id: "02", title: "Frontend Development", variant: "terminal",
     kicker: "Design, built",
     desc: "Component architecture and state strategy that keeps an interface fast, accessible and maintainable in production.",
     tags: ["React", "Components", "State"],
     deliverable: "Typed component library" },
-  { id: "03", title: "Motion Design", variant: "motion", tone: "lilac",
+  { id: "03", title: "Motion Design", variant: "motion",
     kicker: "Timing & easing",
     desc: "Interface motion that clarifies intent and communicates hierarchy. Every curve is chosen, and none of it is decorative.",
     tags: ["GSAP", "Micro-interactions", "Easing"],
     deliverable: "Motion spec + prototypes" },
-  { id: "04", title: "Responsive Design", variant: "responsive", tone: "sage",
+  { id: "04", title: "Responsive Design", variant: "responsive",
     kicker: "Every breakpoint",
     desc: "Layout systems that adapt across breakpoints without losing rhythm, readability or hierarchy.",
     tags: ["Fluid grid", "Breakpoints", "Type scale"],
     deliverable: "Responsive layout system" },
-  { id: "05", title: "Accessibility", variant: "a11y", tone: "clay",
+  { id: "05", title: "Accessibility", variant: "a11y",
     kicker: "Designed in, not patched on",
     desc: "Contrast, keyboard paths and semantic structure resolved during design rather than retrofitted before launch.",
     tags: ["WCAG 2.2", "Keyboard", "Semantics"],
     deliverable: "Audit + remediated components" },
-  { id: "06", title: "Design Systems", variant: "tokens", tone: "moss",
+  { id: "06", title: "Design Systems", variant: "tokens",
     kicker: "One source of truth",
     desc: "Token-led styling and documented patterns that speed delivery while holding visual consistency across teams.",
     tags: ["Tokens", "Patterns", "Docs"],
     deliverable: "Token set + usage docs" },
-  { id: "07", title: "Performance UX", variant: "metrics", tone: "mist",
+  { id: "07", title: "Performance UX", variant: "metrics",
     kicker: "Speed people feel",
     desc: "Perceived-speed work across loading states, rendering strategy and interaction cost, measured rather than guessed.",
     tags: ["Core Web Vitals", "Perceived", "Budgets"],
@@ -108,14 +108,21 @@ const PALETTES = [
 ];
 
 // ── Expression canvas composition ────────────────────────────────────────────
-// Each palette reproduces the reference composition in its own shades — the
-// family IS the shape, not a card holding one.
+// Two panels, after the reference: the type specimens run down a narrow panel
+// on the left, and the colour sits in the bigger panel on the right as a field
+// of cards on its own dotted ground.
 //
-// Each family gets its own small grid rather than being spread across one
-// shared fine grid. That is what makes the proportions land: on a shared grid
-// a card spanning four tracks swallows three gutters, so it can never sit in
-// the right ratio to the gutter beside it. With a grid per family every gutter
-// is a real gutter, and the tracks are the reference's own measurements:
+// Inside that panel the cards are uniform portrait blocks on an 8 x 4 grid,
+// one family to a quadrant. The airiness comes from the gutter, not from empty
+// cells — the reference's own grid is filled edge to edge and reads open
+// because the gaps are wide. Two cells are left over and they sit at the foot
+// of the lower two quadrants.
+//
+// Each family's darkest step keeps the bend: a bar two cells wide with a leg
+// under its left half, welded into one card. Everything else is a single cell.
+// Inside the right panel each family keeps the composition it had — the same
+// two bends and the same track sizes, taken from the reference's own measured
+// card edges — just smaller, so all four sit in the panel at once:
 //
 //   columns  179 : 45 : 179 : 185        rows  157 : 10 : 155 : 142
 //
@@ -124,19 +131,10 @@ const PALETTES = [
 //        shin  leg   leg   C
 //        foot  foot  E     C
 //
-// The thin second row is what lets A run deeper than the bar while the leg
-// starts higher than the shin — the one asymmetry the reference turns on.
-// Every card comes out within 0.7% of its measured size, most of them exact.
-//
-// TWO cards bend, and opposite ways:
-//   bar + leg    wide on top, narrower below; notch opens bottom-right and
-//                the tall card C tucks into it
-//   shin + foot  narrow on top, wider below; notch opens top-right and the
-//                leg above sits in it
-// Each is ONE card drawn as two fused rects, because a single element cannot
-// be L-shaped and keep rounded outer corners — clip-path would square them
-// all off. They overlap by a pixel so no seam shows, they do not answer hover
-// separately, and a fillet closes the inner angle.
+// Two cards bend, opposite ways: bar+leg is wide on top and narrower below,
+// its notch holding the tall C; shin+foot is narrow on top and wider below,
+// its notch holding the leg. Each is one card drawn as two fused rects,
+// because a single element cannot be L-shaped and keep rounded outer corners.
 const FAM_SLOTS = {
   A:    "1 / 1 / 3 / 2",
   bar:  "1 / 2 / 2 / 5",   leg:  "2 / 2 / 4 / 4",
@@ -145,47 +143,28 @@ const FAM_SLOTS = {
   E:    "4 / 3 / 5 / 4"
 };
 
-/* Where each family sits on the canvas. Stepped rather than set out in a
-   straight 2x2 — each starts on a different row and column, so the four walk
-   across the full width as a collage. Still on the grid: every origin is a
-   whole cell, which is what keeps a loose arrangement from reading as a
-   mistake. */
-const FAM_AREA = {
-  Moss:  "1 / 1 / 7 / 6",
-  Clay:  "3 / 9 / 9 / 14",
-  Dusk:  "11 / 3 / 17 / 8",
-  Slate: "13 / 10 / 19 / 15"
-};
-
 /* Slot per shade, biggest card first, so a family still reads as a ramp even
    though its cards are scattered. "B" and "D" are the bent ones and each
-   expands to a pair at render. Six-shade families split the tall card. */
+   expands to a pair at render; six-shade families split the tall card. */
 const FAM_ORDER = {
   6: ["B", "D", "C1", "A", "E", "C2"],
   5: ["B", "D", "C", "A", "E"]
 };
 
-/* Which pair a bent slot draws as: [labelled piece, inert piece]. The label
-   goes on the piece at the bottom of the silhouette, as in the reference. */
+/* [labelled piece, inert piece]. The label goes on the piece at the bottom of
+   the silhouette, and the inert one follows it in the DOM so one hover can
+   lift both — an adjacent-sibling selector only reaches forwards. */
 const BENT_PAIRS = { B: ["leg", "bar"], D: ["foot", "shin"] };
 
-// Set into the pockets the stepped families leave.
+// Down the left panel, in the order they are listed.
 const EXPRESSION_WORDS = [
-  { word: "Structure", face: "Roboto",           role: "Display",            font: "'Roboto', sans-serif",      weight: 900, size: 4.6, colour: "#2F4D45", area: "1 / 7 / 3 / 15" },
-  { word: "Editorial", face: "Playfair Display", role: "Transitional serif", font: "'Playfair Display', serif", weight: 700, size: 3.4, colour: "#4A3F6B", area: "7 / 1 / 9 / 5", italic: true },
-  { word: "Legible",   face: "Inter",            role: "UI sans",            font: "'Inter', sans-serif",       weight: 500, size: 2.8, colour: "#3C6057", area: "7 / 5 / 9 / 9" },
-  { word: "Balance",   face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",     weight: 700, size: 2.8, colour: "#2A2438", area: "9 / 1 / 11 / 5" },
-  { word: "Rhythm",    face: "Lora",             role: "Old-style serif",    font: "'Lora', serif",             weight: 500, size: 2.9, colour: "#7E6440", area: "9 / 5 / 11 / 9" },
-  { word: "System",    face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",     weight: 600, size: 2.4, colour: "#33465C", area: "9 / 9 / 11 / 12" },
-  { word: "Metadata",  face: "Space Mono",       role: "Monospace",          font: "'Space Mono', monospace",   weight: 400, size: 1.9, colour: "#0F766E", area: "9 / 12 / 11 / 15" },
-  { word: "Contrast",  face: "Roboto",           role: "Text",               font: "'Roboto', sans-serif",      weight: 400, size: 3.0, colour: "#A24908", area: "17 / 1 / 19 / 8" }
+  { word: "Structure", face: "Roboto",           role: "Display",            font: "'Roboto', sans-serif",      weight: 900, colour: "#2F4D45" },
+  { word: "Editorial", face: "Playfair Display", role: "Transitional serif", font: "'Playfair Display', serif", weight: 700, colour: "#4A3F6B", italic: true },
+  { word: "Legible",   face: "Inter",            role: "UI sans",            font: "'Inter', sans-serif",       weight: 500, colour: "#3C6057" },
+  { word: "Balance",   face: "Poppins",          role: "Geometric sans",     font: "'Poppins', sans-serif",     weight: 700, colour: "#2A2438" },
+  { word: "Rhythm",    face: "Lora",             role: "Old-style serif",    font: "'Lora', serif",             weight: 500, colour: "#7E6440" },
+  { word: "Metadata",  face: "Space Mono",       role: "Monospace",          font: "'Space Mono', monospace",   weight: 400, colour: "#0F766E" }
 ];
-
-/* Each rule sits in a gutter no word spans. Every word occupies an odd row and
-   the one after it, so a gutter after an even row can never fall inside one.
-   The lines run the width of the screen, disappear behind whichever cards they
-   meet and reappear in the gaps — which is what ties the collage to a grid. */
-const EXPR_RULE_ROWS = [2, 6, 8, 10, 16];
 
 // ── Contact ──────────────────────────────────────────────────────────────────
 // The intent only sets the subject line. Nothing is collected here and nothing
@@ -210,8 +189,10 @@ const CONTACT_INTENTS = [
 // suits these cards exactly — each one already had a copy half and an artwork
 // half, which is what the two halves of a bend hold.
 //
-//   A-copy   B-art    B-art       A  copy on top, artwork below
-//   A-art    A-art    B-copy      B  artwork on top, copy below
+//   A-copy   B-field  B-field    Copy sits where it always did — the top of
+//   A-field  A-field  B-copy     the first card, the foot of the second.
+//                                The other half is left as open colour, which
+//                                is where the drawn artefacts used to be.
 //
 // An odd card at the end gets a page to itself in the same shape, widened by
 // a column so it still fills the page.
@@ -221,11 +202,15 @@ const CAP_PAGES = CAPABILITIES.reduce((pages, c, i) => {
 }, []);
 
 /* [slot, what it holds, which bend] per position. shin and leg are the narrow
-   halves that reach out to meet their wider partner; bar and foot are wide. */
+   halves that reach out to meet their wider partner; bar and foot are wide.
+
+   Both halves of a card carry the same colour, so a card reads as one block
+   with its copy in one half and the other left open — which is what the
+   reference does, and what the drawn artefacts were getting in the way of. */
 const CAP_SLOTS = {
-  lead:  [["a-head", "copy", "shin"], ["a-body", "art", "foot"]],
-  trail: [["b-head", "art", "bar"], ["b-body", "copy", "leg"]],
-  solo:  [["solo-head", "copy", "shin"], ["solo-body", "art", "foot"]]
+  lead:  [["a-head", "copy", "shin"], ["a-body", "field", "foot"]],
+  trail: [["b-head", "field", "bar"], ["b-body", "copy", "leg"]],
+  solo:  [["solo-head", "copy", "shin"], ["solo-body", "field", "foot"]]
 };
 
 // ── Hero navigation ──────────────────────────────────────────────────────────
@@ -246,136 +231,11 @@ const HERO_NAV = [
 // column puts them back in reading order with `order`, so only the bar changes.
 const HERO_NAV_LEAD = HERO_NAV.slice(0, 2);
 const HERO_NAV_TRAIL = HERO_NAV.slice(2);
-
-// ── Capability artwork ───────────────────────────────────────────────────────
-// One contained artefact per capability. Each sits inside the card's visual
-// column rather than bleeding across the whole card, so the rail reads as a
-// consistent family instead of seven unrelated scenes.
-function CapabilityVisual({ variant }) {
-  switch (variant) {
-    case "blueprint":
-      return (
-        <div className="cap-art cap-art-blueprint" aria-hidden="true">
-          <div className="cap-board cap-board-back" />
-          <div className="cap-board cap-board-front">
-            <span className="cap-board-bar" />
-            <span className="cap-board-side" />
-            <span className="cap-board-block b1" />
-            <span className="cap-board-block b2" />
-            <span className="cap-board-block b3" />
-          </div>
-        </div>
-      );
-    case "terminal":
-      return (
-        <div className="cap-art cap-art-terminal" aria-hidden="true">
-          <div className="cap-window">
-            <span className="cap-window-chrome" />
-            <div className="cap-code">
-              <span><em>const</em> Card = ({'{'} title {'}'}) =&gt; (</span>
-              <span className="ind1">&lt;<em>article</em> className=<b>"card"</b>&gt;</span>
-              <span className="ind2">&lt;<em>h3</em>&gt;{'{'}title{'}'}&lt;/<em>h3</em>&gt;</span>
-              <span className="ind1">&lt;/<em>article</em>&gt;</span>
-              <span>);<i className="cap-caret" /></span>
-            </div>
-          </div>
-        </div>
-      );
-    case "motion":
-      return (
-        <div className="cap-art cap-art-motion" aria-hidden="true">
-          <span className="cap-ring r1" />
-          <span className="cap-ring r2" />
-          <span className="cap-orbit" />
-          <svg className="cap-curve" viewBox="0 0 120 120" fill="none">
-            <path d="M4 116 C 40 116, 52 12, 116 4" />
-          </svg>
-        </div>
-      );
-    case "responsive":
-      return (
-        <div className="cap-art cap-art-responsive" aria-hidden="true">
-          <span className="cap-device sm"><i /><b>375</b></span>
-          <span className="cap-device md"><i /><b>768</b></span>
-          <span className="cap-device lg"><i /><b>1440</b></span>
-        </div>
-      );
-    case "a11y":
-      return (
-        <div className="cap-art cap-art-a11y" aria-hidden="true">
-          <div className="cap-contrast">
-            <span className="cap-contrast-row">
-              <i style={{ background: "#2F4D45" }} />
-              <b>8.06:1</b>
-              <em>AAA</em>
-            </span>
-            <span className="cap-contrast-row">
-              <i style={{ background: "#3C6057" }} />
-              <b>6.09:1</b>
-              <em>AA</em>
-            </span>
-            <span className="cap-contrast-row is-weak">
-              <i style={{ background: "#7A9E8E" }} />
-              <b>2.57:1</b>
-              <em>Surface only</em>
-            </span>
-          </div>
-        </div>
-      );
-    case "tokens":
-      return (
-        <div className="cap-art cap-art-tokens" aria-hidden="true">
-          {[
-            { t: "--color-brand", c: "#3C6057" },
-            { t: "--radius-md", c: "#C4A882" },
-            { t: "--space-4", c: "#8B7CB8" },
-            { t: "--ease-glide", c: "#7A9E8E" }
-          ].map((tk) => (
-            <span className="cap-token" key={tk.t}>
-              <i style={{ background: tk.c }} />
-              <code>{tk.t}</code>
-            </span>
-          ))}
-        </div>
-      );
-    case "metrics":
-      return (
-        <div className="cap-art cap-art-metrics" aria-hidden="true">
-          <div className="cap-gauge">
-            <svg viewBox="0 0 120 120">
-              <circle className="cap-gauge-track" cx="60" cy="60" r="52" />
-              <circle className="cap-gauge-fill" cx="60" cy="60" r="52" />
-            </svg>
-            <b>98</b>
-            <em>Performance</em>
-          </div>
-          <div className="cap-vitals">
-            <span><b>1.1s</b><em>LCP</em></span>
-            <span><b>0.02</b><em>CLS</em></span>
-            <span><b>40ms</b><em>INP</em></span>
-          </div>
-        </div>
-      );
-    default:
-      return null;
-  }
-}
-
 export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setSel }) {
   const heroRef=useRef(null),heroTitleRef=useRef(null),heroDescRef=useRef(null),developerRef=useRef(null);
   const aboutRef=useRef(null),skillsRef=useRef(null),projectsRef=useRef(null),typeCanvasRef=useRef(null),contactRef=useRef(null);
   const designSectionRef=useRef(null);
   const [developerFill, setDeveloperFill] = useState(0);
-  /* Which capability artworks are on screen. It was a single centred index,
-     which only made sense when one card covered the viewport; in a field
-     several are visible at once, so this is a set.
-
-     Seeded with every card, not empty. The observer's job is to QUIET the
-     ones that scroll away, so if it never reports — no support, or a host
-     that does not deliver the callback — the artwork still draws rather than
-     sitting dead. Same fail-safe direction as the reveals elsewhere here:
-     the default state is the visible one. */
-  const [liveCaps, setLiveCaps] = useState(() => new Set(CAPABILITIES.map((c) => c.id)));
   // Screenshots that failed to load. A project can name an image before the
   // file exists; the card then falls back to its title card instead of
   // rendering an empty rectangle.
@@ -538,30 +398,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       el.removeEventListener("mousemove", onMove);
       el.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
-
-  // Which artworks are allowed to run. Still an observer — it only fires on
-  // threshold crossings, so nothing is measured on scroll — but it now tracks
-  // every card that is on screen rather than the one in the middle, because
-  // the field shows several at once.
-  useEffect(() => {
-    const pieces = Array.from(document.querySelectorAll(".cap-card[data-cap]"));
-    if (!pieces.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        setLiveCaps((prev) => {
-          const next = new Set(prev);
-          entries.forEach((e) => {
-            const id = e.target.dataset.cap;
-            if (e.isIntersecting) next.add(id); else next.delete(id);
-          });
-          return next;
-        });
-      },
-      { rootMargin: "-5% 0px -5% 0px", threshold: 0 }
-    );
-    pieces.forEach((c) => io.observe(c));
-    return () => io.disconnect();
   }, []);
 
   // A project can name a screenshot before the file exists. Both the CRA dev
@@ -779,10 +615,6 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       <div className="hero-grid">
         {/* Column rules only — the boxy lattice that used to sit behind them
             is gone, so these read as guides on a plain ground. */}
-        <div className="hero-rules" aria-hidden="true">
-          <span /><span /><span /><span />
-        </div>
-
         <div className={`hero-rail${navCondensed ? " is-condensed" : ""}`}>
           {/* Two groups around the mark. Only one of them is the labelled
               landmark — a second <nav aria-label="Sections"> would announce a
@@ -831,10 +663,29 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           </nav>
         </div>
 
+        {/* The division, read off the reference: five columns, three rows,
+            each row cut differently — 60% on the first two, 40% and 80% on
+            the last. Seven cells, every one present so the hairlines between
+            them run unbroken.
+
+            The cards sit INSIDE their cells with a small inset; they are not
+            cells themselves. That is what lets the wordmark sit at the right
+            of its cell with no line between it and the open ground beside. */}
+        <div className="hero-cell hero-cell--open hero-cell--r1a" aria-hidden="true">
+          <span className="hero-fill" />
+        </div>
+        <div className="hero-cell hero-cell--mark">
+          <div className="hero-mark">
+            <span className="hero-mark-text">Quantamania</span>
+          </div>
+        </div>
+
         {/* Name → role, laid out as one line reading across the grid: the
             left phrase, an arrow, then the right phrase breaking to two
             lines. Arrangement and spacing only — the face and colours stay
             as they were. */}
+        <div className="hero-cell hero-cell--head">
+        <div className="hero-headline">
         <h1 ref={heroTitleRef} className="hero-title">
           <span className="hero-title-lead">
             <span className="hero-title-name">Michael Gaitho</span>
@@ -850,17 +701,29 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             </span>
           </span>
         </h1>
+        </div>
+        </div>
+
+        <div className="hero-cell hero-cell--open hero-cell--r2b" aria-hidden="true">
+          <span className="hero-fill" />
+        </div>
+        <div className="hero-cell hero-cell--open hero-cell--r3a" aria-hidden="true">
+          <span className="hero-fill" />
+        </div>
 
         {/* Moved out of the About section and set as one horizontal rail,
             the way the small items sit under the headline in the reference. */}
+        <div className="hero-cell hero-cell--facts">
         <dl className="hero-meta">
           <div><dt>Discipline</dt><dd>UI/UX design &amp; frontend engineering</dd></div>
           <div><dt>Education</dt><dd>Bachelor of Information Technology</dd></div>
           <div><dt>Focus</dt><dd>AI interfaces, real-time dashboards</dd></div>
         </dl>
+        </div>
 
         {/* The statement moved up from Who I Am. It runs to the foot of the
             hero so its bottom edge meets the green band below. */}
+        <div className="hero-cell hero-cell--quote">
         <figure ref={heroDescRef} className="hero-quote">
           <blockquote className="hero-quote-text">
             I design interfaces that stay clear at scale, then build them myself,
@@ -868,6 +731,14 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           </blockquote>
           <figcaption className="hero-quote-mark" aria-hidden="true">&#8221;</figcaption>
         </figure>
+        </div>
+
+        {/* The card at the foot of the lattice: an arrow out to the top
+            right, the line of copy at its bottom left. */}
+        {/* Nothing here now — the cell stays so its hairlines still draw. */}
+        <div className="hero-cell hero-cell--open hero-cell--cta" aria-hidden="true">
+          <span className="hero-fill" />
+        </div>
       </div>
 
       {devMode&&<DevBadge id="hero" devMode={devMode} theme={theme}/>}
@@ -942,28 +813,37 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
           <div className="cap-page" key={pi}>
             {pair.map((item, k) => {
               const role = pair.length === 1 ? "solo" : k === 0 ? "lead" : "trail";
-              const live = liveCaps.has(item.id) ? " is-active" : "";
+              /* A checkerboard, not a straight alternation. Keying the tone
+                 off the card's position alone would put moss on the left of
+                 every page and clay on the right; adding the page index flips
+                 each page against the one before, so the field turns over as
+                 you scroll instead of repeating one arrangement. */
+              const tone = (pi + k) % 2 === 0 ? "moss" : "clay";
 
               return CAP_SLOTS[role].map(([slot, holds, bend]) => (
                 <div
                   key={`${item.id}-${slot}`}
                   data-cap={item.id}
-                  className={`cap-card tone-${item.tone} cap-variant-${item.variant} cap-piece--${bend} cap-slot--${slot}${live}`}
+                  className={`cap-card tone-${tone} cap-variant-${item.variant} cap-piece--${bend} cap-slot--${slot}`}
                 >
-                  {holds === "copy" ? (
+                  {holds === "field" ? (
+                    /* The open half carries the three deliverables as a small
+                       connected field of boxes, in the same language as the
+                       tools constellation — square cells, hairline borders
+                       with the shared edges collapsed, ticks at the outer
+                       corners. They were pills under the copy before. */
+                    <ul className="cap-tiles">
+                      {item.tags.map((tag) => (
+                        <li className="cap-tile" key={tag}><span>{tag}</span></li>
+                      ))}
+                    </ul>
+                  ) : (
                     <div className="cap-copy">
                       <div className="cap-meta">
                         <span className="cap-index">{item.id}</span>
                       </div>
                       <h3 className="cap-title">{item.title}</h3>
                       <p className="cap-desc">{item.desc}</p>
-                      <ul className="cap-tags">
-                        {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                      </ul>
-                    </div>
-                  ) : (
-                    <div className="cap-visual">
-                      <CapabilityVisual variant={item.variant} />
                     </div>
                   )}
                 </div>
@@ -1212,97 +1092,85 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       </div>
 
       <div className="expr-canvas">
-        {/* Horizontal rules only. They run the full width of the viewport, so
-            the layer they live in is bled out to the screen edges in CSS. */}
-        <div className="expr-rules" aria-hidden="true">
-          {EXPR_RULE_ROWS.map((n) => (
-            <span
-              key={`h${n}`}
-              className="expr-rule expr-rule-h"
-              style={{ top: `calc(${n} * var(--expr-row) + ${n - 0.5} * var(--expr-gap))` }}
-            />
+        {/* Left: the type, listed. */}
+        <div className="expr-type">
+          {EXPRESSION_WORDS.map((w) => (
+            <button key={w.word} type="button" className="expr-word">
+              <span
+                className="expr-word-text"
+                style={{
+                  fontFamily: w.font,
+                  fontWeight: w.weight,
+                  fontStyle: w.italic ? "italic" : "normal",
+                  color: w.colour
+                }}
+              >
+                {w.word}
+              </span>
+              <span className="expr-word-spec">
+                <strong>{w.face}</strong>
+                <em>{w.role}</em>
+              </span>
+            </button>
           ))}
         </div>
 
-        {EXPRESSION_WORDS.map((w) => (
-          <button
-            key={w.word}
-            type="button"
-            className="expr-word"
-            style={{
-              gridArea: w.area,
-              fontFamily: w.font,
-              fontWeight: w.weight,
-              fontStyle: w.italic ? "italic" : "normal",
-              fontSize: `clamp(30px, ${w.size}vw, ${Math.round(w.size * 13)}px)`,
-              color: w.colour
-            }}
-          >
-            <span className="expr-word-text">{w.word}</span>
-            <span className="expr-word-spec">
-              <strong>{w.face}</strong>
-              <em>{w.role}</em>
-              <span>{w.weight}{w.italic ? " Italic" : ""}</span>
-            </span>
-          </button>
-        ))}
+        {/* Right: the bigger panel, carrying the colour on its own ground.
+            One grid per family inside it — the wrapper draws nothing, it only
+            holds the four tracks that give the cards their proportions. */}
+        <div className="expr-colour">
+          {PALETTES.map((p) => (
+            <div key={p.name} className="expr-family">
+              {p.steps.flatMap((c, i) => {
+                const slot = FAM_ORDER[p.steps.length][i];
+                const label = (
+                  <>
+                    <span className="expr-swatch-name">{p.name} {c.step}</span>
+                    <span className="expr-swatch-foot">
+                      <code className="expr-swatch-hex">{c.hex}</code>
+                      <span className="expr-swatch-role">{c.role}</span>
+                    </span>
+                  </>
+                );
 
-        {/* One grid per family. The wrapper draws nothing — no background,
-            no border — it only holds the four tracks that give the cards the
-            reference's proportions. */}
-        {PALETTES.map((p) => (
-          <div key={p.name} className="expr-family" style={{ gridArea: FAM_AREA[p.name] }}>
-            {p.steps.flatMap((c, i) => {
-              const slot = FAM_ORDER[p.steps.length][i];
-              const label = (
-                <span className="expr-swatch-label">
-                  <span className="expr-swatch-family">{p.name} {c.step}</span>
-                  <code className="expr-swatch-hex">{c.hex}</code>
-                  <span className="expr-swatch-role">
-                    {c.role}{c.ratio ? ` · ${c.ratio}:1 ${c.grade}` : ""}
-                  </span>
-                </span>
-              );
+                if (!BENT_PAIRS[slot]) {
+                  return [
+                    <div
+                      key={c.hex}
+                      className="expr-swatch"
+                      style={{ gridArea: FAM_SLOTS[slot], background: c.hex, color: c.on }}
+                      tabIndex={0}
+                    >
+                      {label}
+                    </div>
+                  ];
+                }
 
-              if (!BENT_PAIRS[slot]) {
+                /* One bent card, two fused rects. --sw-fill carries the colour
+                   to the fillet, which paints the card's own colour back into
+                   the inner angle. */
+                const [face, rest] = BENT_PAIRS[slot];
                 return [
                   <div
                     key={c.hex}
-                    className="expr-swatch"
-                    style={{ gridArea: FAM_SLOTS[slot], background: c.hex, color: c.on }}
+                    className={`expr-swatch expr-swatch--bent expr-swatch--${face}`}
+                    style={{ gridArea: FAM_SLOTS[face], background: c.hex, color: c.on, "--sw-fill": c.hex }}
                     tabIndex={0}
                   >
                     {label}
-                  </div>
+                  </div>,
+                  <div
+                    key={`${c.hex}-${rest}`}
+                    className={`expr-swatch expr-swatch--bent expr-swatch--${rest}`}
+                    style={{ gridArea: FAM_SLOTS[rest], background: c.hex, "--sw-fill": c.hex }}
+                    aria-hidden="true"
+                  />
                 ];
-              }
-
-              /* One bent card, two fused rects. --sw-fill carries the colour
-                 to the fillet, which has to paint the card's own colour into
-                 the inner angle — `background` alone is not readable from a
-                 gradient in the pseudo-element. */
-              const [face, rest] = BENT_PAIRS[slot];
-              return [
-                <div
-                  key={c.hex}
-                  className={`expr-swatch expr-swatch--bent expr-swatch--${face}`}
-                  style={{ gridArea: FAM_SLOTS[face], background: c.hex, color: c.on, "--sw-fill": c.hex }}
-                  tabIndex={0}
-                >
-                  {label}
-                </div>,
-                <div
-                  key={`${c.hex}-${rest}`}
-                  className={`expr-swatch expr-swatch--bent expr-swatch--${rest}`}
-                  style={{ gridArea: FAM_SLOTS[rest], background: c.hex, "--sw-fill": c.hex }}
-                  aria-hidden="true"
-                />
-              ];
-            })}
-          </div>
-        ))}
+              })}
+            </div>
+          ))}
+        </div>
       </div>
-
 
       {devMode && <DevBadge id="type-canvas" devMode={devMode} theme={theme} />}
     </section>
