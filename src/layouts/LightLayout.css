@@ -3926,59 +3926,136 @@
 .hero-cell--cta  { grid-column: 5 / 6; grid-row: 3; }
 
 /* ── The open ground breathes ───────────────────────────────────────────────
-   The four cells that carry nothing fill with colour and drain again, each on
-   its own clock. Durations are deliberately coprime-ish (8.6 / 9.2 / 11.3 /
-   12.1s) so the four never settle into lockstep — the order reads as random
-   however long you watch, without any JS deciding it. Each one alternates
-   apricot → moss → apricot across its cycle, and half start on the opposite
-   colour so no two neighbours ever rise together in the same shade.
+   Three of the four empty cells fill with colour and drain again, each on its
+   own clock. Durations are deliberately coprime-ish (18.4 / 21.7 / 25.1s) so
+   they never settle into lockstep — the order reads as random however long you
+   watch, with no JS deciding it. The first cell stays open: the logo sits over
+   it, and colour moving behind a logo reads as a glitch rather than a pulse.
 
-   The fill is full-bleed inside its cell, not inset like the cards — the
-   section itself colours in, and the 1px grid gaps stay visible through it. */
-.hero-cell--open { position: relative; overflow: hidden; }
+   Direction is not fixed per cell. One cycle is four fills, each entering from
+   a different edge and draining out through the opposite one — floor, left,
+   ceiling, right — and each cell runs that set in a different order, so at any
+   moment the three are travelling three different ways. The colour alternates
+   on every fill, so a cell cycles through eight distinct states before it
+   repeats. That is what clip-path buys over scaleY: the edge it grows from is
+   part of the keyframe, so it can change mid-animation.
+
+   The fill is inset and rounded to the same figures as the headline and the
+   other cards, so what fills is a card, not the raw cell — and the 1px grid
+   gaps still read, because nothing paints out to the cell edge. */
+.hero-cell--open { position: relative; }
 
 .hero-fill {
   position: absolute;
-  inset: 0;
-  transform: scaleY(0);
-  transform-origin: var(--fill-from, bottom);
-  will-change: transform;
-  animation: var(--fill-keys, heroFillWarm) var(--fill-dur, 10s)
+  inset: var(--panel-inset);
+  border-radius: clamp(8px, 0.9vw, 14px);
+  clip-path: inset(100% 0 0 0);
+  will-change: clip-path;
+  animation: var(--fill-keys) var(--fill-dur, 20s)
              cubic-bezier(0.66, 0, 0.26, 1) var(--fill-delay, 0s) infinite;
 }
 
-/* Up from the floor, down from the ceiling — alternating, so the field moves
-   in both directions at once rather than all sliding one way. */
-.hero-cell--r1a .hero-fill { --fill-from: bottom; --fill-dur: 9.2s;  --fill-delay: 0s;    --fill-keys: heroFillWarm; }
-.hero-cell--r2b .hero-fill { --fill-from: top;    --fill-dur: 11.3s; --fill-delay: 2.1s;  --fill-keys: heroFillCool; }
-.hero-cell--r3a .hero-fill { --fill-from: top;    --fill-dur: 8.6s;  --fill-delay: 4.7s;  --fill-keys: heroFillWarm; }
-.hero-cell--cta .hero-fill { --fill-from: bottom; --fill-dur: 12.1s; --fill-delay: 1.35s; --fill-keys: heroFillCool; }
+.hero-cell--r2b .hero-fill { --fill-dur: 21.7s; --fill-delay: 0s;   --fill-keys: heroFlowA; }
+.hero-cell--r3a .hero-fill { --fill-dur: 18.4s; --fill-delay: 5.2s; --fill-keys: heroFlowB; }
+.hero-cell--cta .hero-fill { --fill-dur: 25.1s; --fill-delay: 2.7s; --fill-keys: heroFlowC; }
 
-/* Each cycle is two fills. The colour only ever changes at scaleY(0), where
-   there is nothing on screen to see it change — so it reads as a new fill
-   arriving in a new colour, never as a block cross-fading. */
-@keyframes heroFillWarm {
-  0%,  4%   { transform: scaleY(0); background: #E8B07A; }
-  22%, 40%  { transform: scaleY(1); background: #E8B07A; }
-  50%       { transform: scaleY(0); background: #E8B07A; }
-  50.01%,
-  54%       { transform: scaleY(0); background: #4A7265; }
-  72%, 90%  { transform: scaleY(1); background: #4A7265; }
-  100%      { transform: scaleY(0); background: #4A7265; }
+/* Reading the four insets: 100% 0 0 0 is collapsed onto the floor,
+   0 0 100% 0 onto the ceiling, 0 100% 0 0 onto the left edge, 0 0 0 100% onto
+   the right. A pair gives the direction — floor → full rises, full → ceiling
+   drains upward. Every jump between two collapsed states happens at zero area,
+   where there is nothing on screen to see it jump; the colour swaps on the
+   same beat, so each fill reads as a new one arriving in a new colour rather
+   than a block cross-fading. */
+@keyframes heroFlowA {
+  /* up from the floor, out through the ceiling */
+  0%,     2%  { clip-path: inset(100% 0 0 0); background: #E8B07A; }
+  11%,   19%  { clip-path: inset(0 0 0 0);    background: #E8B07A; }
+  25%         { clip-path: inset(0 0 100% 0); background: #E8B07A; }
+  /* in from the left, out through the right */
+  25.01%, 27% { clip-path: inset(0 100% 0 0); background: #4A7265; }
+  36%,   44%  { clip-path: inset(0 0 0 0);    background: #4A7265; }
+  50%         { clip-path: inset(0 0 0 100%); background: #4A7265; }
+  /* down from the ceiling, out through the floor */
+  50.01%, 52% { clip-path: inset(0 0 100% 0); background: #E8B07A; }
+  61%,   69%  { clip-path: inset(0 0 0 0);    background: #E8B07A; }
+  75%         { clip-path: inset(100% 0 0 0); background: #E8B07A; }
+  /* in from the right, out through the left */
+  75.01%, 77% { clip-path: inset(0 0 0 100%); background: #4A7265; }
+  86%,   94%  { clip-path: inset(0 0 0 0);    background: #4A7265; }
+  100%        { clip-path: inset(0 100% 0 0); background: #4A7265; }
 }
 
-@keyframes heroFillCool {
-  0%,  4%   { transform: scaleY(0); background: #4A7265; }
-  22%, 40%  { transform: scaleY(1); background: #4A7265; }
-  50%       { transform: scaleY(0); background: #4A7265; }
-  50.01%,
-  54%       { transform: scaleY(0); background: #E8B07A; }
-  72%, 90%  { transform: scaleY(1); background: #E8B07A; }
-  100%      { transform: scaleY(0); background: #E8B07A; }
+@keyframes heroFlowB {
+  /* in from the right, out through the left */
+  0%,     2%  { clip-path: inset(0 0 0 100%); background: #4A7265; }
+  11%,   19%  { clip-path: inset(0 0 0 0);    background: #4A7265; }
+  25%         { clip-path: inset(0 100% 0 0); background: #4A7265; }
+  /* down from the ceiling, out through the floor */
+  25.01%, 27% { clip-path: inset(0 0 100% 0); background: #E8B07A; }
+  36%,   44%  { clip-path: inset(0 0 0 0);    background: #E8B07A; }
+  50%         { clip-path: inset(100% 0 0 0); background: #E8B07A; }
+  /* in from the left, out through the right */
+  50.01%, 52% { clip-path: inset(0 100% 0 0); background: #4A7265; }
+  61%,   69%  { clip-path: inset(0 0 0 0);    background: #4A7265; }
+  75%         { clip-path: inset(0 0 0 100%); background: #4A7265; }
+  /* up from the floor, out through the ceiling */
+  75.01%, 77% { clip-path: inset(100% 0 0 0); background: #E8B07A; }
+  86%,   94%  { clip-path: inset(0 0 0 0);    background: #E8B07A; }
+  100%        { clip-path: inset(0 0 100% 0); background: #E8B07A; }
+}
+
+@keyframes heroFlowC {
+  /* in from the left, out through the right */
+  0%,     2%  { clip-path: inset(0 100% 0 0); background: #E8B07A; }
+  11%,   19%  { clip-path: inset(0 0 0 0);    background: #E8B07A; }
+  25%         { clip-path: inset(0 0 0 100%); background: #E8B07A; }
+  /* up from the floor, out through the ceiling */
+  25.01%, 27% { clip-path: inset(100% 0 0 0); background: #4A7265; }
+  36%,   44%  { clip-path: inset(0 0 0 0);    background: #4A7265; }
+  50%         { clip-path: inset(0 0 100% 0); background: #4A7265; }
+  /* in from the right, out through the left */
+  50.01%, 52% { clip-path: inset(0 0 0 100%); background: #E8B07A; }
+  61%,   69%  { clip-path: inset(0 0 0 0);    background: #E8B07A; }
+  75%         { clip-path: inset(0 100% 0 0); background: #E8B07A; }
+  /* down from the ceiling, out through the floor */
+  75.01%, 77% { clip-path: inset(0 0 100% 0); background: #4A7265; }
+  86%,   94%  { clip-path: inset(0 0 0 0);    background: #4A7265; }
+  100%        { clip-path: inset(100% 0 0 0); background: #4A7265; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-fill { animation: none; transform: scaleY(0); }
+  .hero-fill { animation: none; clip-path: inset(100% 0 0 0); }
+}
+
+/* ── The hero holds while About rides up over it ────────────────────────────
+   Native sticky rather than a scrubbed ScrollTrigger: the compositor does it,
+   so it costs nothing per frame and cannot fall behind the scroll. The hero
+   is exactly one viewport tall with no padding, so top:0 pins it flush.
+
+   About is the lid. It already carries `isolation: isolate`, so it is its own
+   stacking context; the explicit z-index just makes the order deliberate
+   instead of relying on source position. Its clipped fold means the hero shows
+   through the cut corner as it passes — the overlap is visible, not just
+   implied. The pin releases at the end of .hero-stack, by which point About
+   has covered the hero completely. */
+.hero-stack { position: relative; }
+
+.hero-stack .section-hero {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+}
+
+.hero-stack .section-about {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  /* The hero is `min-height: auto` below this width, so it is no longer a
+     clean viewport-tall lid — pinning something shorter than the screen just
+     leaves it stranded mid-scroll. */
+  .hero-stack .section-hero { position: relative; }
 }
 
 /* The rail overlays the first cell rather than being one, so the division

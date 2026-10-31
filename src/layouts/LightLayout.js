@@ -610,6 +610,11 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
 
     {/* Main content with higher z-index */}
     <div style={{position:"relative",zIndex:1}}>
+    {/* The hero pins and About rides up over it. The two live in one wrapper
+        so the pin releases the moment About has fully covered the hero —
+        leaving it stuck for the whole page would park it behind every later
+        section, and any transparency in those would reveal it. */}
+    <div className="hero-stack">
     {/* HERO — headline left, a design artefact filling the right */}
     <section ref={heroRef} id="hero" className="hero-section section-hero">
       <div className="hero-grid">
@@ -671,9 +676,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
             The cards sit INSIDE their cells with a small inset; they are not
             cells themselves. That is what lets the wordmark sit at the right
             of its cell with no line between it and the open ground beside. */}
-        <div className="hero-cell hero-cell--open hero-cell--r1a" aria-hidden="true">
-          <span className="hero-fill" />
-        </div>
+        <div className="hero-cell hero-cell--r1a" aria-hidden="true" />
         <div className="hero-cell hero-cell--mark">
           <div className="hero-mark">
             <span className="hero-mark-text">Quantamania</span>
@@ -801,6 +804,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
       </div>
       {devMode&&<DevBadge id="about" devMode={devMode} theme={theme}/>}
     </section>
+    </div>
 
     {/* WHAT I DO — pinned horizontal case-study rail */}
     {/* WHAT I DO — a deck of cards that stack up as you scroll. Each card is
