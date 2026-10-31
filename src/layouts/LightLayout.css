@@ -3960,10 +3960,15 @@
   inset: var(--panel-inset);
   border-radius: clamp(8px, 0.9vw, 14px);
   clip-path: inset(100% 0 0 0);
-  will-change: clip-path;
   animation: var(--fill-keys) var(--fill-dur, 20s)
              cubic-bezier(0.66, 0, 0.26, 1) var(--fill-delay, 0s) infinite;
 }
+
+/* Nothing to look at once the hero has gone, and clip-path repaints on the
+   main thread — so the frames go to the scroll instead. `will-change` is
+   deliberately absent: clip-path is not composited, so it would pin three
+   full-cell layers in memory for no gain. */
+.hero-grid.is-resting .hero-fill { animation-play-state: paused; }
 
 .hero-cell--r2b .hero-fill { --fill-dur: 21.7s; --fill-delay: 0s;   --fill-keys: heroFlowA; }
 .hero-cell--r3a .hero-fill { --fill-dur: 18.4s; --fill-delay: 5.2s; --fill-keys: heroFlowB; }
@@ -4250,62 +4255,26 @@
 }
 
 /* The mark sits in the top-left cell at the inset the rail used to carry, so
-   it lands where it always was. It turns continuously and takes the orange on
-   a slower, unrelated clock — 17s against 11s — so the colour arrives at a
-   different angle every time rather than at the same point of each turn. */
+   it lands where it always was. Nothing is animated on it — it is the plain
+   mark with its hover cross-fade, as .hero-logo-wrap has always drawn it. */
 .hero-cell--r1a {
   display: flex;
   align-items: flex-start;
   padding: clamp(18px, 2.2vw, 34px);
 }
 
-.hero-brand {
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  line-height: 0;
-  border-radius: 50%;
+/* The mark leaves as the bar arrives, so there is never a second one on
+   screen — the same handoff the rail used to do by being the bar itself.
+   Transform and opacity only: both are composited, so this costs no layout
+   and no repaint while the page is moving. */
+.hero-cell--r1a .hero-logo-wrap {
+  transition: opacity 0.32s var(--ease-soft), transform 0.32s var(--ease-glide);
 }
 
-.hero-brand:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
-
-.hero-brand-spin {
-  position: relative;
-  display: block;
-  line-height: 0;
-  animation: brand-burst 7s cubic-bezier(0.62, 0, 0.3, 1) infinite;
-}
-
-.hero-brand .hero-logo-hot {
-  /* The same 7s, deliberately. Two different durations would drift apart and
-     the colour would eventually land mid-spin instead of on the turn. */
-  animation: brand-swap 7s step-end infinite;
-  /* The hover cross-fade on the bar's copy would fight the keyframes. */
-  transition: none;
-}
-
-/* One full turn in 0.9s, a 2.6s stand, another full turn, another stand. The
-   rotation accumulates to 720deg rather than resetting, so the loop back to 0
-   is seamless — 720 and 0 are the same picture. */
-@keyframes brand-burst {
-  0%            { transform: rotate(0deg); }
-  12.857%, 50%  { transform: rotate(360deg); }
-  62.857%, 100% { transform: rotate(720deg); }
-}
-
-/* step-end on the animation, so this does not fade — it cuts. The cut falls
-   at 50%, exactly where the second turn starts, so that turn runs in the new
-   colour from its first frame and holds it through the stand that follows. */
-@keyframes brand-swap {
-  0%   { opacity: 0; }
-  50%  { opacity: 1; }
-  100% { opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-brand-spin { animation: none; }
-  .hero-brand .hero-logo-hot { animation: none; opacity: 0; }
+.hero-cell--r1a.is-handed-off .hero-logo-wrap {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.92);
+  pointer-events: none;
 }
 
 /* The wordmark runs up the edge of its box rather than sitting in the middle
@@ -4313,12 +4282,22 @@
    mark. */
 .hero-mark {
   place-items: center start;
-  padding: clamp(12px, 1.4vw, 22px);
+  /* Tightened from 22px. The word runs the full height of this box, so the
+     inset is what limits how large it can be set — not the box itself. */
+  padding: clamp(8px, 0.8vw, 13px);
 }
 
 .hero-mark-text {
-  font-size: clamp(13px, 1.3vw, 21px);
+  /* vh, not vw. The word runs the height of its card, and that card is a
+     third of the viewport HEIGHT — so a vw term underfills a short, wide
+     window and overflows a tall one. At 2.5vh it lands at 93-95% of the
+     available run at every size. Up from 1.3vw either way: at that value it
+     was a 19px strip in a 265px box, which is what read as a thin ribbon. */
+  font-size: clamp(15px, 2.5vh, 30px);
   letter-spacing: 0.06em;
+  /* The stroke grows with it, or a larger cap drawn with a 1px line reads
+     thinner rather than heavier — the outline is the whole letterform here. */
+  -webkit-text-stroke: clamp(1.3px, 0.21vh, 2.3px) #000;
 }
 
 /* Below the division's comfortable width it stops being a division: one
@@ -4471,8 +4450,14 @@
    hero, so taking it out of flow does not move the headline or the card.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* `gap` was transitioned here, which lays out the bar again on every frame
+   of the change. The bar is a fixed measure now and its rest state is hidden,
+   so there was nothing for it to smooth — and opacity gets the job done
+   without touching layout. visibility is in the transition so the bar stays
+   present until the fade finishes on the way out, while still appearing at
+   once on the way in. */
 .hero-rail {
-  transition: gap 0.38s var(--ease-glide);
+  transition: opacity 0.34s var(--ease-soft), visibility 0.34s linear;
 }
 
 .hero-rail.is-bar {
@@ -4506,13 +4491,14 @@
      rather than a third item in the run. */
   gap: clamp(22px, 2.6vw, 44px);
 
-  /* Orange edge. 1.5px rather than 1: a sub-pixel border snaps down to 1px on
-     a 1x display and most of the weight is lost. */
-  border: 1.5px solid rgba(194, 65, 12, 0.55);
-  border-top: none;
-  background: rgba(239, 235, 228, 0.92);
-  -webkit-backdrop-filter: saturate(140%) blur(16px);
-  backdrop-filter: saturate(140%) blur(16px);
+  /* No edge. The rounded foot and the shadow are what separate the bar from
+     the page now, so it reads as a panel rather than a drawn box. */
+  border: none;
+  /* White, not the page's cream — the bar reads as its own surface sitting
+     over the page rather than a tinted slice of it. Opaque, so the backdrop
+     blur that used to be here is gone with it: behind a solid fill it renders
+     nothing and only costs a compositing pass. */
+  background: #FFFFFF;
   box-shadow: 0 14px 34px -20px rgba(47, 77, 69, 0.38);
 
   /* position is not animatable, so the arrival is a keyframe sequence rather

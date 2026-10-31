@@ -243,14 +243,45 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
   const [activeSection, setActiveSection] = useState(null);
 
   /* The bar arrives on scroll rather than being there from the start; 60px
-     rather than 0 so a one-notch wheel nudge does not toggle it. At rest the
-     same element is just the mark sitting in the hero's top band. */
+     rather than 0 so a one-notch wheel nudge does not toggle it. The hero's
+     own mark hands off to it, so only one is ever on screen.
+
+     Read inside a rAF rather than straight out of the scroll event: on a
+     trackpad these fire several times per frame, and each one was a setState
+     call. Coalescing to one read per frame costs nothing and keeps the
+     handler off the critical path. */
   const [navCondensed, setNavCondensed] = useState(false);
   useEffect(() => {
-    const read = () => setNavCondensed(window.scrollY > 60);
+    let frame = 0;
+    const read = () => {
+      frame = 0;
+      setNavCondensed(window.scrollY > 60);
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(read); };
     read();
-    window.addEventListener("scroll", read, { passive: true });
-    return () => window.removeEventListener("scroll", read);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  /* The hero's colour fills animate clip-path, which is not a composited
+     property — every frame is a repaint of a fifth of the screen on the main
+     thread, competing with the scroll. Once the hero is off screen there is
+     nothing to see, so they are parked. An observer rather than a scroll
+     offset: no per-frame work at all, and it stays correct whatever the
+     hero's height turns out to be. */
+  const [heroOnScreen, setHeroOnScreen] = useState(true);
+  useEffect(() => {
+    const node = heroRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => setHeroOnScreen(entry.isIntersecting),
+      { rootMargin: "120px" }
+    );
+    io.observe(node);
+    return () => io.disconnect();
   }, []);
 
   /* The work rail's scroll position, so the arrows can disable themselves at
@@ -669,7 +700,7 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
     <div className="hero-stack">
     {/* HERO — headline left, a design artefact filling the right */}
     <section ref={heroRef} id="hero" className="hero-section section-hero">
-      <div className="hero-grid">
+      <div className={`hero-grid${heroOnScreen ? "" : " is-resting"}`}>
         {/* Column rules only — the boxy lattice that used to sit behind them
             is gone, so these read as guides on a plain ground. */}
 
@@ -684,17 +715,15 @@ export function LightLayout({ theme, devMode, scrollTo, tIdx, setTIdx, sel, setS
         {/* The mark, back in the lattice's top-left where it was. The bar out
             in the wrapper has its own copy, but that one is hidden until you
             scroll, so only ever one is on screen. */}
-        <div className="hero-cell hero-cell--r1a">
+        <div className={`hero-cell hero-cell--r1a${navCondensed ? " is-handed-off" : ""}`}>
           <button
             type="button"
-            className="hero-brand"
+            className="hero-logo-wrap"
             onClick={() => scrollTo("hero")}
             aria-label="Michael Gaitho — back to top"
           >
-            <span className="hero-brand-spin">
-              <img className="hero-logo" src="/logo_transparent_shadow.png" alt="" />
-              <img className="hero-logo hero-logo-hot" src="/logo_orange.png" alt="" aria-hidden="true" />
-            </span>
+            <img className="hero-logo" src="/logo_transparent_shadow.png" alt="" />
+            <img className="hero-logo hero-logo-hot" src="/logo_orange.png" alt="" aria-hidden="true" />
           </button>
         </div>
         <div className="hero-cell hero-cell--mark">

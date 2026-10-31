@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Lenis from "lenis";
 import { GSAPLoader } from "./hooks/useGSAP";
 import { THEMES } from "./data/themes";
 import { ParticleCanvas, ScrollBar, Modal, ScrollProgress, ParallaxElement, ScrollReveal, ScrollIndicator } from "./components/Shared";
@@ -34,8 +35,63 @@ export default function App() {
   },[]);
   const navRef=useRef(null);
 
-  useEffect(()=>{let p=0;const iv=setInterval(()=>{p+=Math.random()*35;setLoadPct(Math.min(p,100));if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),150);}},50);return()=>clearInterval(iv);},[]);
-  const scrollTo=id=>{const element=document.getElementById(id);if(element){element.scrollIntoView({behavior:'smooth',block:'start',inline:'nearest'});}};
+  /* ~2.3s of ramp and a beat at full. It used to add up to 35 per 50ms tick,
+     which reached 100 in six ticks — about 300ms, too fast to read the count
+     or see the colours travel. Small random steps keep it from looking like a
+     linear timer while still being watchable. */
+  useEffect(()=>{
+    let p=0;
+    const iv=setInterval(()=>{
+      p+=Math.random()*2.6+1.1;
+      setLoadPct(Math.min(p,100));
+      if(p>=100){clearInterval(iv);setTimeout(()=>setLoading(false),620);}
+    },55);
+    return()=>clearInterval(iv);
+  },[]);
+  /* Inertial scrolling. Lenis rather than GSAP's ScrollSmoother — which is
+     present in node_modules — because ScrollSmoother transform-wraps the page
+     and that kills `position: sticky`. The light layout pins its hero and
+     stacks the What I Do deck entirely on sticky, so both would break. Lenis
+     eases the real window scroll position instead, so sticky, ScrollTrigger
+     and anchor jumps all keep working untouched.
+
+     lerp is the glide: each frame closes 8.5% of the gap to where the wheel
+     has asked to be, so releasing the wheel coasts to a stop rather than
+     cutting dead. Touch is left alone — phones already have momentum of
+     their own, and syncing it just fights the platform. */
+  const lenisRef=useRef(null);
+  useEffect(()=>{
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    /* autoRaf, rather than driving lenis.raf from our own loop. Lenis stops
+       default on the wheel, so if the loop that advances it ever broke the
+       page would stop scrolling altogether — and a self-rescheduling rAF
+       breaks permanently on a single throw. Its own loop also handles the tab
+       being backgrounded, where rAF does not fire at all. GSAP is loaded from
+       a CDN here and may not exist yet at mount, so gsap.ticker is not an
+       option either. */
+    const lenis=new Lenis({lerp:0.085,wheelMultiplier:1,syncTouch:false,autoRaf:true});
+    lenisRef.current=lenis;
+
+    // ScrollTrigger recalculates on native scroll events, which Lenis emits —
+    // telling it directly keeps scrubbed triggers in step with the eased
+    // position rather than a frame behind it.
+    const sync=()=>window.ScrollTrigger?.update();
+    lenis.on("scroll",sync);
+
+    return ()=>{
+      lenis.off("scroll",sync);
+      lenis.destroy();
+      lenisRef.current=null;
+    };
+  },[]);
+
+  const scrollTo=id=>{
+    const element=document.getElementById(id);
+    if(!element) return;
+    // Through Lenis when it is running, or the jump fights the glide.
+    if(lenisRef.current) lenisRef.current.scrollTo(element,{offset:0});
+    else element.scrollIntoView({behavior:'smooth',block:'start',inline:'nearest'});
+  };
 
   // Close mobile menu on window resize to desktop
   useEffect(() => {
@@ -70,8 +126,39 @@ export default function App() {
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800;900&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=SF+Mono:wght@400;500;600;700&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;}
     html{scroll-behavior:smooth;scroll-padding-top:${isLight?0:80}px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+    /* Lenis is driving: native smooth would fight it for the same scroll
+       position, and the page must not be height-constrained while it does. */
+    html.lenis,html.lenis body{height:auto;}
+    html.lenis-smooth{scroll-behavior:auto!important;}
+    html.lenis-stopped{overflow:hidden;}
     body{background:${theme.bg};color:${theme.text};font-family:${theme.bodyFont};overflow-x:clip;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;}
     ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:${theme.bg}}::-webkit-scrollbar-thumb{background:${theme.textMuted};border-radius:99px;opacity:.45}
+    /* ── Splash ── */
+    .ld-screen{position:fixed;inset:0;z-index:99999;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+    .ld-half{position:absolute;top:0;bottom:0;width:50.2%;will-change:transform;transition:transform .42s cubic-bezier(.22,.61,.36,1);}
+    /* Anchored ON the midline and grown outward from it: right:50% puts the
+       left half's inner edge at the centre, so scaleX runs it out to the edge
+       of the screen rather than in from it. */
+    .ld-half--left{right:50%;transform-origin:right center;}
+    .ld-half--right{left:50%;transform-origin:left center;}
+    .ld-mark{position:relative;z-index:2;width:clamp(86px,12vw,152px);line-height:0;}
+    .ld-mark-img{display:block;width:100%;height:auto;}
+    .ld-count{position:absolute;z-index:3;left:clamp(16px,3.2vw,56px);bottom:clamp(6px,2vh,30px);
+      font-family:'Instrument Sans',sans-serif;font-weight:500;font-size:clamp(66px,13vw,180px);
+      line-height:.84;letter-spacing:-.035em;min-width:3ch;height:.84em;pointer-events:none;}
+    .ld-count-layer{position:absolute;left:0;bottom:0;display:block;}
+    /* A quick cross-fade with a small counter-slide, so the two trade places
+       rather than blinking. One cycle shows each once. */
+    @keyframes ld-swap-num{0%,40%{opacity:1;transform:translateY(0)}50%,90%{opacity:0;transform:translateY(-.07em)}100%{opacity:1;transform:translateY(0)}}
+    @keyframes ld-swap-mg{0%,40%{opacity:0;transform:translateY(.07em)}50%,90%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(.07em)}}
+    .ld-count-num{animation:ld-swap-num .92s cubic-bezier(.4,0,.2,1) infinite;}
+    .ld-count-mg{animation:ld-swap-mg .92s cubic-bezier(.4,0,.2,1) infinite;}
+    .ld-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+    @media (prefers-reduced-motion: reduce){
+      .ld-count-num{animation:none;opacity:1}
+      .ld-count-mg{animation:none;opacity:0}
+    }
+
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes slideUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
@@ -465,20 +552,37 @@ export default function App() {
     }
   `;
 
-  if(loading) return (
-    <div style={{position:"fixed",inset:0,background:theme.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:99999}}>
-      <GSAPLoader/><style>{css}</style>
-      <div style={{position:"relative",width:68,height:68,marginBottom:30}}>
-        <div style={{position:"absolute",inset:0,borderRadius:"50%",border:`1px solid ${theme.border}`,animation:"spinSlow 8s linear infinite"}}/>
-        <div style={{position:"absolute",inset:8,borderRadius:"50%",border:`1px solid ${theme.borderMid}`,borderTopColor:"transparent",animation:"spinSlow 3s linear infinite",opacity:.6}}/>
-        <div style={{position:"absolute",inset:18,borderRadius:"50%",border:`1px solid ${theme.textMuted}`,borderTopColor:"transparent",animation:"spinSlow 1.5s linear infinite",opacity:.4}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Instrument Sans',sans-serif",fontWeight:700,fontSize:12,color:theme.textMuted,opacity:.7}}>MG</div>
+  /* The splash. The two colours pour out of the mark and split the screen down
+     its centre — green to the left, apricot to the right — so they read as
+     having come out of the logo rather than wiped across it. Both halves are
+     driven by transform rather than width, so the growth is composited and
+     never lays out. */
+  if(loading) {
+    const p=Math.min(loadPct,100)/100;
+    const splitUp=isLight?"#4A7265":theme.accent;
+    const splitDown=isLight?"#E8B07A":theme.accentSub;
+    return (
+      <div className="ld-screen" style={{background:theme.bg}}>
+        <GSAPLoader/><style>{css}</style>
+        <div className="ld-half ld-half--left" style={{background:splitUp,transform:`scaleX(${p})`}} aria-hidden="true"/>
+        <div className="ld-half ld-half--right" style={{background:splitDown,transform:`scaleX(${p})`}} aria-hidden="true"/>
+
+        <div className="ld-mark">
+          <img className="ld-mark-img" src="/logo_transparent_shadow.png" alt=""/>
+        </div>
+
+        {/* One live region announcing the percentage. The MG/number alternation
+            is CSS on two stacked layers, not state — the count is already
+            re-rendering, and a second timer flipping it would be a re-render
+            per flip for something no one needs to read from the DOM. */}
+        <div className="ld-count" style={{color:theme.text}}>
+          <span className="ld-count-layer ld-count-num">{Math.round(loadPct)}</span>
+          <span className="ld-count-layer ld-count-mg" aria-hidden="true">MG</span>
+        </div>
+        <span className="ld-sr" role="status" aria-live="polite">{`Loading ${Math.round(loadPct)}%`}</span>
       </div>
-      <div style={{fontSize:9,letterSpacing:".28em",textTransform:"uppercase",color:theme.textMuted,marginBottom:18,fontFamily:"'Google Sans',sans-serif",opacity:.5}}>Loading</div>
-      <div style={{width:130,height:1,background:theme.border,borderRadius:99,overflow:"hidden"}}><div style={{height:"100%",width:`${loadPct}%`,background:theme.textMuted,transition:"width .1s",opacity:.5}}/></div>
-      <div style={{marginTop:9,fontSize:11,color:theme.textMuted,fontFamily:"'Google Sans',sans-serif",opacity:.4}}>{Math.round(loadPct)}%</div>
-    </div>
-  );
+    );
+  }
 
   
   return (
